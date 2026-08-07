@@ -259,7 +259,7 @@ export default function UserView() {
           <span style={{ fontSize:'12px', color:'#374151' }}>{requestText.length} chars · Ctrl+Enter to submit</span>
           {requestText && <button onClick={() => setRequestText('')} style={{ fontSize:'12px', color:'#374151', background:'none', border:'none', cursor:'pointer' }}>Clear</button>}
         </div>
-      </div>
+      </section>
 
       {/* Service info card */}
       <ServiceInfoCard meta={meta} selected={selected} />
