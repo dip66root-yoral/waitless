@@ -1,9 +1,14 @@
 import axios from 'axios'
 import { io } from 'socket.io-client'
 
+// In production: set VITE_API_URL to your backend (e.g. https://waitless-backend.onrender.com)
+// In dev: falls back to /api (proxied by Vite)
+const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api'
+const SOCKET_URL = import.meta.env.VITE_API_URL || '/'
+
 // Axios API client
 export const api = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000,
 })
@@ -21,7 +26,7 @@ let socketInstance = null
 
 export function getSocket() {
   if (!socketInstance) {
-    socketInstance = io('/', {
+    socketInstance = io(SOCKET_URL, {
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 5,
