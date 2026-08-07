@@ -111,7 +111,7 @@ export default function UserView() {
   const pollRef = useRef(null)
 
   useEffect(() => {
-    document.title = 'Book Now — QueueIQ'
+    document.title = 'Book Now — WAITLESS'
     queuesAPI.list().then(r => setQueues(r.data || [])).catch(() => addToast('Could not load services', 'error'))
     return () => {
       clearInterval(pollRef.current)
@@ -428,7 +428,7 @@ export default function UserView() {
           <div style={{ borderRadius:'16px', padding:'36px 20px', textAlign:'center', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.07)', marginBottom:'14px' }}>
             <div style={{ fontSize:'3rem', marginBottom:'12px' }}>{isDone ? '✅' : '⏭️'}</div>
             <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'20px', color:'#fff', marginBottom:'8px' }}>{isDone ? 'Booking Complete!' : 'Token Skipped'}</h3>
-            <p style={{ fontSize:'14px', color:'#64748b', marginBottom:'24px' }}>{isDone ? 'Thank you for using QueueIQ.' : 'Please approach the counter directly.'}</p>
+            <p style={{ fontSize:'14px', color:'#64748b', marginBottom:'24px' }}>{isDone ? 'Thank you for using WAITLESS.' : 'Please approach the counter directly.'}</p>
             <button onClick={reset} className="btn-book" style={{ padding:'12px 32px', fontSize:'14px' }}>Book Another Slot</button>
           </div>
         )}

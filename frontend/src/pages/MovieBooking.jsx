@@ -111,7 +111,7 @@ export default function MovieBooking() {
   const pollRef = useRef(null)
 
   useEffect(() => {
-    if (movie) { document.title = `${movie.title} — QueueIQ`; setSelectedFormat(movie.formats[0]) }
+    if (movie) { document.title = `${movie.title} - WAITLESS`; setSelectedFormat(movie.formats[0]) }
     return () => { clearInterval(pollRef.current); if (socketRef.current) socketRef.current.off('queue:updated') }
   }, [movie])
 

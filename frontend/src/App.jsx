@@ -30,10 +30,10 @@ function NavBar() {
       }}>
         {/* Logo */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', marginRight: '40px', flexShrink: 0 }}>
-          <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#e50914', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(229,9,20,0.4)' }}>
-            <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 900, color: '#fff', fontSize: '14px', lineHeight: 1 }}>Q</span>
+          <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'linear-gradient(135deg, #e50914, #ff4040)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(229,9,20,0.4)' }}>
+            <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 900, color: '#fff', fontSize: '16px', lineHeight: 1 }}>W</span>
           </div>
-          <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 900, color: '#fff', fontSize: '18px', letterSpacing: '-0.02em' }}>QueueIQ</span>
+          <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 900, color: '#fff', fontSize: '18px', letterSpacing: '0.08em', textTransform: 'uppercase' }}>WAITLESS</span>
         </Link>
 
         {/* Nav links */}

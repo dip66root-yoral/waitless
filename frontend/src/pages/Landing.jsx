@@ -235,7 +235,7 @@ export default function Landing() {
   const moviesRef = useRef(null)
 
   useEffect(() => {
-    document.title = 'QueueIQ — Book Movies, Tickets & More'
+    document.title = 'WAITLESS - Book Movies, Tickets & More'
     queuesAPI.list().then(r => {
       const m = {}; r.data?.forEach(q => { m[q.id] = q }); setQueues(m)
     }).catch(() => {})
@@ -391,10 +391,10 @@ export default function Landing() {
       <div style={{ borderTop:'1px solid rgba(255,255,255,0.05)', padding:'22px 28px' }}>
         <div style={{ maxWidth:MAX_W, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:'12px' }}>
           <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
-            <div style={{ width:'28px', height:'28px', borderRadius:'8px', background:'#e50914', display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'#fff', fontSize:'13px' }}>Q</span>
+            <div style={{ width:'28px', height:'28px', borderRadius:'8px', background:'linear-gradient(135deg, #e50914, #ff4040)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'#fff', fontSize:'14px' }}>W</span>
             </div>
-            <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, color:'#fff', fontSize:'15px' }}>QueueIQ</span>
+            <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, color:'#fff', fontSize:'15px', letterSpacing:'0.05em' }}>WAITLESS</span>
             <span style={{ color:'#374151', fontSize:'13px' }}>· Built for India 🇮🇳</span>
           </div>
           <div style={{ display:'flex', gap:'24px', fontSize:'12px', color:'#374151' }}>

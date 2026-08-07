@@ -129,7 +129,7 @@ export default function ProviderView() {
   const pollRef = useRef(null)
 
   useEffect(() => {
-    document.title = 'Counter Dashboard — QueueIQ'
+    document.title = 'Counter Dashboard - WAITLESS'
     queuesAPI.list().then(r => setQueues(r.data || [])).catch(() => addToast('Failed to load queues','error'))
     return () => { clearInterval(pollRef.current); if (socketRef.current) socketRef.current.off('queue:updated') }
   }, [])
