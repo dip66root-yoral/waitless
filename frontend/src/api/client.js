@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify'
+
 // Mocked API Client for fully serverless Frontend deployment (using LocalStorage)
 
 /* ─── Event Emitter (Mock Socket) ────────────────────────────────────────── */
@@ -179,12 +181,12 @@ export const tokensAPI = {
       id: uuidv4(),
       queue_id: data.queue_id,
       token_number: number,
-      user_name: data.user_name || 'Guest',
-      request_text: data.request_text,
+      user_name: DOMPurify.sanitize(data.user_name || 'Guest'),
+      request_text: DOMPurify.sanitize(data.request_text || ''),
       service_type: data.service_type || 'General Service',
       urgency: data.urgency || 'medium',
       priority: priorityMap[data.urgency || 'medium'] || 5,
-      notes: data.notes || '',
+      notes: DOMPurify.sanitize(data.notes || ''),
       status: 'waiting',
       created_at: new Date().toISOString()
     }

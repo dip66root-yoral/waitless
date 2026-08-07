@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { queuesAPI } from '../api/client.js'
-import { QRCodeCanvas } from 'qrcode.react'
 import { MOVIES } from '../data/movies.js'
 
 /* ─── Constants ────────────────────────────────────────────────── */
@@ -247,31 +246,23 @@ export default function Landing() {
   }
 
   return (
-    <div className="app-bg" style={{ minHeight:'100vh' }}>
+    <main className="app-bg" style={{ minHeight:'100vh' }}>
 
       {/* ═══════════════════════════════════════════════
-          SECTION 1 — WHAT DO YOU WANT TO BOOK?
+          SECTION 1 — HERO & HUBS
       ═══════════════════════════════════════════════ */}
-      <section style={{ padding:`calc(${NAV_H} + 52px) 28px 64px` }}>
+      <section aria-label="Hero Section" style={{ padding:'120px 28px 64px' }}>
         <div style={{ maxWidth:MAX_W, margin:'0 auto' }}>
 
-          {/* Heading — no Gemini badge */}
-          <div style={{ textAlign:'center', marginBottom:'40px' }}>
+          {/* Heading */}
+          <header style={{ textAlign:'center', marginBottom:'40px' }}>
             <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'52px', color:'#fff', margin:'0 0 16px', lineHeight:1.15, letterSpacing:'-0.02em' }}>
               What do you want to book today?
             </h1>
             <p style={{ fontSize:'15px', color:'#64748b', maxWidth:'420px', margin:'0 auto', lineHeight:1.65 }}>
               Movies, train, flights or hospital OPD — skip the queue, book your spot instantly.
             </p>
-            
-            {/* WOW Factor: QR Code */}
-            <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-              <div style={{ background: '#fff', padding: '12px', borderRadius: '16px', display: 'inline-block', boxShadow: '0 8px 32px rgba(229,9,20,0.15)' }}>
-                <QRCodeCanvas value="https://waitless-app.netlify.app/user" size={120} level="H" fgColor="#000" bgColor="#fff" />
-              </div>
-              <span style={{ fontSize: '13px', fontWeight: 700, color: '#e50914', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Scan to Join Queue</span>
-            </div>
-          </div>
+          </header>
 
           {/* 2×2 Hub cards — max 780px centered */}
           <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:'16px', maxWidth:'780px', margin:'0 auto' }}>

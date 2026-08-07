@@ -60,11 +60,11 @@ function ServiceInfoCard({ meta, selected }) {
 /* ─── Shared layout wrapper ────────────────────────────────────── */
 function Page({ children }) {
   return (
-    <div className="app-bg" style={{ minHeight:'100vh', paddingTop:'60px' }}>
+    <main className="app-bg" style={{ minHeight:'100vh', paddingTop:'60px' }}>
       <div style={{ maxWidth:'560px', margin:'0 auto', padding:'40px 20px 80px' }}>
         {children}
       </div>
-    </div>
+    </main>
   )
 }
 
@@ -242,11 +242,11 @@ export default function UserView() {
           <p style={{ fontWeight:700, color:'#fff', fontSize:'14px', margin:0 }}>{selected?.service_name}</p>
           <p style={{ fontSize:'12px', color:'#4b5563', margin:0 }}>{selected?.stats?.waiting_count ?? 0} ahead · ~{(selected?.stats?.waiting_count ?? 0) * (selected?.avg_service_time ?? 10)}m wait</p>
         </div>
-        <button onClick={() => setStep('select')} style={{ marginLeft:'auto', fontSize:'12px', color:meta?.accent, background:'none', border:'none', cursor:'pointer', fontWeight:600 }}>Change</button>
+        <button aria-label="Change service" onClick={() => setStep('select')} style={{ marginLeft:'auto', fontSize:'12px', color:meta?.accent, background:'none', border:'none', cursor:'pointer', fontWeight:600 }}>Change</button>
       </div>
 
       {/* Textarea */}
-      <div style={{ borderRadius:'14px', border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.03)', overflow:'hidden', marginBottom:'12px' }}>
+      <section aria-label="Request input form" style={{ borderRadius:'14px', border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.03)', overflow:'hidden', marginBottom:'12px' }}>
         <textarea
           rows={4}
           value={requestText}
