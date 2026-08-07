@@ -4,5 +4,10 @@ dist/
 *.log
 *.sqlite
 *.db
+*.db-shm
+*.db-wal
 node_extracted/
+node.zip
 .DS_Store
+frontend/.vite/
+backend/data/
