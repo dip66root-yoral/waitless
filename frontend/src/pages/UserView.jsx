@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { queuesAPI, tokensAPI, geminiAPI, getSocket } from '../api/client.js'
+import confetti from 'canvas-confetti'
 import { useToast } from '../context/ToastContext.jsx'
 import QueueProgress from '../components/QueueProgress.jsx'
 
@@ -141,6 +142,14 @@ export default function UserView() {
       const token = res.data
       setMyToken(token); setLiveToken(token); setStep('tracking')
       addToast(`Booking confirmed! Token ${token.token_number}`, 'success')
+      
+      // WOW Factor: Confetti!
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#e50914', '#ff4040', '#ffffff']
+      })
       const socket = getSocket()
       socketRef.current = socket
       socket.emit('join:queue', token.queue_id)

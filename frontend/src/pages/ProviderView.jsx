@@ -168,8 +168,19 @@ export default function ProviderView() {
     setIsCallingNext(true)
     try {
       const r = await tokensAPI.callNext(activeQueue.id)
-      r.data ? addToast(`Now serving: ${r.data.token_number} — ${r.data.user_name}`,'success')
-             : addToast('Queue is empty!','info')
+      if (r.data) {
+        addToast(`Now serving: ${r.data.token_number} — ${r.data.user_name}`, 'success')
+        
+        // Voice Announcement (WOW Factor)
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(`Token ${r.data.token_number}, please proceed to the counter.`)
+          utterance.rate = 0.9
+          utterance.pitch = 1
+          window.speechSynthesis.speak(utterance)
+        }
+      } else {
+        addToast('Queue is empty!', 'info')
+      }
       fetchTokens(activeQueue.id)
     } catch (e) { addToast(e.error||'Failed','error') }
     finally { setIsCallingNext(false) }
