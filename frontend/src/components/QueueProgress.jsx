@@ -1,3 +1,5 @@
+import React from 'react'
+
 const STEPS = [
   { key: 'waiting', label: 'Booked', icon: '🎟️' },
   { key: 'soon', label: 'Almost Ready', icon: '🔔' },
@@ -12,7 +14,7 @@ function getActive(status, position) {
   return 0
 }
 
-export default function QueueProgress({ status, position, accentColor = '#e50914' }) {
+const QueueProgress = React.memo(function QueueProgress({ status, position, accentColor = '#e50914' }) {
   const active = getActive(status, position)
 
   return (
@@ -54,4 +56,6 @@ export default function QueueProgress({ status, position, accentColor = '#e50914
       })}
     </div>
   )
-}
+})
+
+export default QueueProgress

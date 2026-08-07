@@ -1,8 +1,10 @@
+import React, { Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
-import Landing from './pages/Landing.jsx'
-import UserView from './pages/UserView.jsx'
-import ProviderView from './pages/ProviderView.jsx'
-import MovieBooking from './pages/MovieBooking.jsx'
+
+const Landing = React.lazy(() => import('./pages/Landing.jsx'))
+const UserView = React.lazy(() => import('./pages/UserView.jsx'))
+const ProviderView = React.lazy(() => import('./pages/ProviderView.jsx'))
+const MovieBooking = React.lazy(() => import('./pages/MovieBooking.jsx'))
 import ToastContainer from './components/ToastContainer.jsx'
 import { ToastProvider } from './context/ToastContext.jsx'
 
@@ -77,13 +79,15 @@ export default function App() {
         <div className="app-bg">
           <NavBar />
           <ToastContainer />
-          <Routes>
-            <Route path="/"               element={<Landing />} />
-            <Route path="/user"           element={<UserView />} />
-            <Route path="/movie/:movieId" element={<MovieBooking />} />
-            <Route path="/provider"       element={<ProviderView />} />
-            <Route path="/provider/:queueId" element={<ProviderView />} />
-          </Routes>
+          <Suspense fallback={<div style={{ padding: '40px', color: '#fff', textAlign: 'center' }}>Loading...</div>}>
+            <Routes>
+              <Route path="/"               element={<Landing />} />
+              <Route path="/user"           element={<UserView />} />
+              <Route path="/movie/:movieId" element={<MovieBooking />} />
+              <Route path="/provider"       element={<ProviderView />} />
+              <Route path="/provider/:queueId" element={<ProviderView />} />
+            </Routes>
+          </Suspense>
         </div>
       </BrowserRouter>
     </ToastProvider>

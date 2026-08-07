@@ -75,8 +75,15 @@ const INITIAL_QUEUES = [
 if (!localStorage.getItem('waitless_queues')) {
   localStorage.setItem('waitless_queues', JSON.stringify(INITIAL_QUEUES))
 }
+const FAKE_TOKENS = [
+  { id: 'fake-1', queue_id: 'queue-movies-001', token_number: 'C-001', user_name: 'Rahul Sharma', request_text: '2 Tickets for IMAX Avengers', service_type: 'Movies', urgency: 'high', priority: 1, notes: 'VIP Seats', status: 'in-progress', created_at: new Date(Date.now() - 600000).toISOString() },
+  { id: 'fake-2', queue_id: 'queue-movies-001', token_number: 'C-002', user_name: 'Priya Singh', request_text: 'Popcorn combo pickup', service_type: 'F&B', urgency: 'low', priority: 5, notes: '', status: 'waiting', created_at: new Date(Date.now() - 300000).toISOString() },
+  { id: 'fake-3', queue_id: 'queue-clinic-001', token_number: 'M-001', user_name: 'Amit Kumar', request_text: 'Blood test report collection', service_type: 'Diagnostics', urgency: 'medium', priority: 5, notes: '', status: 'in-progress', created_at: new Date(Date.now() - 900000).toISOString() },
+  { id: 'fake-4', queue_id: 'queue-clinic-001', token_number: 'M-002', user_name: 'Neha Gupta', request_text: 'Routine checkup with Dr. Reddy', service_type: 'Consultation', urgency: 'high', priority: 1, notes: 'Fever since 2 days', status: 'waiting', created_at: new Date(Date.now() - 400000).toISOString() },
+]
+
 if (!localStorage.getItem('waitless_tokens')) {
-  localStorage.setItem('waitless_tokens', JSON.stringify([]))
+  localStorage.setItem('waitless_tokens', JSON.stringify(FAKE_TOKENS))
 }
 
 const db = {
@@ -87,7 +94,14 @@ const db = {
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 /* ─── Queues API ───────────────────────────────────────────────────────── */
+/**
+ * API object handling Queue related operations.
+ */
 export const queuesAPI = {
+  /**
+   * Fetch all active queues with their current stats.
+   * @returns {Promise<{ data: Array }>} List of queues
+   */
   list: async () => {
     await delay(300)
     const queues = db.get('queues')
