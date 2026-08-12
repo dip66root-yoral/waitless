@@ -69,11 +69,12 @@ export const MOVIES = [
     isNew: false,
     isTrending: true,
     poster: {
-      bg: 'linear-gradient(160deg, #080500 0%, #1a1000 50%, #2e1a00 80%, #0d0800 100%)',
-      accent: '#f5a623',
-      accent2: '#ff6b00',
+      bg: 'linear-gradient(160deg, #1f1a14 0%, #0d0a07 100%)',
+      accent: '#c8a97e',
+      accent2: '#d45d2a',
       emoji: '⛏️',
       pattern: 'dust',
+      objectPosition: '20% center', // Focus on Yash on the left side
     },
     // KGF Chapter 2 (real poster via proxy)
     posterUrl: '/posters/movie_kgf_chapter2.jpg',
