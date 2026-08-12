@@ -16,9 +16,8 @@ services:
       - key: GEMINI_API_KEY
         sync: false
 
-  - type: web
+  - type: static
     name: waitless-ui
-    env: static
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
