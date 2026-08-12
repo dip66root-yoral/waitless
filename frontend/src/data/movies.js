@@ -24,8 +24,7 @@ export const MOVIES = [
       emoji: '🕷️',
       pattern: 'web',
     },
-    // Spider-Man: No Way Home (real poster via proxy)
-    posterUrl: '/posters/movie_spiderman.jpg',
+    posterUrl: '/posters/movie_spiderman_brandnewday.jpg',
   },
   {
     id: 'movie-odyssey',
