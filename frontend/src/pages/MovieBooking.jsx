@@ -85,40 +85,55 @@ export default function MovieBooking() {
 
       {/* ── Cinematic hero banner ── */}
       <div style={{ position:'relative', height:'460px', overflow:'hidden' }}>
-        <MoviePoster movie={movie} />
+        <div style={{ position:'absolute', inset:0, filter:'blur(25px) opacity(0.5)', transform:'scale(1.1)' }}>
+          <MoviePoster movie={movie} />
+        </div>
         {/* Left fade for text readability */}
         <div style={{ position:'absolute', inset:0, background:'linear-gradient(105deg,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.7) 40%,rgba(0,0,0,0.15) 70%,transparent 100%)' }}/>
         {/* Bottom fade to page */}
         <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'180px', background:'linear-gradient(to top,#08090f 0%,transparent 100%)' }}/>
 
         {/* Content inside hero */}
-        <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', justifyContent:'flex-end', padding:'40px 48px', maxWidth:'660px' }}>
-          {/* Badges row */}
-          <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:'8px', marginBottom:'16px' }}>
-            {movie.isNew && (
-              <span style={{ fontSize:'11px', fontWeight:800, padding:'4px 12px', borderRadius:'20px', background:'#e50914', color:'#fff', letterSpacing:'0.06em' }}>🔥 NEW RELEASE</span>
-            )}
-            <span style={{ fontSize:'11px', fontWeight:700, padding:'4px 12px', borderRadius:'20px', background:'rgba(255,255,255,0.1)', color:'#fff', backdropFilter:'blur(10px)', border:'1px solid rgba(255,255,255,0.15)' }}>
-              {movie.rating}
-            </span>
-            <span style={{ fontSize:'11px', fontWeight:700, padding:'4px 12px', borderRadius:'20px', background:'rgba(0,0,0,0.5)', color:'#fbbf24', backdropFilter:'blur(10px)', border:'1px solid rgba(245,158,11,0.2)' }}>
-              ⭐ {movie.imdb} IMDb
-            </span>
-            {movie.formats.slice(0,3).map(f => (
-              <span key={f} style={{ fontSize:'11px', fontWeight:700, padding:'4px 11px', borderRadius:'20px', background:'rgba(0,0,0,0.5)', color:'#94a3b8', backdropFilter:'blur(10px)', border:'1px solid rgba(255,255,255,0.1)' }}>{f}</span>
-            ))}
+        <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'flex-end', justifyContent:'space-between', padding:'40px 48px', gap:'40px' }}>
+          
+          <div style={{ display:'flex', flexDirection:'column', justifyContent:'flex-end', maxWidth:'660px' }}>
+            {/* Badges row */}
+            <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:'8px', marginBottom:'16px' }}>
+              {movie.isNew && (
+                <span style={{ fontSize:'11px', fontWeight:800, padding:'4px 12px', borderRadius:'20px', background:'#e50914', color:'#fff', letterSpacing:'0.06em' }}>🔥 NEW RELEASE</span>
+              )}
+              <span style={{ fontSize:'11px', fontWeight:700, padding:'4px 12px', borderRadius:'20px', background:'rgba(255,255,255,0.1)', color:'#fff', backdropFilter:'blur(10px)', border:'1px solid rgba(255,255,255,0.15)' }}>
+                {movie.rating}
+              </span>
+              <span style={{ fontSize:'11px', fontWeight:700, padding:'4px 12px', borderRadius:'20px', background:'rgba(0,0,0,0.5)', color:'#fbbf24', backdropFilter:'blur(10px)', border:'1px solid rgba(245,158,11,0.2)' }}>
+                ⭐ {movie.imdb} IMDb
+              </span>
+              {movie.formats.slice(0,3).map(f => (
+                <span key={f} style={{ fontSize:'11px', fontWeight:700, padding:'4px 11px', borderRadius:'20px', background:'rgba(0,0,0,0.5)', color:'#94a3b8', backdropFilter:'blur(10px)', border:'1px solid rgba(255,255,255,0.1)' }}>{f}</span>
+              ))}
+            </div>
+
+            <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'#fff', lineHeight:1.05, marginBottom:'6px', fontSize:'clamp(28px,5vw,48px)', textShadow:'0 4px 30px rgba(0,0,0,0.5)' }}>
+              {movie.title}
+            </h1>
+            <p style={{ fontSize:'15px', fontWeight:600, color:movie.poster.accent, marginBottom:'10px' }}>{movie.subtitle}</p>
+            <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:'8px' }}>
+              {movie.genre.map(g => (
+                <span key={g} style={{ fontSize:'12px', color:'#94a3b8', padding:'3px 10px', borderRadius:'20px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.08)' }}>{g}</span>
+              ))}
+              <span style={{ color:'#4b5563', fontSize:'12px' }}>· {movie.duration}</span>
+            </div>
           </div>
 
-          <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'#fff', lineHeight:1.05, marginBottom:'6px', fontSize:'clamp(28px,5vw,48px)', textShadow:'0 4px 30px rgba(0,0,0,0.5)' }}>
-            {movie.title}
-          </h1>
-          <p style={{ fontSize:'15px', fontWeight:600, color:movie.poster.accent, marginBottom:'10px' }}>{movie.subtitle}</p>
-          <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:'8px' }}>
-            {movie.genre.map(g => (
-              <span key={g} style={{ fontSize:'12px', color:'#94a3b8', padding:'3px 10px', borderRadius:'20px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.08)' }}>{g}</span>
-            ))}
-            <span style={{ color:'#4b5563', fontSize:'12px' }}>· {movie.duration}</span>
+          {/* UNCROPPED POSTER ON RIGHT */}
+          <div style={{ height:'350px', display: 'flex', alignItems: 'flex-end' }}>
+            <img 
+              src={movie.posterUrl} 
+              alt={movie.title} 
+              style={{ height:'100%', borderRadius:'14px', boxShadow:'0 20px 50px rgba(0,0,0,0.6)', border:`1px solid ${movie.poster.accent}40`, objectFit:'contain' }} 
+            />
           </div>
+
         </div>
       </div>
 
