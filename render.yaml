@@ -24,10 +24,17 @@ services:
     rootDir: frontend
     buildCommand: npm install --include=dev && npm run build
     staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://waitless-api-tv0e.onrender.com/api/*
+      - type: rewrite
+        source: /*
+        destination: /index.html
     envVars:
       - key: NODE_VERSION
         value: "20.18.1"
       - key: VITE_API_URL
-        value: https://waitless-api-tv0e.onrender.com
+        value: ""
       - key: VITE_WS_URL
         value: https://waitless-api-tv0e.onrender.com
