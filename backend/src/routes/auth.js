@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const { db } = require('../db');
+const { onlineUsers } = require('../socket');
 
 const router = express.Router();
 
@@ -72,6 +73,8 @@ router.post('/login', async (req, res) => {
       return res.status(403).json({ error: 'Your account has been suspended.' });
     }
 
+    db.prepare('UPDATE users SET last_login_at = datetime("now") WHERE id = ?').run(user.id);
+
     const tokenPayload = { userId: user.id, role: user.role };
     const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
 
@@ -112,7 +115,14 @@ router.get('/users', (req, res) => {
       return res.status(403).json({ error: 'Forbidden: Admins only' });
     }
 
-    const users = db.prepare('SELECT id, name, email, phone, role, is_active, created_at FROM users ORDER BY created_at DESC').all();
+    const rows = db.prepare('SELECT id, name, email, phone, role, is_active, created_at, last_login_at FROM users ORDER BY created_at DESC').all();
+    
+    // Attach online status
+    const users = rows.map(u => ({
+      ...u,
+      is_online: onlineUsers.has(u.id)
+    }));
+
     return res.json({ users });
   } catch (err) {
     console.error('[Auth] Users error:', err);

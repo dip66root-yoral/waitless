@@ -25,8 +25,9 @@ db.exec(`
     phone TEXT UNIQUE,
     password_hash TEXT NOT NULL,
     role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user', 'provider', 'admin')),
-    is_active INTEGER NOT NULL DEFAULT 1,
-    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    is_active INTEGER DEFAULT 1,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    last_login_at TEXT
   );
 
   CREATE TABLE IF NOT EXISTS queues (
@@ -101,12 +102,14 @@ db.exec(`
 // Automatically make the creator an admin
 db.exec(`UPDATE users SET role = 'admin' WHERE email = 'dip06karmakar@gmail.com';`);
 
-// Fix missing is_active column if database was restored from an old WAL file
+// Fix missing columns if database was restored from an old WAL file
 try {
   db.exec('ALTER TABLE users ADD COLUMN is_active INTEGER DEFAULT 1');
-} catch (e) {
-  // Column already exists, ignore
-}
+} catch (e) {}
+
+try {
+  db.exec('ALTER TABLE users ADD COLUMN last_login_at TEXT');
+} catch (e) {}
 
 // Helper: recalculate positions and wait times for a queue
 function recalculateQueue(queueId) {

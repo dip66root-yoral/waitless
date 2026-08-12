@@ -85,7 +85,9 @@ export default function AdminView() {
                   <th style={{ textAlign: 'left', padding: '16px 20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>User</th>
                   <th style={{ textAlign: 'left', padding: '16px 20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>Contact</th>
                   <th style={{ textAlign: 'left', padding: '16px 20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>Role</th>
+                  <th style={{ textAlign: 'left', padding: '16px 20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>Status</th>
                   <th style={{ textAlign: 'left', padding: '16px 20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>Joined</th>
+                  <th style={{ textAlign: 'left', padding: '16px 20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>Last Login</th>
                   <th style={{ textAlign: 'center', padding: '16px 20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>Access</th>
                 </tr>
               </thead>
@@ -116,8 +118,17 @@ export default function AdminView() {
                         {u.role.toUpperCase()}
                       </span>
                     </td>
+                    <td style={{ padding: '16px 20px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: u.is_online ? '#22c55e' : '#475569', boxShadow: u.is_online ? '0 0 10px #22c55e' : 'none' }} />
+                        <span style={{ color: u.is_online ? '#22c55e' : '#64748b', fontSize: '12px', fontWeight: 600 }}>{u.is_online ? 'Online' : 'Offline'}</span>
+                      </div>
+                    </td>
                     <td style={{ padding: '16px 20px', color: '#94a3b8', fontSize: '13px' }}>
                       {new Date(u.created_at).toLocaleDateString()}
+                    </td>
+                    <td style={{ padding: '16px 20px', color: '#94a3b8', fontSize: '13px' }}>
+                      {u.last_login_at ? new Date(u.last_login_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Never'}
                     </td>
                     <td style={{ padding: '16px 20px', textAlign: 'center' }}>
                       {u.role !== 'admin' ? (
