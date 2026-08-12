@@ -51,7 +51,7 @@ export const MOVIES = [
       pattern: 'stars',
     },
     // Interstellar (real poster via proxy)
-    posterUrl: '/posters/movie_odyssey.jpg',
+    posterUrl: '/posters/movie_space_odyssey.jpg',
   },
   {
     id: 'movie-kgf3',
