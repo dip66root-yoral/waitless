@@ -28,6 +28,6 @@ services:
       - key: NODE_VERSION
         value: "20.18.1"
       - key: VITE_API_URL
-        value: https://waitless-api.onrender.com
+        value: https://waitless-api-tv0e.onrender.com
       - key: VITE_WS_URL
-        value: https://waitless-api.onrender.com
+        value: https://waitless-api-tv0e.onrender.com
