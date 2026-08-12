@@ -29,30 +29,32 @@ function TokenRow({ token, onAction, loadingId, meta }) {
 
   return (
     <div style={{
-      display:'flex', alignItems:'center', gap:'14px',
-      padding:'14px 18px', borderRadius:'14px', transition:'all 0.2s',
-      background: isServing ? meta?.accentDim || 'rgba(229,9,20,0.08)' : 'rgba(255,255,255,0.02)',
-      border: isServing ? `1px solid ${meta?.border || 'rgba(229,9,20,0.2)'}` : '1px solid rgba(255,255,255,0.05)',
-      boxShadow: isServing ? `0 0 24px ${meta?.accentDim}` : 'none',
-      opacity: isDone || isSkipped ? 0.5 : 1,
-    }}>
+      display:'flex', alignItems:'center', gap:'16px',
+      padding:'16px 20px', borderRadius:'16px', transition:'all 0.25s cubic-bezier(0.22,1,0.36,1)',
+      background: isServing ? meta?.accentDim || 'rgba(229,9,20,0.08)' : 'rgba(255,255,255,0.03)',
+      border: isServing ? `1px solid ${meta?.border || 'rgba(229,9,20,0.2)'}` : '1px solid rgba(255,255,255,0.06)',
+      boxShadow: isServing ? `0 8px 32px ${meta?.accentDim}` : 'none',
+      opacity: isDone || isSkipped ? 0.6 : 1,
+      position: 'relative', overflow: 'hidden'
+    }} onMouseEnter={e => { if(isWaiting) { e.currentTarget.style.background='rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.1)' } }} onMouseLeave={e => { if(isWaiting) { e.currentTarget.style.background='rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.06)' } }}>
+      {isServing && <div style={{ position:'absolute', top:0, left:0, width:'4px', height:'100%', background:meta?.accent || '#e50914' }}/>}
 
       {/* Token number badge */}
-      <div style={{ width:'54px', height:'44px', borderRadius:'10px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'13px', flexShrink:0, background: isServing ? (meta?.accent || '#e50914') : '#141520', color: isServing ? '#fff' : '#4b5563', border: isServing ? 'none' : '1px solid rgba(255,255,255,0.06)', letterSpacing:'0.03em' }}>
+      <div style={{ width:'60px', height:'48px', borderRadius:'12px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'16px', flexShrink:0, background: isServing ? (meta?.accent || '#e50914') : 'rgba(255,255,255,0.05)', color: isServing ? '#fff' : '#94a3b8', border: isServing ? 'none' : '1px solid rgba(255,255,255,0.08)', letterSpacing:'0.02em', boxShadow: isServing ? `0 4px 16px ${meta?.accent}40` : 'none' }}>
         {token.token_number}
       </div>
 
       {/* Info */}
       <div style={{ flex:1, minWidth:0 }}>
-        <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:'7px', marginBottom:'3px' }}>
-          <span style={{ fontWeight:700, color:'#fff', fontSize:'14px' }}>{token.user_name}</span>
-          <span style={{ fontSize:'10px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:urg.bg, color:urg.color, border:`1px solid ${urg.border}` }}>{urg.label}</span>
-          {isServing  && <span style={{ fontSize:'10px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(74,222,128,0.12)', color:'#4ade80', border:'1px solid rgba(74,222,128,0.25)' }}>● SERVING</span>}
-          {isDone     && <span style={{ fontSize:'10px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(148,163,184,0.1)', color:'#94a3b8', border:'1px solid rgba(148,163,184,0.2)' }}>✓ DONE</span>}
-          {isSkipped  && <span style={{ fontSize:'10px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(148,163,184,0.07)', color:'#4b5563', border:'1px solid rgba(148,163,184,0.12)' }}>↷ SKIPPED</span>}
-          {isWaiting  && <span style={{ fontSize:'10px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(245,158,11,0.1)', color:'#fbbf24', border:'1px solid rgba(245,158,11,0.2)' }}>⏳ WAITING</span>}
+        <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:'7px', marginBottom:'4px' }}>
+          <span style={{ fontWeight:800, color:'#fff', fontSize:'15px', letterSpacing:'-0.01em' }}>{token.user_name}</span>
+          <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:urg.bg, color:urg.color, border:`1px solid ${urg.border}`, letterSpacing:'0.05em' }}>{urg.label}</span>
+          {isServing  && <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(74,222,128,0.12)', color:'#4ade80', border:'1px solid rgba(74,222,128,0.25)', letterSpacing:'0.05em' }}>● SERVING</span>}
+          {isDone     && <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(148,163,184,0.1)', color:'#94a3b8', border:'1px solid rgba(148,163,184,0.2)', letterSpacing:'0.05em' }}>✓ DONE</span>}
+          {isSkipped  && <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(148,163,184,0.07)', color:'#64748b', border:'1px solid rgba(148,163,184,0.12)', letterSpacing:'0.05em' }}>↷ SKIPPED</span>}
+          {isWaiting  && <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(245,158,11,0.12)', color:'#fbbf24', border:'1px solid rgba(245,158,11,0.25)', letterSpacing:'0.05em' }}>⏳ WAITING</span>}
         </div>
-        <p style={{ fontSize:'12px', color:'#4b5563', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+        <p style={{ fontSize:'13px', color:'#94a3b8', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
           {token.service_type || token.request_text || 'General booking'}
         </p>
         {token.notes && (
@@ -95,10 +97,10 @@ function TokenRow({ token, onAction, loadingId, meta }) {
 /* ─── Stat card ────────────────────────────────────────────────── */
 function StatCard({ icon, value, label, color }) {
   return (
-    <div style={{ borderRadius:'16px', padding:'18px 20px', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.06)', textAlign:'center' }}>
-      <div style={{ fontSize:'22px', marginBottom:'8px' }}>{icon}</div>
-      <div style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'30px', color, lineHeight:1, marginBottom:'5px' }}>{value}</div>
-      <div style={{ fontSize:'12px', color:'#374151', fontWeight:600 }}>{label}</div>
+    <div style={{ borderRadius:'16px', padding:'20px 24px', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.06)', textAlign:'center', transition:'all 0.2s', cursor:'default' }} onMouseEnter={e => { e.currentTarget.style.background='rgba(255,255,255,0.04)'; e.currentTarget.style.transform='translateY(-2px)' }} onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.02)'; e.currentTarget.style.transform='none' }}>
+      <div style={{ fontSize:'24px', marginBottom:'12px' }}>{icon}</div>
+      <div style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'36px', color, lineHeight:1, marginBottom:'6px' }}>{value}</div>
+      <div style={{ fontSize:'13px', color:'#64748b', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>{label}</div>
     </div>
   )
 }
@@ -130,7 +132,7 @@ export default function ProviderView() {
 
   useEffect(() => {
     document.title = 'Counter Dashboard - WAITLESS'
-    queuesAPI.list().then(r => setQueues(r.data || [])).catch(() => addToast('Failed to load queues','error'))
+    queuesAPI.list().then(r => setQueues((r.data || []).filter(q => !q.id.startsWith('queue-stadium') && !q.id.startsWith('queue-match')))).catch(() => addToast('Failed to load queues','error'))
     return () => { clearInterval(pollRef.current); if (socketRef.current) socketRef.current.off('queue:updated') }
   }, [])
 
@@ -188,8 +190,9 @@ export default function ProviderView() {
 
   async function tokenAction(tid, action) {
     setLoadingTokenId(tid)
+    const statusMap = { done: 'done', serve: 'in-progress', skip: 'skipped' }
     try {
-      await tokensAPI.updateStatus(tid, { done:'done', serve:'in-progress', skip:'skipped' }[action])
+      await tokensAPI.updateStatus(tid, statusMap[action])
       addToast({ done:'Marked as done', serve:'Now serving', skip:'Skipped' }[action], action==='skip'?'warning':'success')
       fetchTokens(activeQueue.id)
     } catch (e) { addToast(e.error||'Action failed','error') }
@@ -220,17 +223,33 @@ export default function ProviderView() {
           return (
             <button key={q.id}
               onClick={() => { switchQueue(q); navigate(`/provider/${q.id}`) }}
-              style={{ width:'100%', textAlign:'left', padding:'11px 12px', borderRadius:'12px', cursor:'pointer', transition:'all 0.18s', background: isActive ? m.accentDim : 'transparent', border: `1px solid ${isActive ? m.border : 'transparent'}`, display:'flex', alignItems:'center', gap:'10px' }}>
-              <div style={{ width:'36px', height:'36px', borderRadius:'10px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'18px', flexShrink:0, background: isActive ? `${m.accent}18` : 'rgba(255,255,255,0.04)', border:`1px solid ${isActive ? m.border : 'rgba(255,255,255,0.06)'}` }}>
+              style={{ width:'100%', textAlign:'left', padding:'12px 14px', borderRadius:'14px', cursor:'pointer', transition:'all 0.2s', background: isActive ? m.accentDim : 'transparent', border: `1px solid ${isActive ? m.border : 'transparent'}`, display:'flex', alignItems:'center', gap:'12px' }}
+              onMouseEnter={e => { if(!isActive) e.currentTarget.style.background='rgba(255,255,255,0.03)' }}
+              onMouseLeave={e => { if(!isActive) e.currentTarget.style.background='transparent' }}>
+              <div style={{ width:'38px', height:'38px', borderRadius:'10px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'18px', flexShrink:0, background: isActive ? `${m.accent}20` : 'rgba(255,255,255,0.04)', border:`1px solid ${isActive ? m.border : 'rgba(255,255,255,0.06)'}`, boxShadow: isActive ? `0 4px 12px ${m.accentDim}` : 'none' }}>
                 {m.icon}
               </div>
               <div style={{ minWidth:0 }}>
-                <p style={{ fontWeight:700, fontSize:'13px', color: isActive ? '#fff' : '#64748b', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{q.service_name}</p>
-                <p style={{ fontSize:'11px', color: isActive ? m.accent : '#374151', margin:'2px 0 0', fontWeight: isActive ? 700 : 400 }}>{waiting_count} waiting</p>
+                <p style={{ fontWeight:700, fontSize:'14px', color: isActive ? '#fff' : '#94a3b8', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{q.service_name}</p>
+                <p style={{ fontSize:'12px', color: isActive ? m.accent : '#4b5563', margin:'2px 0 0', fontWeight: isActive ? 700 : 500 }}>{waiting_count} waiting</p>
               </div>
             </button>
           )
         })}
+
+        {/* Hardcoded Sports Counter link to remove the mess */}
+        <button onClick={() => navigate('/stadiums')}
+          style={{ width:'100%', textAlign:'left', padding:'12px 14px', borderRadius:'14px', cursor:'pointer', transition:'all 0.2s', background: 'transparent', border: '1px solid transparent', display:'flex', alignItems:'center', gap:'12px' }}
+          onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.03)'}
+          onMouseLeave={e => e.currentTarget.style.background='transparent'}>
+          <div style={{ width:'38px', height:'38px', borderRadius:'10px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'18px', flexShrink:0, background: 'rgba(245,158,11,0.04)', border:'1px solid rgba(245,158,11,0.06)' }}>
+            🏟️
+          </div>
+          <div style={{ minWidth:0 }}>
+            <p style={{ fontWeight:700, fontSize:'14px', color: '#94a3b8', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>Sports Counters</p>
+            <p style={{ fontSize:'12px', color: '#4b5563', margin:'2px 0 0', fontWeight: 500 }}>View Matches</p>
+          </div>
+        </button>
       </aside>
 
       {/* ═══════════════════════════════════════════════

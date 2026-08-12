@@ -9,14 +9,20 @@ const { initSocket } = require('./socket');
 const queuesRouter = require('./routes/queues');
 const tokensRouter = require('./routes/tokens');
 const geminiRouter = require('./routes/gemini');
+const authRouter = require('./routes/auth');
 
 const app = express();
 const server = http.createServer(app);
 
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 // Socket.io with CORS
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:3000'],
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
   },
@@ -28,7 +34,7 @@ tokensRouterInstance.setIO(io);
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  origin: allowedOrigins,
   credentials: true,
 }));
 app.use(express.json());
@@ -41,6 +47,7 @@ app.use((req, res, next) => {
 });
 
 // Routes
+app.use('/api/auth', authRouter);
 app.use('/api/queues', queuesRouter);
 app.use('/api/tokens', tokensRouter);
 app.use('/api/gemini', geminiRouter);

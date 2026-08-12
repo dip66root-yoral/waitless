@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: waitless-api
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: FRONTEND_URL
+        value: https://waitless-ui.onrender.com
+      - key: GEMINI_API_KEY
+        sync: false
+
+  - type: web
+    name: waitless-ui
+    env: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_URL
+        value: https://waitless-api.onrender.com
+      - key: VITE_WS_URL
+        value: https://waitless-api.onrender.com

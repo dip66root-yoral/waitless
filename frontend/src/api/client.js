@@ -1,289 +1,115 @@
-import DOMPurify from 'dompurify'
+/**
+ * WAITLESS - Real API Client
+ * Connects to the Node.js backend via Axios (REST) and Socket.io (real-time).
+ * Response shape is normalized so callers always receive { data: ... }.
+ */
+import axios from 'axios'
+import { io } from 'socket.io-client'
 
-// Mocked API Client for fully serverless Frontend deployment (using LocalStorage)
+const BASE_URL = import.meta.env.VITE_API_URL || ''
 
-/* ─── Event Emitter (Mock Socket) ────────────────────────────────────────── */
-class MockSocket {
-  constructor() {
-    this.events = {}
-    this.id = 'mock-socket-' + Math.random().toString(36).substr(2, 9)
-  }
-  on(event, listener) {
-    if (!this.events[event]) this.events[event] = []
-    this.events[event].push(listener)
-  }
-  off(event, listener) {
-    if (!this.events[event]) return
-    if (!listener) {
-      this.events[event] = []
-    } else {
-      this.events[event] = this.events[event].filter(l => l !== listener)
+/* ─── Axios instance ──────────────────────────────────────────────────────── */
+const api = axios.create({ baseURL: BASE_URL })
+
+// Attach JWT token to every request automatically
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('waitless_token')
+  if (token) config.headers.Authorization = `Bearer ${token}`
+  return config
+})
+
+// Normalize: backend wraps everything in { success, data }.
+// We unwrap so callers always get { data: <actual payload> }
+api.interceptors.response.use(
+  (res) => {
+    // If the backend returned { success: true, data: ... }, unwrap it
+    if (res.data && typeof res.data === 'object' && 'data' in res.data) {
+      return { ...res, data: res.data.data }
     }
-  }
-  emit(event, ...args) {
-    if (this.events[event]) {
-      this.events[event].forEach(listener => listener(...args))
+    return res
+  },
+  (err) => {
+    if (err.response?.status === 401) {
+      localStorage.removeItem('waitless_token')
+      localStorage.removeItem('waitless_user')
+      window.location.href = '/login'
     }
+    // Surface the backend error message to callers
+    const message = err.response?.data?.error || err.message || 'Request failed'
+    return Promise.reject({ error: message, status: err.response?.status })
   }
-}
+)
 
-const socketInstance = new MockSocket()
-// Alias for easy global triggering of updates
-export const triggerUpdate = () => socketInstance.emit('queue:updated')
+/* ─── Socket.io ───────────────────────────────────────────────────────────── */
+let socketInstance = null
 
+/**
+ * Get (or create) the singleton Socket.io connection.
+ * @returns {import('socket.io-client').Socket}
+ */
 export function getSocket() {
+  if (!socketInstance) {
+    // Connect to backend API URL (or localhost in dev) for WebSocket
+    const WS_URL = import.meta.env.VITE_WS_URL || import.meta.env.VITE_API_URL || 'http://localhost:3001'
+    socketInstance = io(WS_URL, {
+      transports: ['websocket', 'polling'],
+      autoConnect: true,
+    })
+  }
   return socketInstance
 }
 
-/* ─── LocalStorage DB Setup ────────────────────────────────────────────── */
-const INITIAL_QUEUES = [
-  {
-    id: 'queue-movies-001',
-    service_name: 'PVR Cinemas — Ticket Counter',
-    description: 'Movie ticket collection, seat upgrades, F&B combos & group bookings',
-    token_prefix: 'C',
-    avg_service_time: 5,
-    status: 'active',
-  },
-  {
-    id: 'queue-clinic-001',
-    service_name: 'City Medical Center',
-    description: 'OPD consultations, diagnostics, blood tests & specialist referrals',
-    token_prefix: 'M',
-    avg_service_time: 15,
-    status: 'active',
-  },
-  {
-    id: 'queue-train-001',
-    service_name: 'Indian Railways Booking',
-    description: 'Train ticket reservations, cancellations, PNR enquiry & passes',
-    token_prefix: 'T',
-    avg_service_time: 12,
-    status: 'active',
-  },
-  {
-    id: 'queue-flight-001',
-    service_name: 'Airport Services Counter',
-    description: 'Flight booking, web check-in, baggage claim & boarding passes',
-    token_prefix: 'F',
-    avg_service_time: 10,
-    status: 'active',
-  },
-]
-
-// Initialize DB if empty
-if (!localStorage.getItem('waitless_queues')) {
-  localStorage.setItem('waitless_queues', JSON.stringify(INITIAL_QUEUES))
-}
-const FAKE_TOKENS = [
-  { id: 'fake-1', queue_id: 'queue-movies-001', token_number: 'C-001', user_name: 'Rahul Sharma', request_text: '2 Tickets for IMAX Avengers', service_type: 'Movies', urgency: 'high', priority: 1, notes: 'VIP Seats', status: 'in-progress', created_at: new Date(Date.now() - 600000).toISOString() },
-  { id: 'fake-2', queue_id: 'queue-movies-001', token_number: 'C-002', user_name: 'Priya Singh', request_text: 'Popcorn combo pickup', service_type: 'F&B', urgency: 'low', priority: 5, notes: '', status: 'waiting', created_at: new Date(Date.now() - 300000).toISOString() },
-  { id: 'fake-3', queue_id: 'queue-clinic-001', token_number: 'M-001', user_name: 'Amit Kumar', request_text: 'Blood test report collection', service_type: 'Diagnostics', urgency: 'medium', priority: 5, notes: '', status: 'in-progress', created_at: new Date(Date.now() - 900000).toISOString() },
-  { id: 'fake-4', queue_id: 'queue-clinic-001', token_number: 'M-002', user_name: 'Neha Gupta', request_text: 'Routine checkup with Dr. Reddy', service_type: 'Consultation', urgency: 'high', priority: 1, notes: 'Fever since 2 days', status: 'waiting', created_at: new Date(Date.now() - 400000).toISOString() },
-]
-
-if (!localStorage.getItem('waitless_tokens')) {
-  localStorage.setItem('waitless_tokens', JSON.stringify(FAKE_TOKENS))
+/* ─── Auth API ────────────────────────────────────────────────────────────── */
+export const authAPI = {
+  /** Register a new user. */
+  register: (data) => api.post('/api/auth/register', data),
+  /** Login with email/phone + password. */
+  login: (data) => api.post('/api/auth/login', data),
+  /** Fetch currently authenticated user. */
+  me: () => api.get('/api/auth/me'),
+  /** Fetch all registered users (admin only). */
+  users: () => api.get('/api/auth/users'),
+  /** Update user active status (admin only). */
+  updateUserStatus: (id, isActive) => api.patch(`/api/auth/users/${id}/status`, { isActive }),
+  /** Fetch support tickets. */
+  getSupportTickets: () => api.get('/api/auth/support-tickets'),
+  /** Resolve a support ticket. */
+  resolveSupportTicket: (id) => api.patch(`/api/auth/support-tickets/${id}/resolve`),
 }
 
-const db = {
-  get: (key) => JSON.parse(localStorage.getItem(`waitless_${key}`) || '[]'),
-  set: (key, data) => localStorage.setItem(`waitless_${key}`, JSON.stringify(data)),
-}
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
-/* ─── Queues API ───────────────────────────────────────────────────────── */
-/**
- * API object handling Queue related operations.
- */
+/* ─── Queues API ──────────────────────────────────────────────────────────── */
 export const queuesAPI = {
-  /**
-   * Fetch all active queues with their current stats.
-   * @returns {Promise<{ data: Array }>} List of queues
-   */
-  list: async () => {
-    await delay(300)
-    const queues = db.get('queues')
-    const tokens = db.get('tokens')
-    // Calculate stats per queue
-    const data = queues.map(q => {
-      const qTokens = tokens.filter(t => t.queue_id === q.id)
-      return {
-        ...q,
-        stats: {
-          waiting_count: qTokens.filter(t => t.status === 'waiting').length,
-          serving_count: qTokens.filter(t => t.status === 'in-progress').length,
-        }
-      }
-    })
-    return { data }
-  },
-  get: async (id) => {
-    await delay(200)
-    const q = db.get('queues').find(q => q.id === id)
-    if (!q) throw { error: 'Queue not found' }
-    return { data: q }
-  }
+  /** List all active queues with live stats. */
+  list: () => api.get('/api/queues'),
+  /** Get a single queue + its tokens. */
+  get: (id) => api.get(`/api/queues/${id}`),
+  /** Create a new queue. */
+  create: (data) => api.post('/api/queues', data),
+  /** Update queue status (active / paused / closed). */
+  updateStatus: (id, status) => api.patch(`/api/queues/${id}/status`, { status }),
 }
 
-/* ─── Tokens API ───────────────────────────────────────────────────────── */
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
-    return v.toString(16)
-  })
-}
-
+/* ─── Tokens API ──────────────────────────────────────────────────────────── */
 export const tokensAPI = {
-  get: async (id) => {
-    await delay(200)
-    const token = db.get('tokens').find(t => t.id === id)
-    if (!token) throw { error: 'Token not found' }
-    
-    // Recalculate position
-    if (token.status === 'waiting') {
-      const qTokens = db.get('tokens').filter(t => t.queue_id === token.queue_id && t.status === 'waiting')
-      // Sort by priority then date
-      qTokens.sort((a, b) => b.priority - a.priority || new Date(a.created_at) - new Date(b.created_at))
-      const pos = qTokens.findIndex(t => t.id === token.id) + 1
-      token.position = pos
-      
-      const q = db.get('queues').find(q => q.id === token.queue_id)
-      token.estimated_wait_time = pos * (q?.avg_service_time || 10)
-    }
-
-    return { data: token }
-  },
-  
-  getByQueue: async (queueId) => {
-    await delay(300)
-    const tokens = db.get('tokens').filter(t => t.queue_id === queueId)
-    const waiting = tokens.filter(t => t.status === 'waiting')
-    const serving = tokens.filter(t => t.status === 'in-progress')
-    
-    // Assign positions
-    waiting.sort((a, b) => b.priority - a.priority || new Date(a.created_at) - new Date(b.created_at))
-    waiting.forEach((t, i) => t.position = i + 1)
-
-    return {
-      data: {
-        tokens,
-        stats: {
-          waiting: waiting.length,
-          serving: serving.length,
-          done: tokens.filter(t => t.status === 'done').length,
-          skipped: tokens.filter(t => t.status === 'skipped').length,
-        }
-      }
-    }
-  },
-
-  create: async (data) => {
-    await delay(500)
-    const q = db.get('queues').find(q => q.id === data.queue_id)
-    if (!q) throw { error: 'Queue not found' }
-
-    const tokens = db.get('tokens')
-    // Generate token number (e.g. C-001)
-    const qTokens = tokens.filter(t => t.queue_id === data.queue_id)
-    const number = `${q.token_prefix}-${String(qTokens.length + 1).padStart(3, '0')}`
-
-    const priorityMap = { high: 10, medium: 5, low: 1 }
-
-    const newToken = {
-      id: uuidv4(),
-      queue_id: data.queue_id,
-      token_number: number,
-      user_name: DOMPurify.sanitize(data.user_name || 'Guest'),
-      request_text: DOMPurify.sanitize(data.request_text || ''),
-      service_type: data.service_type || 'General Service',
-      urgency: data.urgency || 'medium',
-      priority: priorityMap[data.urgency || 'medium'] || 5,
-      notes: DOMPurify.sanitize(data.notes || ''),
-      status: 'waiting',
-      created_at: new Date().toISOString()
-    }
-
-    tokens.push(newToken)
-    db.set('tokens', tokens)
-    triggerUpdate()
-    return { data: newToken }
-  },
-
-  updateStatus: async (id, status) => {
-    await delay(300)
-    const tokens = db.get('tokens')
-    const idx = tokens.findIndex(t => t.id === id)
-    if (idx === -1) throw { error: 'Token not found' }
-    
-    tokens[idx].status = status
-    db.set('tokens', tokens)
-    triggerUpdate()
-    return { data: tokens[idx] }
-  },
-
-  callNext: async (queueId) => {
-    await delay(400)
-    const tokens = db.get('tokens')
-    const waiting = tokens.filter(t => t.queue_id === queueId && t.status === 'waiting')
-    
-    if (waiting.length === 0) return { data: null }
-
-    waiting.sort((a, b) => b.priority - a.priority || new Date(a.created_at) - new Date(b.created_at))
-    const nextToken = waiting[0]
-    
-    const idx = tokens.findIndex(t => t.id === nextToken.id)
-    tokens[idx].status = 'in-progress'
-    
-    db.set('tokens', tokens)
-    triggerUpdate()
-    return { data: tokens[idx] }
-  },
+  /** Create a new booking token. */
+  create: (data) => api.post('/api/tokens', data),
+  /** Get a single token (returns { token, queue, peopleAhead }). */
+  get: (id) => api.get(`/api/tokens/${id}`),
+  /** Get all tokens + stats for a queue (returns { tokens, stats }). */
+  getByQueue: (queueId) => api.get(`/api/tokens/queue/${queueId}`),
+  /** Call the next waiting token. */
+  callNext: (queueId) => api.post(`/api/tokens/queue/${queueId}/next`),
+  /** Skip the current in-progress token. */
+  skip: (queueId) => api.post(`/api/tokens/queue/${queueId}/skip`),
+  /** Update a token's status directly. */
+  updateStatus: (id, status) => api.patch(`/api/tokens/${id}/status`, { status }),
 }
 
-/* ─── Gemini API (Mocked) ──────────────────────────────────────────────── */
+/* ─── Gemini AI API ───────────────────────────────────────────────────────── */
 export const geminiAPI = {
-  parse: async (text) => {
-    await delay(1200) // Simulate AI thinking time
-    
-    let urgency = 'medium'
-    let service_type = 'General Inquiry'
-    let notes = ''
-    let queue_id = null
-
-    const lower = text.toLowerCase()
-    
-    // Simple heuristic parsing
-    if (lower.includes('urgent') || lower.includes('emergency') || lower.includes('asap')) {
-      urgency = 'high'
-    }
-    
-    if (lower.includes('movie') || lower.includes('ticket') || lower.includes('cinema')) {
-      queue_id = 'queue-movies-001'
-      service_type = 'Ticket Booking'
-    } else if (lower.includes('doctor') || lower.includes('pain') || lower.includes('hospital')) {
-      queue_id = 'queue-clinic-001'
-      service_type = 'Medical Consultation'
-    } else if (lower.includes('train') || lower.includes('pnr')) {
-      queue_id = 'queue-train-001'
-      service_type = 'Railway Inquiry'
-    } else if (lower.includes('flight') || lower.includes('airport')) {
-      queue_id = 'queue-flight-001'
-      service_type = 'Flight Services'
-    }
-
-    if (text.length > 20) {
-      notes = text.substring(0, 50) + '...'
-    }
-
-    return {
-      data: {
-        queue_id,
-        urgency,
-        service_type,
-        notes
-      }
-    }
-  }
+  /**
+   * Parse a natural-language request using Gemini AI.
+   * @param {string} text
+   */
+  parse: (text) => api.post('/api/gemini/parse', { text }),
 }

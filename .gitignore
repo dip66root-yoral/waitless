@@ -11,3 +11,7 @@ node.zip
 .DS_Store
 frontend/.vite/
 backend/data/
+mingit/
+mingit.zip
+portable-git/
+git.exe

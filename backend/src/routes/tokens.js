@@ -243,4 +243,20 @@ router.get('/queue/:queueId', (req, res) => {
   }
 });
 
+// GET /api/tokens/user/:phone — get all tokens for a user by phone
+router.get('/user/:phone', (req, res) => {
+  try {
+    const tokens = db.prepare(`
+      SELECT t.*, q.service_name 
+      FROM tokens t
+      JOIN queues q ON t.queue_id = q.id
+      WHERE t.phone = ?
+      ORDER BY t.created_at DESC
+    `).all(req.params.phone);
+    res.json({ success: true, data: tokens });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 module.exports = router;

@@ -18,6 +18,17 @@ db.pragma('foreign_keys = ON');
 
 // Create schema
 db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE,
+    phone TEXT UNIQUE,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user', 'provider', 'admin')),
+    is_active INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
   CREATE TABLE IF NOT EXISTS queues (
     id TEXT PRIMARY KEY,
     service_name TEXT NOT NULL,
@@ -53,6 +64,38 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_tokens_queue_id ON tokens(queue_id);
   CREATE INDEX IF NOT EXISTS idx_tokens_status ON tokens(status);
+  CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+  CREATE INDEX IF NOT EXISTS idx_users_phone ON users(phone);
+
+  CREATE TABLE IF NOT EXISTS support_tickets (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    user_name TEXT,
+    question TEXT NOT NULL,
+    ai_response TEXT,
+    status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open', 'closed')),
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  );
+`);
+
+// Seed default queues if they do not exist
+db.exec(`
+  INSERT OR IGNORE INTO queues (id, service_name, description, token_prefix, avg_service_time) VALUES
+  ('queue-clinic-001', 'City Medical Center', 'OPD Consultations and checkups', 'C', 15),
+  ('queue-train-001', 'Indian Railways Booking', 'Train reservations and Tatkal', 'T', 12),
+  ('queue-flight-001', 'Airport Check-in', 'Flight check-in and baggage drop', 'F', 10),
+  ('queue-stadium-eden', 'Eden Gardens Ticket Counter', 'Cricket match entry and VIP Box', 'E', 3),
+  ('queue-stadium-modi', 'Narendra Modi Stadium Counter', 'Cricket match entry and General Gallery', 'M', 5),
+  ('queue-stadium-wankhede', 'Wankhede Stadium Counter', 'Cricket match entry and VIP Box', 'W', 4),
+  ('queue-stadium-saltlake', 'Salt Lake Stadium Counter', 'Football match entry and VIP Box', 'S', 4),
+  ('queue-stadium-oldtrafford', 'Old Trafford Ticket Counter', 'Football match entry and Sir Alex Stand', 'O', 6),
+  ('queue-match-manu-city', 'Man United vs Man City', 'Premier League Derby Match Entry', 'M', 3),
+  ('queue-match-che-liv', 'Chelsea vs Liverpool', 'Premier League Match Entry', 'C', 3),
+  ('queue-match-barca-real', 'Barcelona vs Real Madrid', 'El Clasico Match Entry', 'B', 3),
+  ('queue-match-ind-aus', 'India vs Australia', 'International T20 Match Entry', 'I', 3),
+  ('queue-match-ind-sa', 'India vs South Africa', 'International ODI Match Entry', 'I', 3),
+  ('queue-match-csk-mi', 'CSK vs MI', 'IPL Match Entry', 'C', 3);
 `);
 
 // Helper: recalculate positions and wait times for a queue

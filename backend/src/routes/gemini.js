@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { db } = require('../db.js');
+const { v4: uuidv4 } = require('uuid');
 
 const SYSTEM_PROMPT = `You are an AI assistant for a smart queue management system called QueueIQ.
 Your task is to parse a user's free-form service request text and extract structured information.
@@ -124,5 +126,57 @@ function ruleBasedParser(text) {
     notes: text.length > 100 ? text.substring(0, 100) + '...' : text,
   };
 }
+
+// POST /api/gemini/help — AI help center chatbot
+router.post('/help', async (req, res) => {
+  const { text, userId, userName } = req.body;
+  if (!text || text.trim().length === 0) {
+    return res.status(400).json({ success: false, error: 'text is required' });
+  }
+
+  try {
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
+    const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
+
+    const prompt = `You are a helpful customer support AI for WAITLESS (a queue management & booking platform).
+The user is asking: "${text}"
+
+Answer their question politely and concisely.
+IMPORTANT: At the very end of your response, output a boolean flag indicating if this issue requires human admin attention (e.g. they want a refund, they are very angry, they have a bug).
+Format your entire output exactly like this JSON:
+{
+  "reply": "Your helpful response here.",
+  "needs_admin": true/false
+}`;
+
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.2 },
+    });
+
+    const responseText = result.response.text().trim();
+    const cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    
+    let parsed;
+    try {
+      parsed = JSON.parse(cleaned);
+    } catch(e) {
+      // Fallback if AI didn't return JSON
+      parsed = { reply: responseText, needs_admin: false };
+    }
+
+    if (parsed.needs_admin && userId) {
+      db.prepare(`
+        INSERT INTO support_tickets (id, user_id, user_name, question, ai_response, status)
+        VALUES (?, ?, ?, ?, ?, 'open')
+      `).run(uuidv4(), userId, userName || 'User', text, parsed.reply);
+    }
+
+    res.json({ success: true, reply: parsed.reply, forwarded: parsed.needs_admin });
+  } catch (err) {
+    console.error('Gemini Help Error:', err.message);
+    res.json({ success: true, reply: "I'm sorry, I'm having trouble connecting to my brain right now. Please try again later.", forwarded: false });
+  }
+});
 
 module.exports = router;

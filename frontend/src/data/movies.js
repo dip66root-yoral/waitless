@@ -24,6 +24,8 @@ export const MOVIES = [
       emoji: '🕷️',
       pattern: 'web',
     },
+    // Spider-Man: No Way Home (real poster via proxy)
+    posterUrl: '/tmdb-img/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg',
   },
   {
     id: 'movie-odyssey',
@@ -48,6 +50,8 @@ export const MOVIES = [
       emoji: '🪐',
       pattern: 'stars',
     },
+    // Interstellar (real poster via proxy)
+    posterUrl: '/tmdb-img/t/p/w500/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg',
   },
   {
     id: 'movie-kgf3',
@@ -72,6 +76,8 @@ export const MOVIES = [
       emoji: '⛏️',
       pattern: 'dust',
     },
+    // KGF Chapter 2 (real poster via proxy)
+    posterUrl: '/tmdb-img/t/p/w500/khNVygolU0TxLIDWff5tQlAhZ23.jpg',
   },
   {
     id: 'movie-pushpa3',
@@ -96,6 +102,8 @@ export const MOVIES = [
       emoji: '🌹',
       pattern: 'fire',
     },
+    // Pushpa The Rise (real poster via proxy)
+    posterUrl: '/tmdb-img/t/p/w500/4DpNRjV7ITZ1GzCvrvCk86th0w.jpg',
   },
   {
     id: 'movie-avatar3',
@@ -120,6 +128,8 @@ export const MOVIES = [
       emoji: '🌿',
       pattern: 'biolum',
     },
+    // Avatar Way of Water (real poster via proxy)
+    posterUrl: '/tmdb-img/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg',
   },
 ]
 

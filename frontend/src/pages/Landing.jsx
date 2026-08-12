@@ -2,155 +2,54 @@ import { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { queuesAPI } from '../api/client.js'
 import { MOVIES } from '../data/movies.js'
+import { STADIUMS } from '../data/stadiums.js'
 
 /* ─── Constants ────────────────────────────────────────────────── */
 const MAX_W = '1160px'
 const NAV_H = '60px'
 
-/* ═══════════════════════════════════════════════════════════════
-   PREMIUM CINEMA POSTER — each movie gets unique visual treatment
-═══════════════════════════════════════════════════════════════ */
-function CinemaPoster({ movie, height = '100%' }) {
-  const { poster, title, genre, rating } = movie
-
-  // Each pattern style is unique to the film
-  const renderPattern = () => {
-    switch (poster.pattern) {
-      case 'web': // Spider-Man
-        return (
-          <>
-            {/* Radial web lines from corner */}
-            <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.15 }} viewBox="0 0 300 450" preserveAspectRatio="xMidYMid slice">
-              {[...Array(12)].map((_,i) => <line key={i} x1="280" y1="420" x2={i*28} y2="0" stroke={poster.accent} strokeWidth="0.8"/>)}
-              {[60,130,200,270,340].map(r => <circle key={r} cx="280" cy="420" r={r} fill="none" stroke={poster.accent} strokeWidth="0.7" opacity="0.8"/>)}
-            </svg>
-            {/* Red glow burst from corner */}
-            <div style={{ position:'absolute', bottom:'-20px', right:'-20px', width:'220px', height:'220px', borderRadius:'50%', background:`radial-gradient(circle, ${poster.accent}35 0%, transparent 70%)` }}/>
-            {/* Blue glow top left */}
-            <div style={{ position:'absolute', top:'-10px', left:'-10px', width:'150px', height:'150px', borderRadius:'50%', background:`radial-gradient(circle, ${poster.accent2}25 0%, transparent 70%)` }}/>
-          </>
-        )
-      case 'stars': // Odyssey
-        return (
-          <>
-            {/* Star field */}
-            {[...Array(60)].map((_,i) => (
-              <div key={i} style={{ position:'absolute', borderRadius:'50%', background:'#fff', width: i%6===0?'2.5px':i%3===0?'1.5px':'1px', height: i%6===0?'2.5px':i%3===0?'1.5px':'1px', left:`${(i*41+7)%100}%`, top:`${(i*67+13)%100}%`, opacity: 0.08 + (i%7)*0.08 }}/>
-            ))}
-            {/* Planet ring */}
-            <div style={{ position:'absolute', top:'18%', right:'8%', width:'90px', height:'90px', borderRadius:'50%', background:`radial-gradient(circle at 35% 35%, ${poster.accent}60 0%, ${poster.accent}20 50%, transparent 70%)`, boxShadow:`0 0 30px ${poster.accent}40`}}>
-              {/* Ring around planet */}
-              <div style={{ position:'absolute', top:'50%', left:'-30%', right:'-30%', height:'12px', borderRadius:'50%', border:`2px solid ${poster.accent}50`, transform:'translateY(-50%) rotateX(70deg)' }}/>
-            </div>
-            {/* Nebula glow */}
-            <div style={{ position:'absolute', top:'30%', left:'20%', width:'180px', height:'120px', borderRadius:'50%', background:`radial-gradient(ellipse, ${poster.accent2}20 0%, transparent 70%)` }}/>
-          </>
-        )
-      case 'fire': // Pushpa
-        return (
-          <>
-            {/* Fire gradient from bottom */}
-            <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'55%', background:`linear-gradient(to top, ${poster.accent}40 0%, ${poster.accent2}20 40%, transparent 100%)` }}/>
-            {/* Hot glow */}
-            <div style={{ position:'absolute', bottom:'-30px', left:'50%', transform:'translateX(-50%)', width:'300px', height:'200px', borderRadius:'50%', background:`radial-gradient(circle, ${poster.accent}30 0%, transparent 70%)` }}/>
-            {/* Diagonal slash accent */}
-            <div style={{ position:'absolute', top:'10%', left:'-20%', width:'200%', height:'3px', background:`linear-gradient(90deg, transparent, ${poster.accent}60, transparent)`, transform:'rotate(-15deg)' }}/>
-            <div style={{ position:'absolute', top:'25%', left:'-20%', width:'200%', height:'1px', background:`linear-gradient(90deg, transparent, ${poster.accent2}40, transparent)`, transform:'rotate(-15deg)' }}/>
-          </>
-        )
-      case 'dust': // KGF
-        return (
-          <>
-            {/* Gold dust particles */}
-            {[...Array(20)].map((_,i) => (
-              <div key={i} style={{ position:'absolute', width: i%4===0?'3px':'2px', height: i%4===0?'3px':'2px', borderRadius:'50%', background: poster.accent, left:`${(i*47+11)%100}%`, top:`${(i*73+17)%100}%`, opacity: 0.1 + (i%5)*0.08 }}/>
-            ))}
-            {/* Gold explosion from bottom center */}
-            <div style={{ position:'absolute', bottom:'-40px', left:'50%', transform:'translateX(-50%)', width:'350px', height:'250px', borderRadius:'50%', background:`radial-gradient(circle, ${poster.accent}25 0%, transparent 65%)` }}/>
-            {/* Dark rock texture lines */}
-            {[20,40,60,80].map(y => (
-              <div key={y} style={{ position:'absolute', left:0, right:0, top:`${y}%`, height:'1px', background:`linear-gradient(90deg,transparent,${poster.accent}15,transparent)` }}/>
-            ))}
-          </>
-        )
-      case 'biolum': // Avatar
-        return (
-          <>
-            {/* Bioluminescent dots */}
-            {[...Array(25)].map((_,i) => (
-              <div key={i} style={{ position:'absolute', width:'4px', height:'4px', borderRadius:'50%', background: i%2===0?poster.accent:poster.accent2, left:`${(i*43+9)%100}%`, top:`${(i*71+15)%100}%`, opacity: 0.12 + (i%6)*0.07, boxShadow:`0 0 6px ${i%2===0?poster.accent:poster.accent2}` }}/>
-            ))}
-            {/* Forest glow from sides */}
-            <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse 40% 80% at 10% 60%, ${poster.accent}18 0%, transparent 60%)` }}/>
-            <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse 40% 80% at 90% 40%, ${poster.accent2}15 0%, transparent 60%)` }}/>
-            {/* Volcano glow from bottom right */}
-            <div style={{ position:'absolute', bottom:'-20px', right:'10%', width:'180px', height:'180px', borderRadius:'50%', background:`radial-gradient(circle, ${poster.accent2}30 0%, transparent 70%)` }}/>
-          </>
-        )
-      default:
-        return null
-    }
-  }
-
-  return (
-    <div style={{ position:'relative', width:'100%', height, background:poster.bg, overflow:'hidden', borderRadius:'inherit' }}>
-      {/* Base atmosphere */}
-      <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse 80% 60% at 50% 30%, ${poster.accent}20 0%, transparent 65%)` }}/>
-
-      {/* Pattern layer */}
-      {renderPattern()}
-
-      {/* Center hero emoji — large & dramatic */}
-      <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', pointerEvents:'none', userSelect:'none' }}>
-        <span style={{ fontSize:'5.5rem', filter:`drop-shadow(0 0 24px ${poster.accent}80)`, opacity:0.35, transform:'translateY(-10%)' }}>
-          {poster.emoji}
-        </span>
-      </div>
-
-      {/* Top accent bar */}
-      <div style={{ position:'absolute', top:0, left:0, right:0, height:'3px', background:`linear-gradient(90deg, transparent, ${poster.accent}, transparent)` }}/>
-
-      {/* Bottom info gradient */}
-      <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'68%', background:'linear-gradient(to top, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.7) 40%, transparent 100%)' }}/>
-    </div>
-  )
-}
+import { MoviePoster } from '../components/MoviePoster.jsx'
 
 /* ─── Movie Card (landing grid) ────────────────────────────────── */
 function MovieCard({ movie }) {
   const [hov, setHov] = useState(false)
   return (
-    <Link to={`/movie/${movie.id}`} style={{ textDecoration:'none', display:'block' }}
+    <Link to={`/movie/${movie.id}`} style={{ textDecoration:'none', display:'block', height:'100%' }}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       <div style={{
-        position:'relative', borderRadius:'14px', overflow:'hidden', aspectRatio:'2/3',
-        border:`1px solid ${hov ? movie.poster.accent+'60' : 'rgba(255,255,255,0.08)'}`,
-        boxShadow: hov ? `0 0 28px ${movie.poster.accent}25, 0 12px 40px rgba(0,0,0,0.7)` : '0 4px 20px rgba(0,0,0,0.5)',
-        transform: hov ? 'translateY(-7px) scale(1.01)' : 'none',
-        transition:'all 0.28s cubic-bezier(.22,.68,0,1.2)',
+        position:'relative', borderRadius:'20px', overflow:'hidden', height:'100%', display:'flex', flexDirection:'column',
+        border:`1px solid ${hov ? movie.poster.accent+'80' : 'rgba(255,255,255,0.08)'}`,
+        boxShadow: hov ? `0 0 32px ${movie.poster.accent}30, 0 16px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1)` : '0 8px 24px rgba(0,0,0,0.6)',
+        transform: hov ? 'translateY(-8px) scale(1.02)' : 'none',
+        transition:'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
       }}>
-        <CinemaPoster movie={movie} />
+        <div style={{ position:'relative', aspectRatio:'2/3', width:'100%' }}>
+          <MoviePoster movie={movie} />
+          {/* Info gradient overlay */}
+          <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'80%', background:'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 30%, transparent 100%)' }}/>
+        </div>
 
         {/* NEW badge */}
         {movie.isNew && (
-          <div style={{ position:'absolute', top:'10px', left:'10px', background:'#e50914', color:'#fff', fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'4px', zIndex:3, letterSpacing:'0.05em' }}>NEW</div>
+          <div style={{ position:'absolute', top:'12px', left:'12px', background:'#e50914', color:'#fff', fontSize:'10px', fontWeight:800, padding:'3px 10px', borderRadius:'6px', zIndex:3, letterSpacing:'0.05em', boxShadow:'0 4px 12px rgba(229,9,20,0.4)' }}>NEW</div>
         )}
         {/* Rating */}
-        <div style={{ position:'absolute', top:'10px', right:'10px', background:'rgba(0,0,0,0.85)', color:movie.poster.accent, fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'4px', border:`1px solid ${movie.poster.accent}50`, zIndex:3 }}>
+        <div style={{ position:'absolute', top:'12px', right:'12px', background:'rgba(0,0,0,0.7)', backdropFilter:'blur(8px)', color:movie.poster.accent, fontSize:'11px', fontWeight:800, padding:'3px 10px', borderRadius:'6px', border:`1px solid ${movie.poster.accent}60`, zIndex:3 }}>
           {movie.rating}
         </div>
 
         {/* Info overlay */}
-        <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'14px', zIndex:3 }}>
-          <div style={{ display:'flex', alignItems:'center', gap:'5px', marginBottom:'3px' }}>
-            <span style={{ color:'#fbbf24', fontSize:'10px', fontWeight:700 }}>⭐ {movie.imdb}</span>
-            <span style={{ color:'#374151' }}>·</span>
-            <span style={{ color:'#6b7280', fontSize:'10px' }}>{movie.duration}</span>
+        <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'16px', zIndex:3, display:'flex', flexDirection:'column', justifyContent:'flex-end' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:'6px', marginBottom:'4px' }}>
+            <span style={{ color:'#fbbf24', fontSize:'11px', fontWeight:800 }}>⭐ {movie.imdb}</span>
+            <span style={{ color:'#4b5563' }}>·</span>
+            <span style={{ color:'#94a3b8', fontSize:'11px', fontWeight:600 }}>{movie.duration}</span>
           </div>
-          <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'#fff', fontSize:'12px', lineHeight:1.35, marginBottom:'3px' }}>{movie.title}</h3>
-          <p style={{ color:movie.poster.accent, fontSize:'10px', marginBottom: hov?'10px':'0', transition:'margin 0.2s' }}>{movie.genre.slice(0,2).join(' · ')}</p>
-          <div style={{ overflow:'hidden', maxHeight: hov?'40px':'0', transition:'max-height 0.25s ease', opacity: hov?1:0 }}>
-            <div className="btn-book" style={{ padding:'6px 10px', fontSize:'11px', width:'100%', borderRadius:'9px', textAlign:'center', display:'block' }}>
+          <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'#fff', fontSize:'16px', lineHeight:1.2, marginBottom:'4px', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden', letterSpacing:'-0.01em' }}>{movie.title}</h3>
+          <p style={{ color:movie.poster.accent, fontSize:'11px', fontWeight:700, marginBottom: hov?'12px':'0', transition:'margin 0.3s cubic-bezier(0.25, 1, 0.5, 1)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{movie.genre.join(' · ')}</p>
+          
+          <div style={{ overflow:'hidden', maxHeight: hov?'44px':'0', transition:'max-height 0.3s cubic-bezier(0.25, 1, 0.5, 1)', opacity: hov?1:0 }}>
+            <div className="btn-book" style={{ padding:'8px 12px', fontSize:'13px', width:'100%', borderRadius:'10px', textAlign:'center', display:'block', background: movie.poster.accent, color:'#fff' }}>
               Book Tickets →
             </div>
           </div>
@@ -167,46 +66,52 @@ function HubCard({ hub, waiting, wait, onClick }) {
 
   const handleClick = (e) => {
     e.preventDefault()
-    if (onClick) onClick()
-    else navigate('/user')
+    if (onClick) onClick()           // movies → scroll to section
+    else navigate(hub.route || '/user')
   }
 
   return (
     <div onClick={handleClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
-        borderRadius:'18px', overflow:'hidden', cursor:'pointer',
-        background:hub.bg, border:`1px solid ${hov ? hub.accent+'50' : hub.border}`,
-        boxShadow: hov ? `0 0 40px ${hub.accentDim}, 0 8px 32px rgba(0,0,0,0.5)` : '0 4px 24px rgba(0,0,0,0.35)',
-        transform: hov ? 'translateY(-4px)' : 'none',
-        transition:'all 0.25s ease',
+        borderRadius:'24px', overflow:'hidden', cursor:'pointer', position: 'relative',
+        background: hub.bg, 
+        border:`1px solid ${hov ? hub.accent+'60' : hub.border}`,
+        boxShadow: hov ? `0 0 40px ${hub.accentDim}, 0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)` : '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+        transform: hov ? 'translateY(-6px)' : 'none',
+        transition:'all 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
       }}>
-      <div style={{ padding:'22px 22px 18px' }}>
-        <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:'14px' }}>
-          <span style={{ fontSize:'30px', lineHeight:1 }}>{hub.icon}</span>
+      {/* Top glowing edge on hover */}
+      <div style={{ position:'absolute', top:0, left:0, right:0, height:'2px', background: hov ? hub.accent : 'transparent', boxShadow: hov ? `0 0 20px ${hub.accent}` : 'none', transition:'all 0.3s' }}/>
+      
+      <div style={{ padding:'32px 28px 24px' }}>
+        <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:'20px' }}>
+          <span style={{ fontSize:'42px', lineHeight:1, filter: hov ? `drop-shadow(0 0 16px ${hub.accent}80)` : 'none', transition:'filter 0.3s' }}>{hub.icon}</span>
           {hub.queueId ? (
             <div style={{ textAlign:'right' }}>
-              <div style={{ display:'flex', alignItems:'center', gap:'5px', justifyContent:'flex-end', marginBottom:'2px' }}>
-                <div style={{ width:'5px', height:'5px', borderRadius:'50%', background:hub.accent, animation:'live-pulse 1.8s ease infinite' }}/>
-                <span style={{ fontSize:'10px', fontWeight:700, color:hub.accent }}>LIVE</span>
+              <div style={{ display:'flex', alignItems:'center', gap:'6px', justifyContent:'flex-end', marginBottom:'4px' }}>
+                <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:hub.accent, animation:'live-pulse 1.8s ease infinite' }}/>
+                <span style={{ fontSize:'11px', fontWeight:800, color:hub.accent, letterSpacing:'0.08em' }}>LIVE</span>
               </div>
-              <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'20px', color:hub.accent }}>{waiting}</span>
-              <p style={{ fontSize:'10px', color:'#4b5563', marginTop:'1px' }}>in queue · ~{wait}m</p>
+              <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:hub.accent, lineHeight:1 }}>{waiting}</span>
+              <p style={{ fontSize:'11px', color:'#94a3b8', marginTop:'2px', fontWeight:600 }}>in queue · ~{wait}m</p>
             </div>
           ) : (
-            <span style={{ fontSize:'10px', fontWeight:700, padding:'3px 10px', borderRadius:'20px', background:hub.accentDim, color:hub.accent, border:`1px solid ${hub.border}` }}>OPEN</span>
+            <span style={{ fontSize:'11px', fontWeight:800, padding:'4px 12px', borderRadius:'20px', background:hub.accentDim, color:hub.accent, border:`1px solid ${hub.border}`, letterSpacing:'0.05em' }}>OPEN</span>
           )}
         </div>
-        <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'19px', color:'#fff', marginBottom:'5px' }}>{hub.title}</h3>
-        <p style={{ fontSize:'13px', color:'#94a3b8', marginBottom:'14px', lineHeight:1.5 }}>{hub.desc}</p>
-        <div style={{ display:'flex', flexWrap:'wrap', gap:'6px' }}>
+        <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', marginBottom:'8px', letterSpacing:'-0.01em' }}>{hub.title}</h3>
+        <p style={{ fontSize:'15px', color:'#94a3b8', marginBottom:'24px', lineHeight:1.6 }}>{hub.desc}</p>
+        <div style={{ display:'flex', flexWrap:'wrap', gap:'8px' }}>
           {hub.tags.map(t => (
-            <span key={t} style={{ fontSize:'11px', padding:'3px 10px', borderRadius:'8px', fontWeight:600, background:hub.accentDim, color:hub.accent, border:`1px solid ${hub.border}` }}>{t}</span>
+            <span key={t} style={{ fontSize:'12px', padding:'5px 12px', borderRadius:'10px', fontWeight:700, background:'rgba(255,255,255,0.03)', color:'#cbd5e1', border:'1px solid rgba(255,255,255,0.06)' }}>{t}</span>
           ))}
         </div>
       </div>
-      <div style={{ padding:'11px 22px', borderTop:`1px solid ${hub.border}`, display:'flex', alignItems:'center', justifyContent:'space-between', background: hov ? hub.accentDim : 'transparent', transition:'background 0.2s' }}>
-        <span style={{ fontSize:'13px', fontWeight:700, color:hub.accent }}>{hub.cta}</span>
-        <span style={{ fontSize:'16px', color:hub.accent, transform: hov ? 'translateX(4px)' : 'none', transition:'transform 0.2s' }}>→</span>
+      <div style={{ padding:'18px 28px', borderTop:`1px solid ${hub.border}`, display:'flex', alignItems:'center', justifyContent:'space-between', background: hov ? hub.accentDim : 'rgba(255,255,255,0.01)', transition:'background 0.3s' }}>
+        <span style={{ fontSize:'14px', fontWeight:800, color:hub.accent, letterSpacing:'0.02em' }}>{hub.cta}</span>
+        <span style={{ fontSize:'18px', color:hub.accent, transform: hov ? 'translateX(6px)' : 'none', transition:'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)' }}>→</span>
       </div>
     </div>
   )
@@ -214,10 +119,11 @@ function HubCard({ hub, waiting, wait, onClick }) {
 
 /* ─── Hub Data ─────────────────────────────────────────────────── */
 const HUBS = [
-  { key:'movies',  icon:'🎬', title:'Movies',         cta:'Browse Movies',  desc:'Book cinema tickets at PVR, INOX & Cinépolis', accent:'#e50914', accentDim:'rgba(229,9,20,0.08)', border:'rgba(229,9,20,0.18)', bg:'linear-gradient(135deg,#140404 0%,#220808 100%)', tags:['Now Showing','IMAX · 3D · 4DX','Recliner · Gold'] },
-  { key:'train',   icon:'🚆', title:'Train Tickets',  cta:'Book Seat',      desc:'Reserve seats, Tatkal booking & pass renewal', accent:'#4ade80', accentDim:'rgba(74,222,128,0.08)', border:'rgba(74,222,128,0.18)', bg:'linear-gradient(135deg,#061208 0%,#0a1e0d 100%)', tags:['Rajdhani · Shatabdi','Tatkal','Senior Pass'], queueId:'queue-train-001' },
-  { key:'flight',  icon:'✈️', title:'Flight Services',cta:'Get Token',      desc:'Check-in, baggage, upgrades & rebooking', accent:'#38bdf8', accentDim:'rgba(56,189,248,0.08)', border:'rgba(56,189,248,0.18)', bg:'linear-gradient(135deg,#040e18 0%,#071525 100%)', tags:['Check-in','Seat Upgrade','Lost Baggage'], queueId:'queue-flight-001' },
-  { key:'medical', icon:'🏥', title:'Medical OPD',    cta:'Get Token',      desc:'Doctor consultations, blood tests & diagnostics', accent:'#a78bfa', accentDim:'rgba(167,139,250,0.08)', border:'rgba(167,139,250,0.18)', bg:'linear-gradient(135deg,#0c0814 0%,#140e20 100%)', tags:['OPD Walk-in','Blood Tests','Specialist'], queueId:'queue-clinic-001' },
+  { key:'movies',  icon:'🎬', title:'Movies',         cta:'Browse Movies',  desc:'Book cinema tickets at PVR, INOX & Cinépolis', accent:'#e50914', accentDim:'rgba(229,9,20,0.1)', border:'rgba(229,9,20,0.2)', bg:'linear-gradient(135deg, rgba(20,4,4,0.6) 0%, rgba(34,8,8,0.6) 100%)', tags:['Now Showing','IMAX · 3D · 4DX','Recliner · Gold'], route:null },
+  { key:'train',   icon:'🚆', title:'Train Tickets',  cta:'Book Seat',      desc:'Reserve seats, Tatkal booking & pass renewal', accent:'#4ade80', accentDim:'rgba(74,222,128,0.1)', border:'rgba(74,222,128,0.2)', bg:'linear-gradient(135deg, rgba(6,18,8,0.6) 0%, rgba(10,30,13,0.6) 100%)', tags:['Rajdhani · Shatabdi','Tatkal','Senior Pass'], queueId:'queue-train-001',   route:'/user/queue-train-001' },
+  { key:'flight',  icon:'✈️', title:'Flight Services',cta:'Get Token',      desc:'Check-in, baggage, upgrades & rebooking', accent:'#38bdf8', accentDim:'rgba(56,189,248,0.1)', border:'rgba(56,189,248,0.2)', bg:'linear-gradient(135deg, rgba(4,14,24,0.6) 0%, rgba(7,21,37,0.6) 100%)', tags:['Check-in','Seat Upgrade','Lost Baggage'], queueId:'queue-flight-001',  route:'/user/queue-flight-001' },
+  { key:'medical', icon:'🏥', title:'Medical OPD',    cta:'Get Token',      desc:'Doctor consultations, blood tests & diagnostics', accent:'#a78bfa', accentDim:'rgba(167,139,250,0.1)', border:'rgba(167,139,250,0.2)', bg:'linear-gradient(135deg, rgba(12,8,20,0.6) 0%, rgba(20,14,32,0.6) 100%)', tags:['OPD Walk-in','Blood Tests','Specialist'], queueId:'queue-clinic-001',  route:'/user/queue-clinic-001' },
+  { key:'stadium', icon:'🏟️', title:'Stadium Booking',cta:'View Matches', desc:'Book VIP box entry for live sports', accent:'#f59e0b', accentDim:'rgba(245,158,11,0.1)', border:'rgba(245,158,11,0.2)', bg:'linear-gradient(135deg, rgba(18,9,4,0.6) 0%, rgba(26,16,6,0.6) 100%)', tags:['Premier League','IPL','La Liga'], queueId:null, route:'/stadiums' }
 ]
 
 /* ─── Divider & Section wrappers ───────────────────────────────── */
@@ -229,9 +135,49 @@ function Divider() {
   )
 }
 
+/* ─── Stadium Card ─────────────────────────────────────────────── */
+function StadiumCard({ stadium }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <Link to={`/user/queue-${stadium.id}`} style={{ textDecoration:'none', display:'block', height:'100%' }}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
+      <div style={{
+        position:'relative', borderRadius:'14px', overflow:'hidden', height:'100%', display:'flex', flexDirection:'column',
+        border:`1px solid ${hov ? stadium.poster.accent+'60' : 'rgba(255,255,255,0.08)'}`,
+        boxShadow: hov ? `0 0 28px ${stadium.poster.accent}25, 0 12px 40px rgba(0,0,0,0.7)` : '0 4px 20px rgba(0,0,0,0.5)',
+        transform: hov ? 'translateY(-7px) scale(1.01)' : 'none',
+        transition:'all 0.28s cubic-bezier(.22,.68,0,1.2)',
+      }}>
+        <div style={{ position:'relative', aspectRatio:'4/3', width:'100%', background: 'rgba(255,255,255,0.02)' }}>
+          <img src={stadium.posterUrl} alt={stadium.title} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+          <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'70%', background:'linear-gradient(to top, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.7) 40%, transparent 100%)' }}/>
+        </div>
+
+        <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'14px', zIndex:3, display:'flex', flexDirection:'column', justifyContent:'flex-end' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:'5px', marginBottom:'3px' }}>
+            <span style={{ color:stadium.poster.accent, fontSize:'10px', fontWeight:700 }}>🏟️ {stadium.type}</span>
+            <span style={{ color:'#374151' }}>·</span>
+            <span style={{ color:'#6b7280', fontSize:'10px' }}>{stadium.capacity} Seats</span>
+          </div>
+          <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'#fff', fontSize:'14px', lineHeight:1.35, marginBottom:'3px' }}>{stadium.title}</h3>
+          <p style={{ color:'#94a3b8', fontSize:'10px', marginBottom: hov?'10px':'0', transition:'margin 0.2s' }}>{stadium.location}</p>
+          <div style={{ overflow:'hidden', maxHeight: hov?'40px':'0', transition:'max-height 0.25s ease', opacity: hov?1:0 }}>
+            <div className="btn-book" style={{ padding:'6px 10px', fontSize:'11px', width:'100%', borderRadius:'9px', textAlign:'center', display:'block', background: stadium.poster.accent, color:'#fff' }}>
+              Book Tickets
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 /* ─── Main ─────────────────────────────────────────────────────── */
 export default function Landing() {
   const [queues, setQueues] = useState({})
+  const [langFilter, setLangFilter] = useState([])
+  const [formatFilter, setFormatFilter] = useState('All Formats')
+  const [sportsFilter, setSportsFilter] = useState('All Sports')
   const moviesRef = useRef(null)
 
   useEffect(() => {
@@ -255,12 +201,15 @@ export default function Landing() {
         <div style={{ maxWidth:MAX_W, margin:'0 auto' }}>
 
           {/* Heading */}
-          <header style={{ textAlign:'center', marginBottom:'40px' }}>
-            <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'52px', color:'#fff', margin:'0 0 16px', lineHeight:1.15, letterSpacing:'-0.02em' }}>
-              What do you want to book today?
+          <header style={{ textAlign:'center', marginBottom:'64px' }}>
+            <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'clamp(40px, 6vw, 64px)', color:'#fff', margin:'0 0 20px', lineHeight:1.1, letterSpacing:'-0.03em' }}>
+              What do you want to <span style={{ background:'linear-gradient(135deg, #38bdf8, #a855f7, #ec4899)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', filter:'drop-shadow(0 4px 24px rgba(168,85,247,0.4))' }}>book today?</span>
             </h1>
-            <p style={{ fontSize:'15px', color:'#64748b', maxWidth:'420px', margin:'0 auto', lineHeight:1.65 }}>
-              Movies, train, flights or hospital OPD — skip the queue, book your spot instantly.
+            <p style={{
+              color: '#94a3b8', fontSize: '20px', maxWidth: '640px', margin: '0 auto', lineHeight: 1.6, fontWeight: 500
+            }}>
+              Skip the line. Pre-book your spot across hospitals, salons, theatres, stadiums, and government offices. 
+              Real-time tracking, zero waiting.
             </p>
           </header>
 
@@ -299,18 +248,31 @@ export default function Landing() {
 
           {/* Filter chips */}
           <div style={{ display:'flex', alignItems:'center', gap:'7px', marginBottom:'24px', overflowX:'auto', paddingBottom:'4px' }}>
-            {['All Languages','Hindi','English','Tamil','Telugu'].map((l,i) => (
-              <button key={l} style={{ flexShrink:0, padding:'5px 14px', borderRadius:'20px', fontSize:'12px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap', background: i===0?'rgba(229,9,20,0.12)':'rgba(255,255,255,0.04)', color: i===0?'#f87171':'#475569', border: i===0?'1px solid rgba(229,9,20,0.25)':'1px solid rgba(255,255,255,0.06)' }}>{l}</button>
-            ))}
+            {['Hindi','English','Tamil','Telugu'].map((l) => {
+              const isSel = langFilter.includes(l)
+              return (
+                <button key={l} onClick={() => {
+                  if (isSel) setLangFilter(langFilter.filter(x => x !== l))
+                  else setLangFilter([...langFilter, l])
+                }} style={{ flexShrink:0, padding:'5px 14px', borderRadius:'20px', fontSize:'12px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap', background: isSel?'rgba(229,9,20,0.12)':'rgba(255,255,255,0.04)', color: isSel?'#f87171':'#475569', border: isSel?'1px solid rgba(229,9,20,0.5)':'1px solid rgba(255,255,255,0.06)', boxShadow: isSel?'0 0 12px rgba(229,9,20,0.2)':'none', transition:'all 0.2s' }}>{l}</button>
+              )
+            })}
             <div style={{ width:'1px', height:'14px', background:'rgba(255,255,255,0.09)', flexShrink:0, margin:'0 3px' }}/>
-            {['All Formats','2D','3D','IMAX','4DX'].map((f,i) => (
-              <button key={f} style={{ flexShrink:0, padding:'5px 14px', borderRadius:'20px', fontSize:'12px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap', background: i===0?'rgba(255,255,255,0.07)':'rgba(255,255,255,0.03)', color: i===0?'#e2e8f0':'#374151', border:'1px solid rgba(255,255,255,0.06)' }}>{f}</button>
-            ))}
+            {['All Formats','2D','3D','IMAX','4DX'].map((f) => {
+              const isSel = formatFilter === f
+              return (
+                <button key={f} onClick={() => setFormatFilter(f)} style={{ flexShrink:0, padding:'5px 14px', borderRadius:'20px', fontSize:'12px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap', background: isSel?'rgba(255,255,255,0.07)':'rgba(255,255,255,0.03)', color: isSel?'#e2e8f0':'#374151', border: isSel?'1px solid rgba(255,255,255,0.3)':'1px solid rgba(255,255,255,0.06)', boxShadow: isSel?'0 0 12px rgba(255,255,255,0.1)':'none', transition:'all 0.2s' }}>{f}</button>
+              )
+            })}
           </div>
 
           {/* Movie grid — 5 columns */}
           <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'16px' }}>
-            {MOVIES.map(m => <MovieCard key={m.id} movie={m} />)}
+            {MOVIES.filter(m => {
+              if (langFilter.length > 0 && !langFilter.some(l => m.language.includes(l))) return false
+              if (formatFilter !== 'All Formats' && !m.formats.some(f => f.includes(formatFilter))) return false
+              return true
+            }).map(m => <MovieCard key={m.id} movie={m} />)}
             {/* Coming soon */}
             <div style={{ borderRadius:'14px', aspectRatio:'2/3', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:'8px', background:'rgba(255,255,255,0.015)', border:'1px dashed rgba(255,255,255,0.07)' }}>
               <span style={{ fontSize:'26px', opacity:0.2 }}>🎬</span>
@@ -398,7 +360,6 @@ export default function Landing() {
             <span style={{ color:'#374151', fontSize:'13px' }}>· Built for India 🇮🇳</span>
           </div>
           <div style={{ display:'flex', gap:'24px', fontSize:'12px', color:'#374151' }}>
-            <span>Powered by <span style={{ color:'#e50914' }}>Gemini AI</span></span>
             <span>Real-time via Socket.io</span>
           </div>
         </div>

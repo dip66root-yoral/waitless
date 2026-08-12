@@ -7,88 +7,12 @@ import QueueProgress from '../components/QueueProgress.jsx'
 
 const NAV_H = '60px'
 
-/* ═══════════════════════════════════════════════════════════════
-   CINEMA POSTER — unique visual per film
-═══════════════════════════════════════════════════════════════ */
-function CinemaPoster({ movie, style = {} }) {
-  const { poster } = movie
-  const renderPattern = () => {
-    switch (poster.pattern) {
-      case 'web':
-        return (
-          <>
-            <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.12 }} viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
-              {[...Array(14)].map((_,i) => <line key={i} x1="380" y1="580" x2={i*30} y2="0" stroke={poster.accent} strokeWidth="0.9"/>)}
-              {[80,160,240,320,400].map(r => <circle key={r} cx="380" cy="580" r={r} fill="none" stroke={poster.accent} strokeWidth="0.8"/>)}
-            </svg>
-            <div style={{ position:'absolute', bottom:'-30px', right:'-30px', width:'280px', height:'280px', borderRadius:'50%', background:`radial-gradient(circle, ${poster.accent}30 0%, transparent 65%)` }}/>
-            <div style={{ position:'absolute', top:'-20px', left:'-20px', width:'160px', height:'160px', borderRadius:'50%', background:`radial-gradient(circle, ${poster.accent2}20 0%, transparent 65%)` }}/>
-          </>
-        )
-      case 'stars':
-        return (
-          <>
-            {[...Array(80)].map((_,i) => (
-              <div key={i} style={{ position:'absolute', borderRadius:'50%', background:'#fff', width: i%5===0?'2.5px':i%3===0?'1.5px':'1px', height: i%5===0?'2.5px':i%3===0?'1.5px':'1px', left:`${(i*41+7)%100}%`, top:`${(i*67+13)%100}%`, opacity: 0.08+(i%7)*0.07 }}/>
-            ))}
-            <div style={{ position:'absolute', top:'15%', right:'12%', width:'100px', height:'100px', borderRadius:'50%', background:`radial-gradient(circle at 35% 35%, ${poster.accent}50 0%, ${poster.accent}15 50%, transparent 70%)`, boxShadow:`0 0 40px ${poster.accent}35`}}/>
-            <div style={{ position:'absolute', top:'20%', left:'25%', width:'220px', height:'140px', borderRadius:'50%', background:`radial-gradient(ellipse, ${poster.accent2}15 0%, transparent 70%)` }}/>
-          </>
-        )
-      case 'fire':
-        return (
-          <>
-            <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'60%', background:`linear-gradient(to top, ${poster.accent}45 0%, ${poster.accent2}20 40%, transparent 100%)` }}/>
-            <div style={{ position:'absolute', bottom:'-40px', left:'50%', transform:'translateX(-50%)', width:'400px', height:'250px', borderRadius:'50%', background:`radial-gradient(circle, ${poster.accent}25 0%, transparent 65%)` }}/>
-            {['-12deg','-6deg','0deg','6deg'].map((r,i) => (
-              <div key={i} style={{ position:'absolute', top:'5%', left:'-30%', width:'160%', height:'2px', background:`linear-gradient(90deg,transparent,${poster.accent}${40-i*8},transparent)`, transform:`rotate(${r})` }}/>
-            ))}
-          </>
-        )
-      case 'dust':
-        return (
-          <>
-            {[...Array(24)].map((_,i) => (
-              <div key={i} style={{ position:'absolute', width: i%4===0?'4px':'2px', height: i%4===0?'4px':'2px', borderRadius:'50%', background:poster.accent, left:`${(i*47+11)%100}%`, top:`${(i*73+17)%100}%`, opacity:0.08+(i%5)*0.07 }}/>
-            ))}
-            <div style={{ position:'absolute', bottom:'-50px', left:'50%', transform:'translateX(-50%)', width:'420px', height:'300px', borderRadius:'50%', background:`radial-gradient(circle, ${poster.accent}22 0%, transparent 60%)` }}/>
-          </>
-        )
-      case 'biolum':
-        return (
-          <>
-            {[...Array(30)].map((_,i) => (
-              <div key={i} style={{ position:'absolute', width:'5px', height:'5px', borderRadius:'50%', background:i%2===0?poster.accent:poster.accent2, left:`${(i*43+9)%100}%`, top:`${(i*71+15)%100}%`, opacity:0.1+(i%6)*0.06, boxShadow:`0 0 8px ${i%2===0?poster.accent:poster.accent2}` }}/>
-            ))}
-            <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse 45% 85% at 10% 60%, ${poster.accent}15 0%, transparent 55%)` }}/>
-            <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse 40% 70% at 90% 40%, ${poster.accent2}12 0%, transparent 55%)` }}/>
-            <div style={{ position:'absolute', bottom:'-30px', right:'15%', width:'200px', height:'200px', borderRadius:'50%', background:`radial-gradient(circle, ${poster.accent2}28 0%, transparent 65%)` }}/>
-          </>
-        )
-      default: return null
-    }
-  }
-  return (
-    <div style={{ position:'absolute', inset:0, background:poster.bg, overflow:'hidden', ...style }}>
-      <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse 80% 60% at 40% 30%, ${poster.accent}22 0%, transparent 60%)` }}/>
-      {renderPattern()}
-      <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'9rem', opacity:0.1, transform:'rotate(-8deg) scale(1.15)', userSelect:'none', pointerEvents:'none', filter:`drop-shadow(0 0 40px ${poster.accent}60)` }}>
-        {poster.emoji}
-      </div>
-      <div style={{ position:'absolute', top:0, left:0, right:0, height:'3px', background:`linear-gradient(90deg,transparent,${poster.accent},transparent)` }}/>
-    </div>
-  )
-}
+import { MoviePoster, PosterThumb } from '../components/MoviePoster.jsx'
+import { StepperBar } from '../components/StepperBar.jsx'
+import { SeatMap } from '../components/SeatMap.jsx'
+import { LiveTicket } from '../components/LiveTicket.jsx'
 
-/* ─── Small poster thumbnail ───────────────────────────────────── */
-function PosterThumb({ movie, size = 80 }) {
-  return (
-    <div style={{ width:`${size}px`, height:`${Math.round(size*1.45)}px`, borderRadius:'10px', overflow:'hidden', position:'relative', flexShrink:0, border:`1px solid ${movie.poster.accent}35` }}>
-      <CinemaPoster movie={movie} />
-      <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 50%)' }}/>
-    </div>
-  )
-}
+const STEPS = ['Showtime', 'Seats', 'Confirm', 'Ticket']
 
 export default function MovieBooking() {
   const { movieId } = useParams()
@@ -100,7 +24,8 @@ export default function MovieBooking() {
   const [selectedCinema, setSelectedCinema] = useState(CINEMAS[0])
   const [selectedShowtime, setSelectedShowtime] = useState(null)
   const [selectedFormat, setSelectedFormat] = useState(null)
-  const [seatType, setSeatType] = useState(null)
+  const [seatType, setSeatType] = useState(SEAT_TYPES[1])
+  const [selectedSeats, setSelectedSeats] = useState([])
   const [numSeats, setNumSeats] = useState(2)
   const [userName, setUserName] = useState('')
   const [phone, setPhone] = useState('')
@@ -160,7 +85,7 @@ export default function MovieBooking() {
 
       {/* ── Cinematic hero banner ── */}
       <div style={{ position:'relative', height:'460px', overflow:'hidden' }}>
-        <CinemaPoster movie={movie} />
+        <MoviePoster movie={movie} />
         {/* Left fade for text readability */}
         <div style={{ position:'absolute', inset:0, background:'linear-gradient(105deg,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.7) 40%,rgba(0,0,0,0.15) 70%,transparent 100%)' }}/>
         {/* Bottom fade to page */}
@@ -284,6 +209,7 @@ export default function MovieBooking() {
   if (step === 'showtime') return (
     <div className="app-bg" style={{ minHeight:'100vh', paddingTop:`calc(${NAV_H} + 32px)` }}>
       <div style={{ maxWidth:'640px', margin:'0 auto', padding:'0 20px 80px' }}>
+        <StepperBar steps={STEPS} currentStep={0} />
 
         {/* Back + mini header */}
         <button onClick={() => setStep('detail')} style={{ display:'flex', alignItems:'center', gap:'6px', color:'#475569', fontSize:'13px', background:'none', border:'none', cursor:'pointer', marginBottom:'24px', padding:0 }}>
@@ -359,7 +285,8 @@ export default function MovieBooking() {
   ────────────────────────────────────────────────────────────── */
   if (step === 'seats') return (
     <div className="app-bg" style={{ minHeight:'100vh', paddingTop:`calc(${NAV_H} + 32px)` }}>
-      <div style={{ maxWidth:'540px', margin:'0 auto', padding:'0 20px 80px' }}>
+      <div style={{ maxWidth:'760px', margin:'0 auto', padding:'0 20px 80px' }}>
+        <StepperBar steps={STEPS} currentStep={1} />
 
         <button onClick={() => setStep('showtime')} style={{ display:'flex', alignItems:'center', gap:'6px', color:'#475569', fontSize:'13px', background:'none', border:'none', cursor:'pointer', marginBottom:'24px', padding:0 }}>
           ← Back
@@ -376,26 +303,17 @@ export default function MovieBooking() {
         </div>
 
         {/* Seat type cards */}
-        <div style={{ display:'flex', flexDirection:'column', gap:'10px', marginBottom:'16px' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'10px', marginBottom:'24px' }}>
           {SEAT_TYPES.map(st => {
             const isSel = seatType?.id === st.id
             return (
               <button key={st.id} onClick={() => setSeatType(st)}
-                style={{ width:'100%', textAlign:'left', padding:'16px 20px', borderRadius:'16px', cursor:'pointer', transition:'all 0.2s', background: isSel ? `${movie.poster.accent}12` : 'rgba(255,255,255,0.025)', border: `1px solid ${isSel ? movie.poster.accent+'50' : 'rgba(255,255,255,0.07)'}`, boxShadow: isSel ? `0 0 24px ${movie.poster.accent}15` : 'none' }}>
-                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                style={{ width:'100%', textAlign:'left', padding:'16px', borderRadius:'16px', cursor:'pointer', transition:'all 0.2s', background: isSel ? `${movie.poster.accent}12` : 'rgba(255,255,255,0.025)', border: `1px solid ${isSel ? movie.poster.accent+'50' : 'rgba(255,255,255,0.07)'}`, boxShadow: isSel ? `0 0 24px ${movie.poster.accent}15` : 'none' }}>
+                <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
                   <div>
-                    <div style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'8px' }}>
-                      <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'16px', color: isSel ? '#fff' : '#94a3b8' }}>{st.label}</span>
-                      <span style={{ fontSize:'12px', color:'#4b5563' }}>{st.desc}</span>
-                    </div>
-                    {/* Mini seat visual */}
-                    <div style={{ display:'flex', gap:'4px' }}>
-                      {[...Array(8)].map((_,i) => (
-                        <div key={i} style={{ width:'16px', height:'12px', borderRadius:'3px 3px 0 0', background: i<(isSel?3:1) ? (isSel?movie.poster.accent:'#374151') : '#1a1b23', border:`1px solid rgba(255,255,255,0.06)`, transition:'all 0.2s' }}/>
-                      ))}
-                    </div>
+                    <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'16px', color: isSel ? '#fff' : '#94a3b8' }}>{st.label}</span>
                   </div>
-                  <div style={{ textAlign:'right' }}>
+                  <div>
                     <p style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'22px', color: isSel ? movie.poster.accent : '#374151', margin:0 }}>₹{st.price}</p>
                     <p style={{ fontSize:'11px', color:'#374151', margin:'2px 0 0' }}>per ticket</p>
                   </div>
@@ -405,25 +323,51 @@ export default function MovieBooking() {
           })}
         </div>
 
+        {/* Seat Map */}
+        <div style={{ marginBottom: '24px' }}>
+          <SeatMap 
+            type={seatType?.label} 
+            price={seatType?.price} 
+            accent={movie.poster.accent}
+            selectedSeats={selectedSeats}
+            onToggleSeat={(seat) => {
+              if (selectedSeats.includes(seat)) {
+                setSelectedSeats(s => s.filter(x => x !== seat))
+              } else if (selectedSeats.length < numSeats) {
+                setSelectedSeats(s => [...s, seat])
+              } else {
+                addToast(`You can only select ${numSeats} seats`, 'warning')
+              }
+            }}
+          />
+        </div>
+
         {/* Ticket count */}
         {seatType && (
           <div style={{ borderRadius:'16px', padding:'18px 20px', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.07)', marginBottom:'16px' }}>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'14px' }}>
               <span style={{ fontWeight:700, color:'#fff', fontSize:'15px' }}>Number of Tickets</span>
               <div style={{ display:'flex', alignItems:'center', gap:'16px' }}>
-                <button onClick={() => setNumSeats(Math.max(1,numSeats-1))} style={{ width:'36px', height:'36px', borderRadius:'10px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.1)', color:'#fff', fontSize:'20px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>−</button>
+                <button onClick={() => { setNumSeats(Math.max(1,numSeats-1)); setSelectedSeats([]) }} style={{ width:'36px', height:'36px', borderRadius:'10px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.1)', color:'#fff', fontSize:'20px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>−</button>
                 <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', minWidth:'24px', textAlign:'center' }}>{numSeats}</span>
                 <button onClick={() => setNumSeats(Math.min(8,numSeats+1))} style={{ width:'36px', height:'36px', borderRadius:'10px', background:movie.poster.accent, border:'none', color:'#fff', fontSize:'20px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>+</button>
               </div>
             </div>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', paddingTop:'14px', borderTop:'1px solid rgba(255,255,255,0.06)' }}>
-              <span style={{ fontSize:'13px', color:'#64748b' }}>{numSeats} × {seatType.label} ({selectedFormat})</span>
+              <div>
+                <p style={{ fontSize:'13px', color:'#64748b', margin: 0 }}>{numSeats} × {seatType.label} ({selectedFormat})</p>
+                {selectedSeats.length > 0 && <p style={{ fontSize:'12px', color:movie.poster.accent, margin: '4px 0 0' }}>Seats: {selectedSeats.join(', ')}</p>}
+              </div>
               <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'22px', color:movie.poster.accent }}>₹{totalPrice}</span>
             </div>
           </div>
         )}
 
-        <button onClick={() => { if (!seatType) return addToast('Select a seat type','warning'); setStep('confirm') }}
+        <button onClick={() => { 
+          if (!seatType) return addToast('Select a seat type','warning')
+          if (selectedSeats.length !== numSeats) return addToast(`Select ${numSeats} seats from the map`, 'warning')
+          setStep('confirm') 
+        }}
           className="btn-book" style={{ width:'100%', padding:'14px', fontSize:'14px' }}>
           Proceed to Confirm →
         </button>
@@ -437,6 +381,7 @@ export default function MovieBooking() {
   if (step === 'confirm') return (
     <div className="app-bg" style={{ minHeight:'100vh', paddingTop:`calc(${NAV_H} + 32px)` }}>
       <div style={{ maxWidth:'520px', margin:'0 auto', padding:'0 20px 80px' }}>
+        <StepperBar steps={STEPS} currentStep={2} />
 
         <button onClick={() => setStep('seats')} style={{ display:'flex', alignItems:'center', gap:'6px', color:'#475569', fontSize:'13px', background:'none', border:'none', cursor:'pointer', marginBottom:'24px', padding:0 }}>
           ← Back
@@ -458,7 +403,7 @@ export default function MovieBooking() {
               </div>
             </div>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'14px' }}>
-              {[{l:'Seat Type',v:seatType?.label},{l:'Tickets',v:`${numSeats} ticket${numSeats>1?'s':''}`},{l:'Price / Ticket',v:`₹${seatType?.price}`},{l:'Convenience Fee',v:'₹0 🎉'}].map(({l,v}) => (
+              {[{l:'Seat Type',v:seatType?.label},{l:'Seats', v:selectedSeats.join(', ')},{l:'Price / Ticket',v:`₹${seatType?.price}`},{l:'Convenience Fee',v:'₹0 🎉'}].map(({l,v}) => (
                 <div key={l} style={{ padding:'11px', borderRadius:'10px', background:'rgba(255,255,255,0.03)' }}>
                   <p style={{ fontSize:'10px', color:'#374151', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'4px' }}>{l}</p>
                   <p style={{ fontSize:'14px', fontWeight:700, color:'#e2e8f0', margin:0 }}>{v}</p>
@@ -503,6 +448,7 @@ export default function MovieBooking() {
   if (step === 'done' && bookingToken) return (
     <div className="app-bg" style={{ minHeight:'100vh', paddingTop:`calc(${NAV_H} + 32px)` }}>
       <div style={{ maxWidth:'500px', margin:'0 auto', padding:'0 20px 80px' }}>
+        <StepperBar steps={STEPS} currentStep={3} />
 
         <div style={{ textAlign:'center', marginBottom:'28px' }}>
           <div style={{ width:'64px', height:'64px', borderRadius:'20px', background:`${movie.poster.accent}18`, border:`1px solid ${movie.poster.accent}40`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'2rem', margin:'0 auto 16px' }}>🎉</div>
@@ -511,37 +457,23 @@ export default function MovieBooking() {
         </div>
 
         {/* Ticket */}
-        <div style={{ borderRadius:'20px', overflow:'hidden', border:'1px solid rgba(255,255,255,0.08)', marginBottom:'14px', boxShadow:'0 8px 40px rgba(0,0,0,0.5)' }}>
-          <div style={{ height:'4px', background:`linear-gradient(90deg,${movie.poster.accent}80,${movie.poster.accent})` }}/>
-          <div style={{ padding:'24px', background:'linear-gradient(135deg,#111218,#14151e)' }}>
-            <div style={{ display:'flex', gap:'16px', marginBottom:'20px' }}>
-              <PosterThumb movie={movie} size={72} />
-              <div>
-                <p style={{ fontSize:'12px', color:'#4b5563', marginBottom:'4px' }}>Token Number</p>
-                <p style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'42px', color:movie.poster.accent, lineHeight:1, marginBottom:'5px' }}>{(liveToken||bookingToken).token_number}</p>
-                <p style={{ fontWeight:700, color:'#e2e8f0', fontSize:'16px' }}>{(liveToken||bookingToken).user_name}</p>
+        <LiveTicket token={liveToken || bookingToken} meta={{ accent: movie.poster.accent, icon: '🍿' }}>
+          <div style={{ display:'flex', gap:'16px', marginBottom:'20px' }}>
+            <PosterThumb movie={movie} size={72} />
+            <div>
+              <p style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', lineHeight:1.2, marginBottom:'5px' }}>{movie.title}</p>
+              <p style={{ fontWeight:700, color:'#e2e8f0', fontSize:'14px' }}>{selectedCinema.name}</p>
+            </div>
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }}>
+            {[{l:'Showtime',v:selectedShowtime},{l:'Seats',v:selectedSeats.join(', ')},{l:'Amount',v:`₹${totalPrice}`}].map(({l,v}) => (
+              <div key={l}>
+                <p style={{ fontSize:'10px', color:'#374151', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'3px' }}>{l}</p>
+                <p style={{ fontSize:'14px', fontWeight:700, color: l==='Amount'?movie.poster.accent:'#e2e8f0', margin:0 }}>{v}</p>
               </div>
-            </div>
-            <div style={{ borderTop:'1px dashed rgba(255,255,255,0.08)', paddingTop:'18px', marginTop:'4px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }}>
-              {[{l:'Movie',v:movie.title},{l:'Showtime',v:selectedShowtime},{l:'Seats',v:`${numSeats} × ${seatType?.label}`},{l:'Amount',v:`₹${totalPrice}`}].map(({l,v}) => (
-                <div key={l}>
-                  <p style={{ fontSize:'10px', color:'#374151', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'3px' }}>{l}</p>
-                  <p style={{ fontSize:'14px', fontWeight:700, color: l==='Amount'?movie.poster.accent:'#e2e8f0', margin:0 }}>{v}</p>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
-          <div style={{ padding:'14px 24px', background:'rgba(255,255,255,0.02)', borderTop:'1px solid rgba(255,255,255,0.06)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-            <span style={{ fontSize:'11px', fontWeight:800, padding:'4px 10px', borderRadius:'20px', background:'rgba(74,222,128,0.12)', color:'#4ade80', border:'1px solid rgba(74,222,128,0.25)' }}>● CONFIRMED</span>
-            <span style={{ fontSize:'12px', color:'#374151' }}>#{(liveToken||bookingToken).position || '—'} in counter queue</span>
-          </div>
-        </div>
-
-        {/* Progress */}
-        <div style={{ borderRadius:'14px', padding:'18px 20px', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.07)', marginBottom:'14px' }}>
-          <p style={{ fontSize:'11px', color:'#374151', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'16px' }}>Collection Queue Status</p>
-          <QueueProgress status={(liveToken||bookingToken).status||'waiting'} position={(liveToken||bookingToken).position||1} accentColor={movie.poster.accent} />
-        </div>
+        </LiveTicket>
 
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px' }}>
           <Link to="/" style={{ textDecoration:'none', padding:'12px', borderRadius:'12px', textAlign:'center', fontSize:'14px', fontWeight:600, color:'#e2e8f0', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)' }}>← Home</Link>

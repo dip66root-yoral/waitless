@@ -19,6 +19,19 @@ export default defineConfig(({ mode }) => ({
         ws: true,
         changeOrigin: true,
       },
+      '/tmdb-img': {
+        target: 'https://image.tmdb.org',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/tmdb-img/, ''),
+      },
+      '/wiki-img': {
+        target: 'https://upload.wikimedia.org',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/wiki-img/, ''),
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+      },
     },
   },
   test: {
