@@ -29,7 +29,7 @@ api.interceptors.response.use(
     return res
   },
   (err) => {
-    if (err.response?.status === 401) {
+    if (err.response?.status === 401 && !err.config?.url?.includes('/login')) {
       localStorage.removeItem('waitless_token')
       localStorage.removeItem('waitless_user')
       window.location.href = '/login'
