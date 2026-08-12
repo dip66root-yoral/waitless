@@ -77,7 +77,7 @@ export const MOVIES = [
       pattern: 'dust',
     },
     // KGF Chapter 2 (real poster via proxy)
-    posterUrl: '/posters/movie_kgf.jpg',
+    posterUrl: '/posters/movie_kgf_chapter2.jpg',
   },
   {
     id: 'movie-pushpa3',
