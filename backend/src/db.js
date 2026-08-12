@@ -111,6 +111,10 @@ try {
   db.exec('ALTER TABLE users ADD COLUMN last_login_at TEXT');
 } catch (e) {}
 
+// Backfill last_login_at for users who registered before the feature was introduced
+db.exec('UPDATE users SET last_login_at = created_at WHERE last_login_at IS NULL');
+
+
 // Helper: recalculate positions and wait times for a queue
 function recalculateQueue(queueId) {
   const queue = db.prepare('SELECT * FROM queues WHERE id = ?').get(queueId);
