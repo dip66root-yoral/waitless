@@ -73,7 +73,7 @@ router.post('/login', async (req, res) => {
       return res.status(403).json({ error: 'Your account has been suspended.' });
     }
 
-    db.prepare('UPDATE users SET last_login_at = datetime("now") WHERE id = ?').run(user.id);
+    db.prepare("UPDATE users SET last_login_at = datetime('now') WHERE id = ?").run(user.id);
 
     const tokenPayload = { userId: user.id, role: user.role };
     const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
