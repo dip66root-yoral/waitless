@@ -89,7 +89,7 @@ export function MoviePoster({ movie, style = {} }) {
         }} />
       )}
       <img 
-        src={movie.posterUrl?.startsWith('/tmdb-img') ? `https://image.tmdb.org${movie.posterUrl.replace('/tmdb-img', '')}` : movie.posterUrl} 
+        src={movie.posterUrl} 
         alt={movie.title}
         onLoad={() => setImgStatus('loaded')}
         onError={() => setImgStatus('error')}

@@ -25,7 +25,7 @@ export const MOVIES = [
       pattern: 'web',
     },
     // Spider-Man: No Way Home (real poster via proxy)
-    posterUrl: '/tmdb-img/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg',
+    posterUrl: '/posters/movie_spiderman.jpg',
   },
   {
     id: 'movie-odyssey',
@@ -51,7 +51,7 @@ export const MOVIES = [
       pattern: 'stars',
     },
     // Interstellar (real poster via proxy)
-    posterUrl: '/tmdb-img/t/p/w500/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg',
+    posterUrl: '/posters/movie_odyssey.jpg',
   },
   {
     id: 'movie-kgf3',
@@ -77,7 +77,7 @@ export const MOVIES = [
       pattern: 'dust',
     },
     // KGF Chapter 2 (real poster via proxy)
-    posterUrl: '/tmdb-img/t/p/w500/khNVygolU0TxLIDWff5tQlAhZ23.jpg',
+    posterUrl: '/posters/movie_kgf.jpg',
   },
   {
     id: 'movie-pushpa3',
@@ -103,7 +103,7 @@ export const MOVIES = [
       pattern: 'fire',
     },
     // Pushpa The Rise (real poster via proxy)
-    posterUrl: '/tmdb-img/t/p/w500/4DpNRjV7ITZ1GzCvrvCk86th0w.jpg',
+    posterUrl: '/posters/movie_pushpa.jpg',
   },
   {
     id: 'movie-avatar3',
@@ -129,7 +129,7 @@ export const MOVIES = [
       pattern: 'biolum',
     },
     // Avatar Way of Water (real poster via proxy)
-    posterUrl: '/tmdb-img/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg',
+    posterUrl: '/posters/movie_avatar.jpg',
   },
 ]
 
