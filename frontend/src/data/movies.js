@@ -74,7 +74,7 @@ export const MOVIES = [
       accent2: '#d45d2a',
       emoji: '⛏️',
       pattern: 'dust',
-      objectPosition: '85% center', // Focus on Yash on the right side
+      objectPosition: 'left center', // Focus on Yash on the far left side
     },
     // KGF Chapter 2 (real poster via proxy)
     posterUrl: '/posters/movie_kgf_chapter2.jpg',
