@@ -101,6 +101,13 @@ db.exec(`
 // Automatically make the creator an admin
 db.exec(`UPDATE users SET role = 'admin' WHERE email = 'dip06karmakar@gmail.com';`);
 
+// Fix missing is_active column if database was restored from an old WAL file
+try {
+  db.exec('ALTER TABLE users ADD COLUMN is_active INTEGER DEFAULT 1');
+} catch (e) {
+  // Column already exists, ignore
+}
+
 // Helper: recalculate positions and wait times for a queue
 function recalculateQueue(queueId) {
   const queue = db.prepare('SELECT * FROM queues WHERE id = ?').get(queueId);
