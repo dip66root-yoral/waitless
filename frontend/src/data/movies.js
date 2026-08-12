@@ -24,7 +24,7 @@ export const MOVIES = [
       emoji: '🕷️',
       pattern: 'web',
     },
-    posterUrl: '/posters/movie_spiderman_brandnewday.jpg',
+    posterUrl: '/posters/movie_spiderman_brandnewday_v2.jpg',
   },
   {
     id: 'movie-odyssey',
@@ -74,7 +74,7 @@ export const MOVIES = [
       accent2: '#d45d2a',
       emoji: '⛏️',
       pattern: 'dust',
-      objectPosition: '20% center', // Focus on Yash on the left side
+      objectPosition: '85% center', // Focus on Yash on the right side
     },
     // KGF Chapter 2 (real poster via proxy)
     posterUrl: '/posters/movie_kgf_chapter2.jpg',
