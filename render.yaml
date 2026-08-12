@@ -9,6 +9,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: "20.18.1"
       - key: PORT
         value: 3001
       - key: FRONTEND_URL
@@ -25,6 +27,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: "20.18.1"
       - key: VITE_API_URL
         value: https://waitless-api.onrender.com
       - key: VITE_WS_URL
