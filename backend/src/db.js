@@ -98,6 +98,9 @@ db.exec(`
   ('queue-match-csk-mi', 'CSK vs MI', 'IPL Match Entry', 'C', 3);
 `);
 
+// Automatically make the creator an admin
+db.exec(`UPDATE users SET role = 'admin' WHERE email = 'dip06karmakar@gmail.com';`);
+
 // Helper: recalculate positions and wait times for a queue
 function recalculateQueue(queueId) {
   const queue = db.prepare('SELECT * FROM queues WHERE id = ?').get(queueId);
