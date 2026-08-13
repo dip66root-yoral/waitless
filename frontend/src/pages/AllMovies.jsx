@@ -5,7 +5,7 @@ import { MoviePoster } from '../components/MoviePoster.jsx'
 export default function AllMovies() {
   return (
     <div className="app-bg" style={{ minHeight: '100vh', paddingTop: '80px', paddingBottom: '80px' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 28px' }}>
+      <div className="responsive-padding" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 28px' }}>
         
         <div style={{ marginBottom: '40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
@@ -21,7 +21,7 @@ export default function AllMovies() {
           </Link>
         </div>
 
-        <div style={{ 
+        <div className="responsive-movie-grid" style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
           gap: '24px' 

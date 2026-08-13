@@ -45,7 +45,7 @@ function NavBar() {
   const [showCities, setShowCities] = React.useState(false)
 
   return (
-    <nav style={{
+    <nav className="responsive-navbar" style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
       height: '60px',
       background: 'rgba(6,8,16,0.82)',
@@ -54,7 +54,7 @@ function NavBar() {
       borderBottom: '1px solid rgba(255,255,255,0.05)',
       display: 'flex', alignItems: 'center',
     }}>
-      <div style={{
+      <div className="responsive-navbar-inner responsive-padding" style={{
         maxWidth: '1200px', width: '100%', margin: '0 auto',
         padding: '0 28px',
         display: 'flex', alignItems: 'center', gap: '0',

@@ -197,11 +197,11 @@ export default function Landing() {
       {/* ═══════════════════════════════════════════════
           SECTION 1 — HERO & HUBS
       ═══════════════════════════════════════════════ */}
-      <section aria-label="Hero Section" style={{ padding:'120px 28px 64px' }}>
+      <section aria-label="Hero Section" className="responsive-padding" style={{ padding:'120px 28px 64px' }}>
         <div style={{ maxWidth:MAX_W, margin:'0 auto' }}>
 
           {/* Heading */}
-          <header style={{ textAlign:'center', marginBottom:'64px' }}>
+          <header className="responsive-text-center" style={{ textAlign:'center', marginBottom:'64px' }}>
             <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'clamp(40px, 6vw, 64px)', color:'#fff', margin:'0 0 20px', lineHeight:1.1, letterSpacing:'-0.03em' }}>
               What do you want to <span style={{ background:'linear-gradient(135deg, #38bdf8, #a855f7, #ec4899)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', filter:'drop-shadow(0 4px 24px rgba(168,85,247,0.4))' }}>book today?</span>
             </h1>
@@ -214,7 +214,7 @@ export default function Landing() {
           </header>
 
           {/* 2×2 Hub cards — max 780px centered */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:'16px', maxWidth:'780px', margin:'0 auto' }}>
+          <div className="responsive-grid-2" style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:'16px', maxWidth:'780px', margin:'0 auto' }}>
             {HUBS.map(hub => {
               const q = hub.queueId ? queues[hub.queueId] : null
               const waiting = q?.stats?.waiting_count ?? 0

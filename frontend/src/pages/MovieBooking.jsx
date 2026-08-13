@@ -94,7 +94,7 @@ export default function MovieBooking() {
         <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'180px', background:'linear-gradient(to top,#08090f 0%,transparent 100%)' }}/>
 
         {/* Content inside hero */}
-        <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'flex-end', justifyContent:'space-between', padding:'40px 48px', gap:'40px' }}>
+        <div className="responsive-padding responsive-stack" style={{ position:'absolute', inset:0, display:'flex', alignItems:'flex-end', justifyContent:'space-between', padding:'40px 48px', gap:'40px' }}>
           
           <div style={{ display:'flex', flexDirection:'column', justifyContent:'flex-end', maxWidth:'660px' }}>
             {/* Badges row */}
@@ -126,7 +126,7 @@ export default function MovieBooking() {
           </div>
 
           {/* UNCROPPED POSTER ON RIGHT */}
-          <div style={{ height:'350px', display: 'flex', alignItems: 'flex-end' }}>
+          <div className="responsive-hide" style={{ height:'350px', display: 'flex', alignItems: 'flex-end' }}>
             <img 
               src={movie.posterUrl} 
               alt={movie.title} 
@@ -138,7 +138,7 @@ export default function MovieBooking() {
       </div>
 
       {/* ── Content below hero ── */}
-      <div style={{ maxWidth:'1100px', margin:'0 auto', padding:'0 28px 80px', display:'grid', gridTemplateColumns:'1fr 340px', gap:'28px', alignItems:'start' }}>
+      <div className="responsive-booking-grid responsive-padding" style={{ maxWidth:'1100px', margin:'0 auto', padding:'0 28px 80px', display:'grid', gridTemplateColumns:'1fr 340px', gap:'28px', alignItems:'start' }}>
 
         {/* LEFT: movie info */}
         <div>

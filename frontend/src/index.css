@@ -506,3 +506,46 @@ textarea.input-field { resize: vertical; min-height: 110px; line-height: 1.6; }
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+/* -- Responsive Utilities ---------------------- */
+@media (max-width: 768px) {
+  .responsive-grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+  .responsive-padding {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  .responsive-stack {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .responsive-hide {
+    display: none !important;
+  }
+  .responsive-text-center {
+    text-align: center !important;
+  }
+  .responsive-hero-bg {
+    height: auto !important;
+    padding-top: 100px !important;
+    padding-bottom: 40px !important;
+  }
+  .responsive-booking-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .responsive-movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+    gap: 16px !important;
+  }
+}
+@media (max-width: 768px) {
+  .responsive-navbar {
+    height: auto !important;
+    padding: 12px 0 !important;
+  }
+  .responsive-navbar-inner {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+}
