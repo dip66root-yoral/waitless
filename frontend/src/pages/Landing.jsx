@@ -267,7 +267,7 @@ export default function Landing() {
           </div>
 
           {/* Movie grid — 5 columns */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'16px' }}>
+          <div className="responsive-movie-grid" style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'16px' }}>
             {MOVIES.filter(m => {
               if (langFilter.length > 0 && !langFilter.some(l => m.language.includes(l))) return false
               if (formatFilter !== 'All Formats' && !m.formats.some(f => f.includes(formatFilter))) return false
@@ -299,7 +299,7 @@ export default function Landing() {
             <Link to="/user" className="btn-book" style={{ padding:'9px 20px', fontSize:'13px', textDecoration:'none' }}>Get Token →</Link>
           </div>
 
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'16px' }}>
+          <div className="responsive-grid-2" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'16px' }}>
             {[
               { id:'queue-clinic-001', icon:'🏥', name:'City Medical Center', desc:'OPD · Diagnostics · Specialist', accent:'#a78bfa', border:'rgba(167,139,250,0.18)', bg:'linear-gradient(135deg,#0c0814,#140e20)' },
               { id:'queue-train-001',  icon:'🚆', name:'Indian Railways',      desc:'Booking · Tatkal · Passes',    accent:'#4ade80', border:'rgba(74,222,128,0.18)',   bg:'linear-gradient(135deg,#061208,#0a1e0d)' },

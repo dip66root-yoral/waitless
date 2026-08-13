@@ -344,7 +344,7 @@ export default function UserView() {
             <div style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#f87171' }}/>
             Priority Level
           </label>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+          <div className="responsive-grid-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
             {Object.entries(URGENCY).map(([key, u]) => (
               <button key={key} onClick={() => setUrgency(key)} style={{
                 padding: '14px', borderRadius: '14px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.22,1,0.36,1)', textAlign: 'center',

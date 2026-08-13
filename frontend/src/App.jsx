@@ -84,7 +84,7 @@ function NavBar() {
         </div>
 
         {/* Nav links */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1 }}>
+        <div className="responsive-navbar-links" style={{ display: 'flex', alignItems: 'center', gap: '2px', flex: 1 }}>
           {NAV_LINKS.map(({ to, label }) => {
             const isActive = to === '/' ? pathname === '/' : pathname.startsWith(to)
             return (

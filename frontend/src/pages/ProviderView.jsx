@@ -284,7 +284,7 @@ export default function ProviderView() {
             </div>
 
             {/* Stats row */}
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'12px', marginBottom:'28px' }}>
+            <div className="responsive-grid-2" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'12px', marginBottom:'28px' }}>
               <StatCard icon="⏳" value={stats?.waiting??0}  label="Waiting"    color="#fbbf24" />
               <StatCard icon="🎯" value={stats?.serving??0}  label="At Counter" color={meta?.accent||'#e50914'} />
               <StatCard icon="✅" value={stats?.done??0}     label="Served"     color="#4ade80" />

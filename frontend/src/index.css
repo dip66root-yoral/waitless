@@ -556,3 +556,22 @@ textarea.input-field { resize: vertical; min-height: 110px; line-height: 1.6; }
     margin-bottom: 20px !important;
   }
 }
+@media (max-width: 768px) {
+  .responsive-grid-dates {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)) !important;
+  }
+  .responsive-grid-times {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)) !important;
+  }
+  .responsive-grid-1 {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (max-width: 768px) {
+  .responsive-navbar-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    flex: unset !important;
+    width: 100% !important;
+  }
+}

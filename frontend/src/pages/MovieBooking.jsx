@@ -241,7 +241,7 @@ export default function MovieBooking() {
         </div>
 
         {/* Date tabs */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'8px', marginBottom:'20px' }}>
+        <div className="responsive-grid-dates" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'8px', marginBottom:'20px' }}>
           {[{d:'Today',dt:'Aug 7'},{d:'Tomorrow',dt:'Aug 8'},{d:'Sat',dt:'Aug 9'},{d:'Sun',dt:'Aug 10'}].map((item,i) => (
             <button key={item.d} style={{ padding:'10px 8px', borderRadius:'12px', cursor:'pointer', textAlign:'center', background: i===0 ? movie.poster.accent : 'rgba(255,255,255,0.03)', color: i===0 ? '#fff' : '#4b5563', border: `1px solid ${i===0 ? movie.poster.accent : 'rgba(255,255,255,0.07)'}`, transition:'all 0.15s' }}>
               <p style={{ fontSize:'13px', fontWeight:800, margin:0 }}>{item.d}</p>
@@ -271,7 +271,7 @@ export default function MovieBooking() {
           </div>
 
           {/* Showtime grid */}
-          <div style={{ padding:'16px 20px', display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'8px' }}>
+          <div className="responsive-grid-times" style={{ padding:'16px 20px', display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'8px' }}>
             {SHOWTIMES.map((t, i) => {
               const states = [{c:'#4ade80',l:'Avail'},{c:'#4ade80',l:'Avail'},{c:'#fbbf24',l:'Fast'},{c:'#fbbf24',l:'Fast'},{c:'#f87171',l:'Full'}]
               const s = states[i]
@@ -318,7 +318,7 @@ export default function MovieBooking() {
         </div>
 
         {/* Seat type cards */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'10px', marginBottom:'24px' }}>
+        <div className="responsive-grid-1" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'10px', marginBottom:'24px' }}>
           {SEAT_TYPES.map(st => {
             const isSel = seatType?.id === st.id
             return (
