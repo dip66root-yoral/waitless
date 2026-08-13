@@ -14,6 +14,7 @@ const StadiumBooking = React.lazy(() => import('./pages/StadiumBooking.jsx'))
 const LoginPage    = React.lazy(() => import('./pages/LoginPage.jsx'))
 const AdminView    = React.lazy(() => import('./pages/AdminView.jsx'))
 const UserProfile  = React.lazy(() => import('./pages/UserProfile.jsx'))
+const AllMovies    = React.lazy(() => import('./pages/AllMovies.jsx'))
 
 /** Redirects to /login if user is not authenticated */
 function ProtectedRoute({ children }) {
@@ -166,6 +167,7 @@ export default function App() {
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   <Route path="/"                   element={<Landing />} />
+                  <Route path="/movies"             element={<AllMovies />} />
                   <Route path="/login"              element={<LoginPage />} />
                   <Route path="/profile"            element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
                   <Route path="/user"               element={<ProtectedRoute><UserView /></ProtectedRoute>} />

@@ -243,7 +243,7 @@ export default function Landing() {
               <h2 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', marginBottom:'3px' }}>🎬 Movies in Cinemas</h2>
               <p style={{ fontSize:'13px', color:'#4b5563' }}>PVR · INOX · Cinépolis · Miraj</p>
             </div>
-            <Link to="/user" style={{ textDecoration:'none', fontSize:'13px', fontWeight:600, color:'#e50914' }}>See all →</Link>
+            <Link to="/movies" style={{ textDecoration:'none', fontSize:'13px', fontWeight:600, color:'#e50914' }}>See all →</Link>
           </div>
 
           {/* Filter chips */}
