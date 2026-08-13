@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
 
+import ReactMarkdown from 'react-markdown'
+
 const S = {
   widget: { position: 'fixed', bottom: '24px', right: '24px', zIndex: 9999 },
   bubble: {
@@ -25,7 +27,7 @@ const S = {
   },
   messages: { flex: 1, padding: '16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' },
   msgUser: { alignSelf: 'flex-end', background: '#3b82f6', color: '#fff', padding: '10px 14px', borderRadius: '16px 16px 4px 16px', maxWidth: '85%', fontSize: '14px', lineHeight: 1.4 },
-  msgAi: { alignSelf: 'flex-start', background: 'rgba(255,255,255,0.1)', color: '#e2e8f0', padding: '10px 14px', borderRadius: '16px 16px 16px 4px', maxWidth: '85%', fontSize: '14px', lineHeight: 1.4 },
+  msgAi: { alignSelf: 'flex-start', background: 'rgba(255,255,255,0.1)', color: '#e2e8f0', padding: '10px 14px', borderRadius: '16px 16px 16px 4px', maxWidth: '85%', fontSize: '14px', lineHeight: 1.4, wordBreak: 'break-word' },
   inputArea: {
     padding: '16px', borderTop: '1px solid rgba(255,255,255,0.05)',
     display: 'flex', gap: '8px'
@@ -105,7 +107,13 @@ export default function AIHelpWidget() {
           <div style={S.messages}>
             {messages.map(m => (
               <div key={m.id} style={m.isAi ? S.msgAi : S.msgUser}>
-                {m.text}
+                {m.isAi ? (
+                  <ReactMarkdown components={{ p: ({node, ...props}) => <p style={{margin:0, paddingBottom: '4px'}} {...props} /> }}>
+                    {m.text}
+                  </ReactMarkdown>
+                ) : (
+                  m.text
+                )}
                 {m.system && <div style={{ fontSize: '11px', color: '#a855f7', marginTop: '4px', fontWeight: 600 }}>System Note</div>}
               </div>
             ))}

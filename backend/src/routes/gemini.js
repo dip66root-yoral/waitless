@@ -138,10 +138,17 @@ router.post('/help', async (req, res) => {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
     const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
 
+    const currentDate = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
     const prompt = `You are a helpful customer support AI for WAITLESS (a queue management & booking platform).
+Current system date and time: ${currentDate}
+
+Platform Info: 
+- Movies available: Spider-Man, KGF Chapter 3, Pushpa: The Fire, Avatar: Fire and Ash, Odyssey.
+- Services available: Train tickets, Flight check-ins, Medical OPD, Stadium VIP Boxes.
+
 The user is asking: "${text}"
 
-Answer their question politely and concisely.
+Answer their question politely and concisely. You can use markdown formatting for readability.
 IMPORTANT: At the very end of your response, output a boolean flag indicating if this issue requires human admin attention (e.g. they want a refund, they are very angry, they have a bug).
 Format your entire output exactly like this JSON:
 {
