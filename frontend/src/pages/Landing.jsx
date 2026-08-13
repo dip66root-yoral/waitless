@@ -197,7 +197,7 @@ export default function Landing() {
       {/* ═══════════════════════════════════════════════
           SECTION 1 — HERO & HUBS
       ═══════════════════════════════════════════════ */}
-      <section aria-label="Hero Section" className="responsive-padding" style={{ padding:'120px 28px 64px' }}>
+      <section aria-label="Hero Section" className="responsive-padding responsive-hero-padding" style={{ padding:'120px 28px 64px' }}>
         <div style={{ maxWidth:MAX_W, margin:'0 auto' }}>
 
           {/* Heading */}
@@ -267,7 +267,7 @@ export default function Landing() {
           </div>
 
           {/* Movie grid — 5 columns */}
-          <div className="responsive-movie-grid" style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'16px' }}>
+          <div className="responsive-horizontal-slider" style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'16px' }}>
             {MOVIES.filter(m => {
               if (langFilter.length > 0 && !langFilter.some(l => m.language.includes(l))) return false
               if (formatFilter !== 'All Formats' && !m.formats.some(f => f.includes(formatFilter))) return false
