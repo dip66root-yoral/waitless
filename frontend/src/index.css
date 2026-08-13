@@ -549,3 +549,10 @@ textarea.input-field { resize: vertical; min-height: 110px; line-height: 1.6; }
     gap: 12px !important;
   }
 }
+@media (max-width: 768px) {
+  .responsive-hero-poster {
+    height: 250px !important;
+    align-self: center !important;
+    margin-bottom: 20px !important;
+  }
+}

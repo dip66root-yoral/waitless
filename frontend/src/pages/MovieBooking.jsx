@@ -84,19 +84,19 @@ export default function MovieBooking() {
     <div className="app-bg" style={{ minHeight:'100vh', paddingTop:NAV_H }}>
 
       {/* ── Cinematic hero banner ── */}
-      <div style={{ position:'relative', height:'460px', overflow:'hidden' }}>
-        <div style={{ position:'absolute', inset:0, filter:'blur(25px) opacity(0.5)', transform:'scale(1.1)' }}>
+      <div className="responsive-hero-bg" style={{ position:'relative', minHeight:'460px', overflow:'hidden' }}>
+        <div style={{ position:'absolute', inset:0, filter:'blur(25px) opacity(0.5)', transform:'scale(1.1)', zIndex: 1 }}>
           <MoviePoster movie={movie} />
         </div>
         {/* Left fade for text readability */}
-        <div style={{ position:'absolute', inset:0, background:'linear-gradient(105deg,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.7) 40%,rgba(0,0,0,0.15) 70%,transparent 100%)' }}/>
+        <div style={{ position:'absolute', inset:0, background:'linear-gradient(105deg,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.7) 40%,rgba(0,0,0,0.15) 70%,transparent 100%)', zIndex: 2 }}/>
         {/* Bottom fade to page */}
-        <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'180px', background:'linear-gradient(to top,#08090f 0%,transparent 100%)' }}/>
+        <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'180px', background:'linear-gradient(to top,#08090f 0%,transparent 100%)', zIndex: 3 }}/>
 
         {/* Content inside hero */}
-        <div className="responsive-padding responsive-stack" style={{ position:'absolute', inset:0, display:'flex', alignItems:'flex-end', justifyContent:'space-between', padding:'40px 48px', gap:'40px' }}>
+        <div className="responsive-padding responsive-stack" style={{ position:'relative', zIndex: 4, display:'flex', alignItems:'flex-end', justifyContent:'space-between', padding:'40px 48px', gap:'40px', minHeight: '460px' }}>
           
-          <div style={{ display:'flex', flexDirection:'column', justifyContent:'flex-end', maxWidth:'660px' }}>
+          <div style={{ display:'flex', flexDirection:'column', justifyContent:'flex-end', maxWidth:'660px', flex: 1 }}>
             {/* Badges row */}
             <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:'8px', marginBottom:'16px' }}>
               {movie.isNew && (
@@ -126,7 +126,7 @@ export default function MovieBooking() {
           </div>
 
           {/* UNCROPPED POSTER ON RIGHT */}
-          <div className="responsive-hide" style={{ height:'350px', display: 'flex', alignItems: 'flex-end' }}>
+          <div className="responsive-hero-poster" style={{ height:'350px', display: 'flex', alignItems: 'flex-end', flexShrink: 0 }}>
             <img 
               src={movie.posterUrl} 
               alt={movie.title} 
