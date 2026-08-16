@@ -24,7 +24,8 @@ export default function MovieBooking() {
   const [selectedCinema, setSelectedCinema] = useState(CINEMAS[0])
   const [selectedShowtime, setSelectedShowtime] = useState(null)
   const [selectedFormat, setSelectedFormat] = useState(null)
-  const [seatType, setSeatType] = useState(SEAT_TYPES[1])
+  const [seatType, setSeatType] = useState(null)
+  const [totalPrice, setTotalPrice] = useState(0)
   const [selectedSeats, setSelectedSeats] = useState([])
   const [numSeats, setNumSeats] = useState(2)
   const [userName, setUserName] = useState('')
@@ -49,19 +50,19 @@ export default function MovieBooking() {
     </div>
   )
 
-  const totalPrice = seatType ? seatType.price * numSeats : 0
+  // totalPrice is tracked in state
 
   async function handleBook() {
     if (!userName.trim()) return addToast('Please enter your name', 'warning')
     if (!selectedShowtime) return addToast('Select a showtime', 'warning')
-    if (!seatType) return addToast('Select a seat type', 'warning')
+    if (selectedSeats.length === 0) return addToast('Please select your seats', 'warning')
     setIsLoading(true)
     try {
       const res = await tokensAPI.create({
         queue_id:'queue-movies-001', user_name:userName.trim(), phone:phone.trim()||undefined,
-        request_text:`${movie.title} — ${selectedCinema.name} — ${selectedShowtime} — ${numSeats}x ${seatType.label} (${selectedFormat})`,
+        request_text:`${movie.title} — ${selectedCinema.name} — ${selectedShowtime} — ${numSeats}x ${seatType} (${selectedFormat})`,
         service_type:`Movie: ${movie.title}`, urgency:'medium', request_category:'appointment',
-        estimated_service_duration:5, notes:`${numSeats} × ${seatType.label} | ${selectedFormat} | ₹${totalPrice}`,
+        estimated_service_duration:5, notes:`${numSeats} × ${seatType} | ${selectedFormat} | ₹${totalPrice}`,
       })
       setBookingToken(res.data); setLiveToken(res.data); setStep('done')
       addToast(`🎬 Booked! Token ${res.data.token_number}`, 'success')
@@ -310,76 +311,43 @@ export default function MovieBooking() {
         <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:'#fff', marginBottom:'5px' }}>Select Seats</h1>
         <p style={{ fontSize:'13px', color:'#4b5563', marginBottom:'24px' }}>{movie.title} · {selectedShowtime} · {selectedFormat}</p>
 
-        {/* Screen indicator */}
-        <div style={{ textAlign:'center', marginBottom:'24px' }}>
-          <div style={{ display:'inline-block', padding:'6px 40px', borderRadius:'0 0 20px 20px', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', borderTop:'none' }}>
-            <p style={{ fontSize:'10px', color:'#374151', fontWeight:700, letterSpacing:'0.15em', textTransform:'uppercase', margin:0 }}>SCREEN ↓</p>
+        {/* Ticket count */}
+        <div style={{ borderRadius:'16px', padding:'18px 20px', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.07)', marginBottom:'24px' }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: selectedSeats.length > 0 ? '14px' : '0' }}>
+            <span style={{ fontWeight:700, color:'#fff', fontSize:'15px' }}>Number of Tickets</span>
+            <div style={{ display:'flex', alignItems:'center', gap:'16px' }}>
+              <button onClick={() => { setNumSeats(Math.max(1,numSeats-1)); setSelectedSeats([]); setTotalPrice(0); setSeatType(null) }} style={{ width:'36px', height:'36px', borderRadius:'10px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.1)', color:'#fff', fontSize:'20px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>−</button>
+              <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', minWidth:'24px', textAlign:'center' }}>{numSeats}</span>
+              <button onClick={() => { setNumSeats(Math.min(8,numSeats+1)); setSelectedSeats([]); setTotalPrice(0); setSeatType(null) }} style={{ width:'36px', height:'36px', borderRadius:'10px', background:movie.poster.accent, border:'none', color:'#fff', fontSize:'20px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>+</button>
+            </div>
           </div>
-        </div>
-
-        {/* Seat type cards */}
-        <div className="responsive-grid-1" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'10px', marginBottom:'24px' }}>
-          {SEAT_TYPES.map(st => {
-            const isSel = seatType?.id === st.id
-            return (
-              <button key={st.id} onClick={() => setSeatType(st)}
-                style={{ width:'100%', textAlign:'left', padding:'16px', borderRadius:'16px', cursor:'pointer', transition:'all 0.2s', background: isSel ? `${movie.poster.accent}12` : 'rgba(255,255,255,0.025)', border: `1px solid ${isSel ? movie.poster.accent+'50' : 'rgba(255,255,255,0.07)'}`, boxShadow: isSel ? `0 0 24px ${movie.poster.accent}15` : 'none' }}>
-                <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
-                  <div>
-                    <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'16px', color: isSel ? '#fff' : '#94a3b8' }}>{st.label}</span>
-                  </div>
-                  <div>
-                    <p style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'22px', color: isSel ? movie.poster.accent : '#374151', margin:0 }}>₹{st.price}</p>
-                    <p style={{ fontSize:'11px', color:'#374151', margin:'2px 0 0' }}>per ticket</p>
-                  </div>
-                </div>
-              </button>
-            )
-          })}
+          {selectedSeats.length > 0 && (
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', paddingTop:'14px', borderTop:'1px solid rgba(255,255,255,0.06)' }}>
+              <div>
+                <p style={{ fontSize:'13px', color:'#64748b', margin: 0 }}>{numSeats} × {seatType} ({selectedFormat})</p>
+                <p style={{ fontSize:'12px', color:movie.poster.accent, margin: '4px 0 0' }}>Seats: {selectedSeats.join(', ')}</p>
+              </div>
+              <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'22px', color:movie.poster.accent }}>₹{totalPrice}</span>
+            </div>
+          )}
         </div>
 
         {/* Seat Map */}
         <div style={{ marginBottom: '24px' }}>
           <SeatMap 
-            type={seatType?.label} 
-            price={seatType?.price} 
+            numTickets={numSeats} 
             accent={movie.poster.accent}
             selectedSeats={selectedSeats}
-            onToggleSeat={(seat) => {
-              if (selectedSeats.includes(seat)) {
-                setSelectedSeats(s => s.filter(x => x !== seat))
-              } else if (selectedSeats.length < numSeats) {
-                setSelectedSeats(s => [...s, seat])
-              } else {
-                addToast(`You can only select ${numSeats} seats`, 'warning')
-              }
+            onSelect={(seats, price, typeLabel) => {
+              setSelectedSeats(seats)
+              setTotalPrice(price)
+              setSeatType(typeLabel)
             }}
           />
         </div>
 
-        {/* Ticket count */}
-        {seatType && (
-          <div style={{ borderRadius:'16px', padding:'18px 20px', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.07)', marginBottom:'16px' }}>
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'14px' }}>
-              <span style={{ fontWeight:700, color:'#fff', fontSize:'15px' }}>Number of Tickets</span>
-              <div style={{ display:'flex', alignItems:'center', gap:'16px' }}>
-                <button onClick={() => { setNumSeats(Math.max(1,numSeats-1)); setSelectedSeats([]) }} style={{ width:'36px', height:'36px', borderRadius:'10px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.1)', color:'#fff', fontSize:'20px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>−</button>
-                <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', minWidth:'24px', textAlign:'center' }}>{numSeats}</span>
-                <button onClick={() => setNumSeats(Math.min(8,numSeats+1))} style={{ width:'36px', height:'36px', borderRadius:'10px', background:movie.poster.accent, border:'none', color:'#fff', fontSize:'20px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>+</button>
-              </div>
-            </div>
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', paddingTop:'14px', borderTop:'1px solid rgba(255,255,255,0.06)' }}>
-              <div>
-                <p style={{ fontSize:'13px', color:'#64748b', margin: 0 }}>{numSeats} × {seatType.label} ({selectedFormat})</p>
-                {selectedSeats.length > 0 && <p style={{ fontSize:'12px', color:movie.poster.accent, margin: '4px 0 0' }}>Seats: {selectedSeats.join(', ')}</p>}
-              </div>
-              <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'22px', color:movie.poster.accent }}>₹{totalPrice}</span>
-            </div>
-          </div>
-        )}
-
         <button onClick={() => { 
-          if (!seatType) return addToast('Select a seat type','warning')
+          if (selectedSeats.length === 0) return addToast('Please select seats from the map','warning')
           if (selectedSeats.length !== numSeats) return addToast(`Select ${numSeats} seats from the map`, 'warning')
           setStep('confirm') 
         }}
@@ -418,7 +386,7 @@ export default function MovieBooking() {
               </div>
             </div>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'14px' }}>
-              {[{l:'Seat Type',v:seatType?.label},{l:'Seats', v:selectedSeats.join(', ')},{l:'Price / Ticket',v:`₹${seatType?.price}`},{l:'Convenience Fee',v:'₹0 🎉'}].map(({l,v}) => (
+              {[{l:'Seat Type',v:seatType},{l:'Seats', v:selectedSeats.join(', ')},{l:'Total Price',v:`₹${totalPrice}`},{l:'Convenience Fee',v:'₹0 🎉'}].map(({l,v}) => (
                 <div key={l} style={{ padding:'11px', borderRadius:'10px', background:'rgba(255,255,255,0.03)' }}>
                   <p style={{ fontSize:'10px', color:'#374151', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'4px' }}>{l}</p>
                   <p style={{ fontSize:'14px', fontWeight:700, color:'#e2e8f0', margin:0 }}>{v}</p>
