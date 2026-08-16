@@ -1,23 +1,8 @@
-import { useEffect, useState } from 'react'
-import QRCode from 'qrcode'
+import { QRCodeSVG } from 'qrcode.react'
 import QueueProgress from './QueueProgress.jsx'
 
 export function LiveTicket({ token, movie, meta, queueData, children }) {
-  const [qrCodeUrl, setQrCodeUrl] = useState('')
   const m = meta || {}
-
-  useEffect(() => {
-    if (token) {
-      QRCode.toDataURL(`waitless:token:${token.id}`, {
-        width: 140,
-        margin: 1,
-        color: {
-          dark: m.accent || '#e50914',
-          light: '#00000000'
-        }
-      }).then(url => setQrCodeUrl(url)).catch(() => {})
-    }
-  }, [token, m.accent])
 
   if (!token) return null
 
@@ -51,11 +36,9 @@ export function LiveTicket({ token, movie, meta, queueData, children }) {
             </div>
             
             {/* QR Code */}
-            {qrCodeUrl && (
-              <div style={{ width: '100px', height: '100px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '8px', border: `1px solid ${m.accent || '#e50914'}30` }}>
-                <img src={qrCodeUrl} alt="Ticket QR" style={{ width: '100%', height: '100%' }} />
-              </div>
-            )}
+            <div style={{ width: '100px', height: '100px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '8px', border: `1px solid ${m.accent || '#e50914'}30`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <QRCodeSVG value={`waitless:token:${token.id}`} size={82} fgColor={m.accent || '#e50914'} bgColor="transparent" />
+            </div>
           </div>
         </div>
 
@@ -70,7 +53,9 @@ export function LiveTicket({ token, movie, meta, queueData, children }) {
         )}
 
         {/* Progress */}
-        <QueueProgress status={status} position={token.position || 0} accentColor={m.accent} />
+        {!m.hideProgress && (
+          <QueueProgress status={status} position={token.position || 0} accentColor={m.accent} />
+        )}
       </div>
     </div>
   )

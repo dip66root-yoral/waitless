@@ -445,7 +445,7 @@ export default function MovieBooking() {
         </div>
 
         {/* Ticket */}
-        <LiveTicket token={liveToken || bookingToken} meta={{ accent: movie.poster.accent, icon: '🍿' }}>
+        <LiveTicket token={liveToken || bookingToken} meta={{ accent: movie.poster.accent, icon: '🍿', hideProgress: true }}>
           <div style={{ display:'flex', gap:'16px', marginBottom:'20px' }}>
             <PosterThumb movie={movie} size={72} />
             <div>
