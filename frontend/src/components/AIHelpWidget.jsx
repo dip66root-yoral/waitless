@@ -4,43 +4,74 @@ import { useAuth } from '../context/AuthContext.jsx'
 import ReactMarkdown from 'react-markdown'
 
 const S = {
-  widget: { position: 'fixed', bottom: '24px', right: '24px', zIndex: 9999 },
+  widget: { position: 'fixed', bottom: '28px', right: '28px', zIndex: 9999 },
   bubble: {
-    width: '60px', height: '60px', borderRadius: '50%',
-    background: 'linear-gradient(135deg, #a855f7, #ec4899)',
-    boxShadow: '0 8px 32px rgba(236,72,153,0.4)', cursor: 'pointer',
+    width: '62px', height: '62px', borderRadius: '50%',
+    background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%)',
+    boxShadow: '0 8px 32px rgba(168,85,247,0.55), 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.25)',
+    cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    fontSize: '28px', transition: 'transform 0.2s ease',
+    fontSize: '26px', transition: 'all 0.25s cubic-bezier(0.25,1,0.5,1)',
+    border: '1px solid rgba(255,255,255,0.15)',
   },
   chatWindow: {
-    position: 'absolute', bottom: '80px', right: '0',
-    width: '350px', height: '500px',
-    background: 'rgba(15,15,25,0.95)', backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255,255,255,0.1)', borderRadius: '24px',
+    position: 'absolute', bottom: '82px', right: '0',
+    width: '370px', height: '520px',
+    background: 'rgba(6,8,18,0.97)',
+    backdropFilter: 'blur(40px) saturate(200%)',
+    WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: '28px',
     display: 'flex', flexDirection: 'column', overflow: 'hidden',
-    boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
+    boxShadow: '0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06)',
   },
   header: {
-    padding: '16px 20px', background: 'rgba(255,255,255,0.05)',
-    borderBottom: '1px solid rgba(255,255,255,0.05)',
-    display: 'flex', alignItems: 'center', gap: '12px'
+    padding: '18px 22px',
+    background: 'linear-gradient(135deg, rgba(124,58,237,0.15) 0%, rgba(236,72,153,0.08) 100%)',
+    borderBottom: '1px solid rgba(255,255,255,0.06)',
+    display: 'flex', alignItems: 'center', gap: '14px'
   },
-  messages: { flex: 1, padding: '16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' },
-  msgUser: { alignSelf: 'flex-end', background: '#3b82f6', color: '#fff', padding: '10px 14px', borderRadius: '16px 16px 4px 16px', maxWidth: '85%', fontSize: '14px', lineHeight: 1.4 },
-  msgAi: { alignSelf: 'flex-start', background: 'rgba(255,255,255,0.1)', color: '#e2e8f0', padding: '10px 14px', borderRadius: '16px 16px 16px 4px', maxWidth: '85%', fontSize: '14px', lineHeight: 1.4, wordBreak: 'break-word' },
+  messages: { flex: 1, padding: '18px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '14px' },
+  msgUser: {
+    alignSelf: 'flex-end',
+    background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+    color: '#fff', padding: '11px 16px',
+    borderRadius: '18px 18px 4px 18px', maxWidth: '82%',
+    fontSize: '14px', lineHeight: 1.5,
+    boxShadow: '0 4px 16px rgba(59,130,246,0.3)',
+    fontWeight: 500,
+  },
+  msgAi: {
+    alignSelf: 'flex-start',
+    background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    color: '#e2e8f0', padding: '11px 16px',
+    borderRadius: '4px 18px 18px 18px', maxWidth: '82%',
+    fontSize: '14px', lineHeight: 1.5, wordBreak: 'break-word',
+    backdropFilter: 'blur(10px)',
+  },
   inputArea: {
-    padding: '16px', borderTop: '1px solid rgba(255,255,255,0.05)',
-    display: 'flex', gap: '8px'
+    padding: '16px 18px',
+    borderTop: '1px solid rgba(255,255,255,0.05)',
+    background: 'rgba(0,0,0,0.2)',
+    display: 'flex', gap: '10px', alignItems: 'center'
   },
   input: {
-    flex: 1, padding: '10px 14px', borderRadius: '20px',
-    background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-    color: '#fff', fontSize: '14px', outline: 'none'
+    flex: 1, padding: '11px 16px', borderRadius: '22px',
+    background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    color: '#fff', fontSize: '14px', outline: 'none',
+    transition: 'border-color 0.2s',
+    fontFamily: "'Inter', sans-serif",
   },
   sendBtn: {
-    width: '40px', height: '40px', borderRadius: '50%',
-    background: '#a855f7', color: '#fff', border: 'none',
-    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+    width: '42px', height: '42px', borderRadius: '50%', flexShrink: 0,
+    background: 'linear-gradient(135deg, #7c3aed, #a855f7, #ec4899)',
+    color: '#fff', border: 'none',
+    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: '16px', fontWeight: 800,
+    boxShadow: '0 4px 16px rgba(168,85,247,0.4)',
+    transition: 'all 0.2s ease',
   }
 }
 
@@ -96,12 +127,15 @@ export default function AIHelpWidget() {
       {isOpen && (
         <div style={S.chatWindow}>
           <div style={S.header}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'linear-gradient(135deg, #a855f7, #ec4899)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>✨</div>
+            <div style={{ width: '42px', height: '42px', borderRadius: '14px', background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', boxShadow: '0 4px 16px rgba(168,85,247,0.4), inset 0 1px 0 rgba(255,255,255,0.2)', flexShrink: 0 }}>✨</div>
             <div>
-              <h4 style={{ color: '#fff', fontSize: '15px', fontWeight: 700, margin: 0 }}>WAITLESS AI</h4>
-              <p style={{ color: '#94a3b8', fontSize: '12px', margin: 0 }}>Support Assistant</p>
+              <h4 style={{ color: '#fff', fontSize: '15px', fontWeight: 800, margin: 0, fontFamily: "'Outfit',sans-serif", letterSpacing: '0.04em' }}>WAITLESS AI</h4>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
+                <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 6px rgba(74,222,128,0.8)', animation: 'live-pulse 1.8s ease infinite' }} />
+                <p style={{ color: '#64748b', fontSize: '12px', margin: 0, fontWeight: 500 }}>Online · Support Assistant</p>
+              </div>
             </div>
-            <button onClick={() => setIsOpen(false)} style={{ marginLeft: 'auto', background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '20px' }}>×</button>
+            <button onClick={() => setIsOpen(false)} style={{ marginLeft: 'auto', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', color: '#64748b', cursor: 'pointer', fontSize: '14px', width: '30px', height: '30px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>✕</button>
           </div>
           
           <div style={S.messages}>

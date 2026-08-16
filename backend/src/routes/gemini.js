@@ -134,32 +134,64 @@ router.post('/help', async (req, res) => {
     return res.status(400).json({ success: false, error: 'text is required' });
   }
 
-  try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
-    const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
+  const currentDate = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
-    const currentDate = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+  // Smart rule-based fallback when API key is unavailable
+  function smartFallback(q) {
+    const lower = q.toLowerCase();
+    if (/date|time|today|now/.test(lower)) return `Today is **${currentDate}** (IST). How can I help you with WAITLESS?`;
+    if (/movie|film|cinema|show/.test(lower)) return `🎬 **Movies now showing on WAITLESS:**\n- Spider-Man: Brand New Day\n- KGF Chapter 3\n- Pushpa: The Fire\n- Avatar: Fire and Ash\n- Odyssey (2026)\n\nClick any movie to book tickets!`;
+    if (/cancel|refund/.test(lower)) return `To cancel a booking or request a refund, please contact our support team. I'll flag this for a human admin to review.`;
+    if (/train/.test(lower)) return `🚆 **Train Booking:** You can book train seats, Tatkal tickets, and renew passes via the Book Services section.`;
+    if (/flight/.test(lower)) return `✈️ **Flight Services:** Get your boarding pass, upgrade seats, or report lost baggage via the Flight counter.`;
+    if (/medical|doctor|hospital|opd/.test(lower)) return `🏥 **Medical OPD:** Skip the hospital queue! Get a virtual token for City Medical Center via the Book Services page.`;
+    if (/stadium|match|sport|cricket|football/.test(lower)) return `🏟️ **Stadium Booking:** Book VIP box seats for live matches (IPL, Premier League, La Liga) via the Stadiums section.`;
+    if (/login|sign|account|password/.test(lower)) return `To sign in, click **Sign In** in the top navbar. You can log in with your email and password.`;
+    if (/help|how|what/.test(lower)) return `👋 I'm WAITLESS AI! I can help you with:\n- 🎬 Movie ticket booking\n- 🚆 Train reservations\n- ✈️ Flight check-in\n- 🏥 Medical OPD tokens\n- 🏟️ Stadium VIP boxes\n\nWhat would you like to do?`;
+    return `I'm here to help! You can book movies, train tickets, flights, medical appointments, and stadium seats on WAITLESS. What do you need?`;
+  }
+
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey === 'your_gemini_api_key_here' || apiKey === 'dummy_key') {
+    const fallbackReply = smartFallback(text);
+    return res.json({ success: true, reply: fallbackReply, forwarded: false, source: 'fallback' });
+  }
+
+  const MODEL_CASCADE = ['gemini-flash-latest', 'gemini-flash-lite-latest'];
+
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+
     const prompt = `You are a helpful customer support AI for WAITLESS (a queue management & booking platform).
 Current system date and time: ${currentDate}
 
 Platform Info: 
-- Movies available: Spider-Man, KGF Chapter 3, Pushpa: The Fire, Avatar: Fire and Ash, Odyssey.
+- Movies available: Spider-Man: Brand New Day, KGF Chapter 3, Pushpa: The Fire, Avatar: Fire and Ash, Odyssey.
 - Services available: Train tickets, Flight check-ins, Medical OPD, Stadium VIP Boxes.
 
 The user is asking: "${text}"
 
-Answer their question politely and concisely. You can use markdown formatting for readability.
-IMPORTANT: At the very end of your response, output a boolean flag indicating if this issue requires human admin attention (e.g. they want a refund, they are very angry, they have a bug).
-Format your entire output exactly like this JSON:
+Answer their question politely and concisely. You can use markdown formatting (bold, lists) for readability.
+IMPORTANT: Format your entire output as valid JSON:
 {
   "reply": "Your helpful response here.",
   "needs_admin": true/false
 }`;
 
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.2 },
-    });
+    let result;
+    for (const modelName of MODEL_CASCADE) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        result = await model.generateContent({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.2 },
+        });
+        break;
+      } catch (modelErr) {
+        console.warn(`Model ${modelName} failed:`, modelErr.message?.substring(0, 80));
+        if (modelName === MODEL_CASCADE[MODEL_CASCADE.length - 1]) throw modelErr;
+      }
+    }
 
     const responseText = result.response.text().trim();
     const cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
@@ -168,21 +200,26 @@ Format your entire output exactly like this JSON:
     try {
       parsed = JSON.parse(cleaned);
     } catch(e) {
-      // Fallback if AI didn't return JSON
       parsed = { reply: responseText, needs_admin: false };
     }
 
     if (parsed.needs_admin && userId) {
-      db.prepare(`
-        INSERT INTO support_tickets (id, user_id, user_name, question, ai_response, status)
-        VALUES (?, ?, ?, ?, ?, 'open')
-      `).run(uuidv4(), userId, userName || 'User', text, parsed.reply);
+      try {
+        db.prepare(`
+          INSERT INTO support_tickets (id, user_id, user_name, question, ai_response, status)
+          VALUES (?, ?, ?, ?, ?, 'open')
+        `).run(uuidv4(), userId, userName || 'User', text, parsed.reply);
+      } catch (dbErr) {
+        console.warn('Could not save support ticket:', dbErr.message);
+      }
     }
 
     res.json({ success: true, reply: parsed.reply, forwarded: parsed.needs_admin });
   } catch (err) {
     console.error('Gemini Help Error:', err.message);
-    res.json({ success: true, reply: "I'm sorry, I'm having trouble connecting to my brain right now. Please try again later.", forwarded: false });
+    // Smart fallback instead of generic error message
+    const fallbackReply = smartFallback(text);
+    res.json({ success: true, reply: fallbackReply, forwarded: false, source: 'fallback' });
   }
 });
 
