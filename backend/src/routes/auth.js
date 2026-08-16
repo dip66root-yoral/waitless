@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const { verifyToken } = require('@clerk/clerk-sdk-node');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const { db } = require('../db');
@@ -8,7 +9,30 @@ const { onlineUsers } = require('../socket');
 const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET || 'waitless_super_secret_key_2024';
+const CLERK_SECRET_KEY = process.env.CLERK_SECRET_KEY;
 const JWT_EXPIRES = '7d';
+
+/* ─── Helper: Verify Auth ────────────────────────── */
+async function getAuthUser(req) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) throw new Error('No token');
+  const token = authHeader.split(' ')[1];
+  
+  try {
+    // Try Clerk first
+    if (CLERK_SECRET_KEY && token.length > 100) {
+      const clerkToken = await verifyToken(token, { secretKey: CLERK_SECRET_KEY });
+      // For simplicity, treat Clerk users as basic 'user' role for now, unless synced
+      return { id: clerkToken.sub, role: 'user', clerk: true };
+    }
+  } catch (e) {
+    // Fallback to local JWT below
+  }
+  
+  // Fallback to local JWT
+  const decoded = jwt.verify(token, JWT_SECRET);
+  return decoded;
+}
 
 /* ─── POST /api/auth/register ─────────────────────── */
 router.post('/register', async (req, res) => {
@@ -89,26 +113,26 @@ router.post('/login', async (req, res) => {
 });
 
 /* ─── GET /api/auth/me ───────────────────────────── */
-router.get('/me', (req, res) => {
+router.get('/me', async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(401).json({ error: 'No token' });
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = await getAuthUser(req);
+    
+    if (decoded.clerk) {
+      // Mock user for Clerk authenticated sessions so it doesn't break
+      return res.json({ user: { id: decoded.id, name: 'Clerk User', role: 'user' } });
+    }
+
     const user = db.prepare('SELECT id, name, email, phone, role FROM users WHERE id = ?').get(decoded.userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
     return res.json({ user });
-  } catch {
+  } catch (err) {
     return res.status(401).json({ error: 'Invalid token' });
   }
 });
 /* ─── GET /api/auth/users ─────────────────────────── */
-router.get('/users', (req, res) => {
+router.get('/users', async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(401).json({ error: 'No token' });
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = await getAuthUser(req);
     
     // Check if the requester is an admin
     if (decoded.role !== 'admin') {
@@ -131,12 +155,9 @@ router.get('/users', (req, res) => {
 });
 
 /* ─── PATCH /api/auth/users/:id/status ────────────────────── */
-router.patch('/users/:id/status', (req, res) => {
+router.patch('/users/:id/status', async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(401).json({ error: 'No token' });
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = await getAuthUser(req);
     
     if (decoded.role !== 'admin') {
       return res.status(403).json({ error: 'Forbidden: Admins only' });

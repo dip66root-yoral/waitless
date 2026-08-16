@@ -1,9 +1,8 @@
 import React, { Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext.jsx'
+import { ClerkProvider } from '@clerk/clerk-react'
 import { LocationProvider, useLocation as useCityLocation } from './context/LocationContext.jsx'
-import ToastContainer from './components/ToastContainer.jsx'
-import { ToastProvider } from './context/ToastContext.jsx'
 import AIHelpWidget from './components/AIHelpWidget.jsx'
 
 const Landing      = React.lazy(() => import('./pages/Landing.jsx'))
@@ -154,36 +153,41 @@ function PageLoader() {
   )
 }
 
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
 export default function App() {
   return (
-    <LocationProvider>
-      <ToastProvider>
-        <BrowserRouter>
-          <AuthProvider>
-            <div className="app-bg">
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <AuthProvider>
+        <LocationProvider>
+          <ToastProvider>
+            <BrowserRouter>
               <NavBar />
-              <ToastContainer />
-              <AIHelpWidget />
-              <Suspense fallback={<PageLoader />}>
+              <Suspense fallback={<div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'#060810', color:'#fff' }}>Loading...</div>}>
                 <Routes>
-                  <Route path="/"                   element={<Landing />} />
-                  <Route path="/movies"             element={<AllMovies />} />
-                  <Route path="/login"              element={<LoginPage />} />
-                  <Route path="/profile"            element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-                  <Route path="/user"               element={<ProtectedRoute><UserView /></ProtectedRoute>} />
-                  <Route path="/user/:queueId"      element={<ProtectedRoute><UserView /></ProtectedRoute>} />
-                  <Route path="/movie/:movieId"     element={<ProtectedRoute><MovieBooking /></ProtectedRoute>} />
-                  <Route path="/stadiums"           element={<ProtectedRoute><StadiumBooking /></ProtectedRoute>} />
-                  <Route path="/provider"           element={<ProtectedRoute><ProviderView /></ProtectedRoute>} />
-                  <Route path="/provider/:queueId"  element={<ProtectedRoute><ProviderView /></ProtectedRoute>} />
-                  <Route path="/admin"              element={<ProtectedRoute><AdminView /></ProtectedRoute>} />
-                  <Route path="*"                   element={<Navigate to="/" />} />
+                  <Route path="/" element={<Landing />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  
+                  {/* Protected User Routes */}
+                  <Route path="/user" element={<ProtectedRoute><UserView /></ProtectedRoute>} />
+                  <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+                  <Route path="/movies/:movieId/book" element={<ProtectedRoute><MovieBooking /></ProtectedRoute>} />
+                  <Route path="/movies/all" element={<ProtectedRoute><AllMovies /></ProtectedRoute>} />
+                  <Route path="/stadiums/:matchId/book" element={<ProtectedRoute><StadiumBooking /></ProtectedRoute>} />
+                  
+                  {/* Protected Provider Routes */}
+                  <Route path="/provider" element={<ProtectedRoute><ProviderView /></ProtectedRoute>} />
+                  
+                  {/* Admin Route */}
+                  <Route path="/admin" element={<ProtectedRoute><AdminView /></ProtectedRoute>} />
                 </Routes>
               </Suspense>
-            </div>
-          </AuthProvider>
-        </BrowserRouter>
-      </ToastProvider>
-    </LocationProvider>
+              <AIHelpWidget />
+              <ToastContainer />
+            </BrowserRouter>
+          </ToastProvider>
+        </LocationProvider>
+      </AuthProvider>
+    </ClerkProvider>
   )
 }

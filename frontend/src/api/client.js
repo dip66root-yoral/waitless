@@ -12,9 +12,16 @@ const BASE_URL = import.meta.env.VITE_API_URL || ''
 const api = axios.create({ baseURL: BASE_URL })
 
 // Attach JWT token to every request automatically
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('waitless_token')
-  if (token) config.headers.Authorization = `Bearer ${token}`
+api.interceptors.request.use(async (config) => {
+  // Use Clerk token if available
+  if (window.Clerk && window.Clerk.session) {
+    const token = await window.Clerk.session.getToken()
+    if (token) config.headers.Authorization = `Bearer ${token}`
+  } else {
+    // Fallback to legacy waitless token just in case
+    const token = localStorage.getItem('waitless_token')
+    if (token) config.headers.Authorization = `Bearer ${token}`
+  }
   return config
 })
 
