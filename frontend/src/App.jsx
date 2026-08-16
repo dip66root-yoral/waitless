@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate, Navigate 
 import { AuthProvider, useAuth } from './context/AuthContext.jsx'
 import { ClerkProvider } from '@clerk/clerk-react'
 import { LocationProvider, useLocation as useCityLocation } from './context/LocationContext.jsx'
+import ToastContainer from './components/ToastContainer.jsx'
+import { ToastProvider } from './context/ToastContext.jsx'
 import AIHelpWidget from './components/AIHelpWidget.jsx'
 
 const Landing      = React.lazy(() => import('./pages/Landing.jsx'))
