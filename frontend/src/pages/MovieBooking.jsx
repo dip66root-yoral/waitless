@@ -24,6 +24,8 @@ export default function MovieBooking() {
   const [selectedCinema, setSelectedCinema] = useState(CINEMAS[0])
   const [selectedShowtime, setSelectedShowtime] = useState(null)
   const [selectedFormat, setSelectedFormat] = useState(null)
+  const [selectedLanguage, setSelectedLanguage] = useState(null)
+  const [selectedDate, setSelectedDate] = useState('Today')
   const [seatType, setSeatType] = useState(null)
   const [totalPrice, setTotalPrice] = useState(0)
   const [selectedSeats, setSelectedSeats] = useState([])
@@ -37,7 +39,7 @@ export default function MovieBooking() {
   const pollRef = useRef(null)
 
   useEffect(() => {
-    if (movie) { document.title = `${movie.title} - WAITLESS`; setSelectedFormat(movie.formats[0]) }
+    if (movie) { document.title = `${movie.title} - WAITLESS`; setSelectedFormat(movie.formats[0]); setSelectedLanguage(movie.language[0]) }
     return () => { clearInterval(pollRef.current); if (socketRef.current) socketRef.current.off('queue:updated') }
   }, [movie])
 
@@ -60,9 +62,9 @@ export default function MovieBooking() {
     try {
       const res = await tokensAPI.create({
         queue_id:'queue-movies-001', user_name:userName.trim(), phone:phone.trim()||undefined,
-        request_text:`${movie.title} — ${selectedCinema.name} — ${selectedShowtime} — ${numSeats}x ${seatType} (${selectedFormat})`,
+        request_text:`${movie.title} — ${selectedCinema.name} — ${selectedDate} ${selectedShowtime} — ${numSeats}x ${seatType} (${selectedFormat}, ${selectedLanguage})`,
         service_type:`Movie: ${movie.title}`, urgency:'medium', request_category:'appointment',
-        estimated_service_duration:5, notes:`${numSeats} × ${seatType} | ${selectedFormat} | ₹${totalPrice}`,
+        estimated_service_duration:5, notes:`${numSeats} × ${seatType} | ${selectedDate} ${selectedShowtime} | ${selectedFormat} | ${selectedLanguage} | ₹${totalPrice}`,
       })
       setBookingToken(res.data); setLiveToken(res.data); setStep('done')
       addToast(`🎬 Booked! Token ${res.data.token_number}`, 'success')
@@ -177,7 +179,7 @@ export default function MovieBooking() {
             <h2 style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'15px', color:'#fff', marginBottom:'14px' }}>Languages</h2>
             <div style={{ display:'flex', flexWrap:'wrap', gap:'8px' }}>
               {movie.language.map(l => (
-                <span key={l} style={{ padding:'6px 14px', borderRadius:'8px', fontSize:'13px', color:'#94a3b8', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)' }}>{l}</span>
+                <button key={l} onClick={() => setSelectedLanguage(l)} style={{ padding:'6px 14px', borderRadius:'8px', fontSize:'13px', cursor:'pointer', transition:'all 0.15s', color: selectedLanguage===l ? '#000' : '#94a3b8', background: selectedLanguage===l ? movie.poster.accent : 'rgba(255,255,255,0.04)', border: `1px solid ${selectedLanguage===l ? movie.poster.accent : 'rgba(255,255,255,0.07)'}`, fontWeight: selectedLanguage===l ? 700 : 500 }}>{l}</button>
               ))}
             </div>
           </div>
@@ -237,18 +239,21 @@ export default function MovieBooking() {
           <PosterThumb movie={movie} size={60} />
           <div>
             <h2 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'18px', color:'#fff', marginBottom:'2px' }}>{movie.title}</h2>
-            <p style={{ fontSize:'12px', color:'#4b5563' }}>{selectedCinema.name} · {selectedFormat}</p>
+            <p style={{ fontSize:'12px', color:'#4b5563' }}>{selectedCinema.name} · {selectedFormat} · {selectedLanguage}</p>
           </div>
         </div>
 
         {/* Date tabs */}
         <div className="responsive-grid-dates" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'8px', marginBottom:'20px' }}>
-          {[{d:'Today',dt:'Aug 7'},{d:'Tomorrow',dt:'Aug 8'},{d:'Sat',dt:'Aug 9'},{d:'Sun',dt:'Aug 10'}].map((item,i) => (
-            <button key={item.d} style={{ padding:'10px 8px', borderRadius:'12px', cursor:'pointer', textAlign:'center', background: i===0 ? movie.poster.accent : 'rgba(255,255,255,0.03)', color: i===0 ? '#fff' : '#4b5563', border: `1px solid ${i===0 ? movie.poster.accent : 'rgba(255,255,255,0.07)'}`, transition:'all 0.15s' }}>
-              <p style={{ fontSize:'13px', fontWeight:800, margin:0 }}>{item.d}</p>
-              <p style={{ fontSize:'10px', margin:'2px 0 0', opacity:0.7 }}>{item.dt}</p>
-            </button>
-          ))}
+          {[{d:'Today',dt:'Aug 7'},{d:'Tomorrow',dt:'Aug 8'},{d:'Sat',dt:'Aug 9'},{d:'Sun',dt:'Aug 10'}].map((item) => {
+            const isSel = selectedDate === item.d
+            return (
+              <button key={item.d} onClick={() => setSelectedDate(item.d)} style={{ padding:'10px 8px', borderRadius:'12px', cursor:'pointer', textAlign:'center', background: isSel ? movie.poster.accent : 'rgba(255,255,255,0.03)', color: isSel ? '#000' : '#4b5563', border: `1px solid ${isSel ? movie.poster.accent : 'rgba(255,255,255,0.07)'}`, transition:'all 0.15s' }}>
+                <p style={{ fontSize:'13px', fontWeight:800, margin:0 }}>{item.d}</p>
+                <p style={{ fontSize:'10px', margin:'2px 0 0', opacity:0.7 }}>{item.dt}</p>
+              </button>
+            )
+          })}
         </div>
 
         {/* Cinema + showtimes */}
