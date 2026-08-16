@@ -236,7 +236,14 @@ export default function UserView() {
             const waiting = q.stats?.waiting_count ?? 0
             const wait = waiting * (q.avg_service_time ?? 10)
             return (
-              <button key={q.id} onClick={() => { setSelected(q); setMeta(m); setStep('request') }}
+              <button key={q.id} onClick={() => { 
+                if (q.id === 'queue-movies-001') {
+                  navigate('/')
+                  setTimeout(() => window.scrollTo({ top: 1200, behavior: 'smooth' }), 100)
+                } else {
+                  setSelected(q); setMeta(m); setStep('request') 
+                }
+              }}
                 style={{ width:'100%', textAlign:'left', borderRadius:'18px', overflow:'hidden', border:`1px solid ${m.border}`, background:m.bg, cursor:'pointer', transition:'all 0.28s cubic-bezier(0.22,1,0.36,1)', position:'relative' }}
                 onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.boxShadow=`0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px ${m.accent}40` }}
                 onMouseLeave={e => { e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow='none' }}>

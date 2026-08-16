@@ -42,6 +42,19 @@ export function SeatMap({ numTickets = 2, accent = '#e50914', selectedSeats, onS
   }
 
   const handleMouseUp = () => setIsDragging(false)
+  
+  const handleTouchStart = (e) => {
+    if (e.target.tagName.toLowerCase() === 'button') return
+    if (e.touches.length === 1) {
+      setIsDragging(true)
+      setDragStart({ x: e.touches[0].clientX - pan.x, y: e.touches[0].clientY - pan.y })
+    }
+  }
+  const handleTouchMove = (e) => {
+    if (!isDragging || e.touches.length !== 1) return
+    setPan({ x: e.touches[0].clientX - dragStart.x, y: e.touches[0].clientY - dragStart.y })
+  }
+  
   const handleWheel = (e) => {
     e.preventDefault()
     setScale(s => Math.min(Math.max(0.5, s - e.deltaY * 0.002), 2))
@@ -49,7 +62,6 @@ export function SeatMap({ numTickets = 2, accent = '#e50914', selectedSeats, onS
 
   // Calculate hovered block
   const getHoverBlock = (row, startCol) => {
-    if (!hoveredSeat) return []
     const block = []
     for (let i = 0; i < numTickets; i++) {
       const col = startCol + i
@@ -89,8 +101,11 @@ export function SeatMap({ numTickets = 2, accent = '#e50914', selectedSeats, onS
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleMouseUp}
         onWheel={handleWheel}
-        style={{ width: '100%', height: '100%', cursor: isDragging ? 'grabbing' : 'grab', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        style={{ width: '100%', height: '100%', cursor: isDragging ? 'grabbing' : 'grab', display: 'flex', alignItems: 'center', justifyContent: 'center', touchAction: 'none' }}
       >
         <div style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`, transition: isDragging ? 'none' : 'transform 0.1s', display: 'flex', flexDirection: 'column', gap: '30px', padding: '40px' }}>
           
