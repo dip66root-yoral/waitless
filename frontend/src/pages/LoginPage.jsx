@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useToast } from '../context/ToastContext.jsx'
+import { use3DTilt } from '../hooks/use3DTilt.js'
 
 /* ─── Styles ──────────────────────────────────────── */
 const S = {
@@ -188,6 +189,8 @@ export default function LoginPage() {
     addToast('Google login is coming soon!', 'info')
   }
 
+  const { ref: cardRef, glareRef, glareStyle, handlers: tiltHandlers } = use3DTilt({ max: 8, scale: 1.01 })
+
   async function handleSignIn(e) {
     e.preventDefault()
     if (!identifier.trim() || !password) return addToast('Fill all fields', 'warning')
@@ -232,7 +235,8 @@ export default function LoginPage() {
       <div style={{ position: 'fixed', top: '10%', left: '20%', width: '400px', height: '400px', borderRadius: '50%', background: 'rgba(229,9,20,0.04)', filter: 'blur(80px)', pointerEvents: 'none' }} />
       <div style={{ position: 'fixed', bottom: '10%', right: '20%', width: '300px', height: '300px', borderRadius: '50%', background: 'rgba(229,9,20,0.03)', filter: 'blur(60px)', pointerEvents: 'none' }} />
 
-      <div style={S.card}>
+      <div ref={cardRef} className="tilt-wrap" style={S.card} {...tiltHandlers}>
+        <div ref={glareRef} style={glareStyle} />
         {/* Logo */}
         <div style={S.logo}>
           <div style={S.logoBox}>

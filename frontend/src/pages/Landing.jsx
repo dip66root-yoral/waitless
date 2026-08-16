@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { queuesAPI } from '../api/client.js'
 import { MOVIES } from '../data/movies.js'
 import { STADIUMS } from '../data/stadiums.js'
+import { use3DTilt } from '../hooks/use3DTilt.js'
 
 /* ─── Constants ────────────────────────────────────────────────── */
 const MAX_W = '1160px'
@@ -13,16 +14,19 @@ import { MoviePoster } from '../components/MoviePoster.jsx'
 /* ─── Movie Card (landing grid) ────────────────────────────────── */
 function MovieCard({ movie }) {
   const [hov, setHov] = useState(false)
+  const { ref, glareRef, glareStyle, handlers } = use3DTilt({ max: 14, scale: 1.05 })
   return (
     <Link to={`/movie/${movie.id}`} style={{ textDecoration:'none', display:'block', height:'100%' }}
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
-      <div style={{
+      onMouseEnter={() => setHov(true)} onMouseLeave={(e) => { setHov(false); handlers.onMouseLeave(e) }}
+      onMouseMove={handlers.onMouseMove}>
+      <div ref={ref} className="tilt-wrap card-3d" style={{
         position:'relative', borderRadius:'20px', overflow:'hidden', height:'100%', display:'flex', flexDirection:'column',
         border:`1px solid ${hov ? movie.poster.accent+'80' : 'rgba(255,255,255,0.08)'}`,
         boxShadow: hov ? `0 0 32px ${movie.poster.accent}30, 0 16px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1)` : '0 8px 24px rgba(0,0,0,0.6)',
-        transform: hov ? 'translateY(-8px) scale(1.02)' : 'none',
         transition:'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
       }}>
+        {/* Glare overlay */}
+        <div ref={glareRef} style={glareStyle} />
         <div style={{ position:'relative', aspectRatio:'2/3', width:'100%' }}>
           <MoviePoster movie={movie} />
           {/* Info gradient overlay */}
@@ -63,6 +67,7 @@ function MovieCard({ movie }) {
 function HubCard({ hub, waiting, wait, onClick }) {
   const [hov, setHov] = useState(false)
   const navigate = useNavigate()
+  const { ref, glareRef, glareStyle, handlers } = use3DTilt({ max: 10, scale: 1.03 })
 
   const handleClick = (e) => {
     e.preventDefault()
@@ -71,17 +76,21 @@ function HubCard({ hub, waiting, wait, onClick }) {
   }
 
   return (
-    <div onClick={handleClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+    <div ref={ref} onClick={handleClick}
+      onMouseEnter={() => setHov(true)} onMouseLeave={(e) => { setHov(false); handlers.onMouseLeave(e) }}
+      onMouseMove={handlers.onMouseMove}
+      className="tilt-wrap card-3d"
       style={{
         borderRadius:'24px', overflow:'hidden', cursor:'pointer', position: 'relative',
         background: hub.bg, 
         border:`1px solid ${hov ? hub.accent+'60' : hub.border}`,
-        boxShadow: hov ? `0 0 40px ${hub.accentDim}, 0 16px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)` : '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
-        transform: hov ? 'translateY(-6px)' : 'none',
-        transition:'all 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+        boxShadow: hov ? `0 0 40px ${hub.accentDim}, 0 24px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.15)` : '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+        transition:'border 0.3s, box-shadow 0.3s',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
       }}>
+      {/* Glare overlay */}
+      <div ref={glareRef} style={glareStyle} />
       {/* Top glowing edge on hover */}
       <div style={{ position:'absolute', top:0, left:0, right:0, height:'2px', background: hov ? hub.accent : 'transparent', boxShadow: hov ? `0 0 20px ${hub.accent}` : 'none', transition:'all 0.3s' }}/>
       
@@ -202,8 +211,13 @@ export default function Landing() {
 
           {/* Heading */}
           <header className="responsive-text-center" style={{ textAlign:'center', marginBottom:'64px' }}>
-            <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'clamp(40px, 6vw, 64px)', color:'#fff', margin:'0 0 20px', lineHeight:1.1, letterSpacing:'-0.03em' }}>
-              What do you want to <span style={{ background:'linear-gradient(135deg, #38bdf8, #a855f7, #ec4899)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', filter:'drop-shadow(0 4px 24px rgba(168,85,247,0.4))' }}>book today?</span>
+            <h1 className="hero-3d-text" style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'clamp(40px, 6vw, 64px)', color:'#fff', margin:'0 0 20px', lineHeight:1.1, letterSpacing:'-0.03em',
+              textShadow: '0 2px 0 rgba(255,255,255,0.1), 0 8px 30px rgba(0,0,0,0.5), 0 -2px 0 rgba(255,255,255,0.05)'
+            }}>
+              What do you want to{' '}
+              <span style={{ background:'linear-gradient(135deg, #38bdf8, #a855f7, #ec4899)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
+                filter:'drop-shadow(0 4px 24px rgba(168,85,247,0.6)) drop-shadow(0 8px 40px rgba(236,72,153,0.3))'
+              }}>book today?</span>
             </h1>
             <p style={{
               color: '#94a3b8', fontSize: '20px', maxWidth: '640px', margin: '0 auto', lineHeight: 1.6, fontWeight: 500

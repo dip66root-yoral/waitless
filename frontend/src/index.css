@@ -592,3 +592,56 @@ textarea.input-field { resize: vertical; min-height: 110px; line-height: 1.6; }
     scroll-snap-align: start !important;
   }
 }
+
+/* -- 3D Global Effects ------------------------------------- */
+
+/* Floating animation for hero heading */
+@keyframes float3d {
+  0%, 100% { transform: translateY(0px) rotateX(0deg); }
+  50%       { transform: translateY(-8px) rotateX(1.5deg); }
+}
+
+/* Shimmer sweep for buttons */
+@keyframes shimmer-sweep {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Depth pulse — subtle ring emanation */
+@keyframes depth-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.08), 0 20px 60px rgba(0,0,0,0.6); }
+  70%  { box-shadow: 0 0 0 16px rgba(255,255,255,0), 0 20px 60px rgba(0,0,0,0.6); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0), 0 20px 60px rgba(0,0,0,0.6); }
+}
+
+/* 3D tilt wrapper — set preserve-3d so children get depth */
+.tilt-wrap {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* 3D floating text */
+.hero-3d-text {
+  animation: float3d 5s ease-in-out infinite;
+  transform-style: preserve-3d;
+  display: inline-block;
+}
+
+/* Shimmer button */
+.btn-book {
+  background-size: 200% auto !important;
+  transition: background-position 0.5s ease, transform 0.15s ease, box-shadow 0.2s ease !important;
+}
+.btn-book:hover {
+  background-position: right center !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 8px 30px rgba(229,9,20,0.5), 0 0 0 1px rgba(255,255,255,0.1) !important;
+}
+.btn-book:active {
+  transform: translateY(1px) scale(0.98) !important;
+}
+
+/* Glowing border on focus-like hover for service cards */
+.card-3d:hover {
+  animation: depth-pulse 1.4s ease-out;
+}
