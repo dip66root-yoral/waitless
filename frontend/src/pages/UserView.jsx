@@ -73,13 +73,13 @@ function ServiceInfoCard({ meta, selected }) {
   const info = SERVICE_INFO[selected?.id]
   if (!info || !meta) return null
   return (
-    <div style={{ borderRadius:'14px', padding:'16px', background:'rgba(255,255,255,0.02)', border:`1px solid ${meta.border}`, marginBottom:'18px' }}>
+    <div style={{ borderRadius:'14px', padding:'16px', background:'rgba(var(--rgb-white),0.02)', border:`1px solid ${meta.border}`, marginBottom:'18px' }}>
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'14px' }}>
-        <div style={{ padding:'11px', borderRadius:'10px', background:'rgba(255,255,255,0.03)' }}>
+        <div style={{ padding:'11px', borderRadius:'10px', background:'rgba(var(--rgb-white),0.03)' }}>
           <p style={{ fontSize:'10px', color:'#374151', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'4px' }}>🕐 Hours</p>
           <p style={{ fontSize:'13px', color:'#e2e8f0', fontWeight:600, margin:0 }}>{info.hours}</p>
         </div>
-        <div style={{ padding:'11px', borderRadius:'10px', background:'rgba(255,255,255,0.03)' }}>
+        <div style={{ padding:'11px', borderRadius:'10px', background:'rgba(var(--rgb-white),0.03)' }}>
           <p style={{ fontSize:'10px', color:'#374151', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'4px' }}>⏱ Avg. Time</p>
           <p style={{ fontSize:'13px', color: meta.accent, fontWeight:700, margin:0 }}>{info.avgTime} per person</p>
         </div>
@@ -88,13 +88,13 @@ function ServiceInfoCard({ meta, selected }) {
         <p style={{ fontSize:'10px', color:'#374151', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'8px' }}>📋 What to Bring</p>
         <div style={{ display:'flex', flexWrap:'wrap', gap:'6px' }}>
           {info.bring.map(b => (
-            <span key={b} style={{ fontSize:'11px', padding:'4px 10px', borderRadius:'8px', color:'#94a3b8', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)' }}>{b}</span>
+            <span key={b} style={{ fontSize:'11px', padding:'4px 10px', borderRadius:'8px', color:'var(--text-muted)', background:'rgba(var(--rgb-white),0.04)', border:'1px solid rgba(var(--rgb-white),0.07)' }}>{b}</span>
           ))}
         </div>
       </div>
       <div style={{ display:'flex', alignItems:'flex-start', gap:'8px', padding:'10px 12px', borderRadius:'10px', background:`${meta.accent}0a`, border:`1px solid ${meta.border}` }}>
         <span style={{ fontSize:'14px', flexShrink:0 }}>💡</span>
-        <p style={{ fontSize:'12px', color:'#94a3b8', margin:0, lineHeight:1.5 }}>{info.tip}</p>
+        <p style={{ fontSize:'12px', color:'var(--text-muted)', margin:0, lineHeight:1.5 }}>{info.tip}</p>
       </div>
     </div>
   )
@@ -154,7 +154,7 @@ export default function UserView() {
       if (urlQueueId) {
         const q = list.find(x => x.id === urlQueueId)
         if (q) {
-          const m = META[q.id] || { icon:'🏢', accent:'#94a3b8', accentDim:'rgba(148,163,184,0.08)', border:'rgba(148,163,184,0.2)', bg:'linear-gradient(135deg,#111218,#1a1b23)' }
+          const m = META[q.id] || { icon:'🏢', accent:'var(--text-muted)', accentDim:'rgba(148,163,184,0.08)', border:'rgba(148,163,184,0.2)', bg:'linear-gradient(135deg,#111218,#1a1b23)' }
           setSelected(q); setMeta(m); setStep('request')
         }
       }
@@ -189,7 +189,7 @@ export default function UserView() {
         particleCount: 150,
         spread: 80,
         origin: { y: 0.6 },
-        colors: ['#e50914', '#ff4040', '#ffffff']
+        colors: ['#e50914', '#ff4040', 'var(--text-main)fff']
       })
       const socket = getSocket()
       socketRef.current = socket
@@ -222,7 +222,7 @@ export default function UserView() {
   if (step === 'select') return (
     <Page>
       <StepperBar steps={STEPS} currentStep={0} />
-      <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:'#fff', marginBottom:'4px', letterSpacing:'-0.01em' }}>Choose a Service</h1>
+      <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:'var(--text-main)', marginBottom:'4px', letterSpacing:'-0.01em' }}>Choose a Service</h1>
       <p style={{ fontSize:'13px', color:'#4b5563', marginBottom:'28px' }}>Select the counter you want to book your spot at</p>
 
       {queues.length === 0 ? (
@@ -232,7 +232,7 @@ export default function UserView() {
       ) : (
         <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
           {queues.map((q, i) => {
-            const m = META[q.id] || { icon:'🏢', accent:'#94a3b8', accentDim:'rgba(148,163,184,0.08)', border:'rgba(148,163,184,0.2)', bg:'linear-gradient(135deg,#111218,#1a1b23)' }
+            const m = META[q.id] || { icon:'🏢', accent:'var(--text-muted)', accentDim:'rgba(148,163,184,0.08)', border:'rgba(148,163,184,0.2)', bg:'linear-gradient(135deg,#111218,#1a1b23)' }
             const waiting = q.stats?.waiting_count ?? 0
             const wait = waiting * (q.avg_service_time ?? 10)
             return (
@@ -255,7 +255,7 @@ export default function UserView() {
                   {/* Info */}
                   <div style={{ flex:1, minWidth:0 }}>
                     <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'4px' }}>
-                      <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'15px', color:'#fff', margin:0, letterSpacing:'-0.01em' }}>{q.service_name}</h3>
+                      <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'15px', color:'var(--text-main)', margin:0, letterSpacing:'-0.01em' }}>{q.service_name}</h3>
                       <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(239,68,68,0.12)', color:'#f87171', border:'1px solid rgba(239,68,68,0.2)', flexShrink:0, letterSpacing:'0.06em' }}>LIVE</span>
                     </div>
                     <p style={{ fontSize:'12px', color:'#374151', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{q.description}</p>
@@ -284,7 +284,7 @@ export default function UserView() {
               </div>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'4px' }}>
-                  <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'15px', color:'#fff', margin:0, letterSpacing:'-0.01em' }}>Stadiums &amp; Live Matches</h3>
+                  <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'15px', color:'var(--text-main)', margin:0, letterSpacing:'-0.01em' }}>Stadiums &amp; Live Matches</h3>
                   <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(245,158,11,0.12)', color:'#f59e0b', border:'1px solid rgba(245,158,11,0.22)', flexShrink:0, letterSpacing:'0.06em' }}>HOT</span>
                 </div>
                 <p style={{ fontSize:'12px', color:'#374151', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>Book VIP box entries for live cricket & football events</p>
@@ -308,7 +308,7 @@ export default function UserView() {
       <Page>
         <BackBtn onClick={() => setStep('select')} />
         <StepperBar steps={STEPS} currentStep={1} />
-        <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:'#fff', marginBottom:'6px' }}>Service Details</h1>
+        <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:'var(--text-main)', marginBottom:'6px' }}>Service Details</h1>
         <p style={{ fontSize:'14px', color:'#64748b', marginBottom:'24px' }}>Please select the type of service you need</p>
 
         {/* Selected service chip */}
@@ -318,10 +318,10 @@ export default function UserView() {
             {meta?.icon}
           </div>
           <div>
-            <p style={{ fontWeight:800, color:'#fff', fontSize:'15px', margin:0, letterSpacing:'-0.01em' }}>{selected?.service_name}</p>
-            <p style={{ fontSize:'12px', color:'#94a3b8', margin:0 }}>{selected?.stats?.waiting_count ?? 0} ahead · ~{(selected?.stats?.waiting_count ?? 0) * (selected?.avg_service_time ?? 10)}m wait</p>
+            <p style={{ fontWeight:800, color:'var(--text-main)', fontSize:'15px', margin:0, letterSpacing:'-0.01em' }}>{selected?.service_name}</p>
+            <p style={{ fontSize:'12px', color:'var(--text-muted)', margin:0 }}>{selected?.stats?.waiting_count ?? 0} ahead · ~{(selected?.stats?.waiting_count ?? 0) * (selected?.avg_service_time ?? 10)}m wait</p>
           </div>
-          <button aria-label="Change service" onClick={() => setStep('select')} style={{ marginLeft:'auto', fontSize:'12px', color:meta?.accent, background:'rgba(255,255,255,0.05)', padding:'6px 12px', borderRadius:'8px', border:`1px solid rgba(255,255,255,0.1)`, cursor:'pointer', fontWeight:700, transition:'all 0.2s' }} onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.1)'} onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.05)'}>Change</button>
+          <button aria-label="Change service" onClick={() => setStep('select')} style={{ marginLeft:'auto', fontSize:'12px', color:meta?.accent, background:'rgba(var(--rgb-white),0.05)', padding:'6px 12px', borderRadius:'8px', border:`1px solid rgba(var(--rgb-white),0.1)`, cursor:'pointer', fontWeight:700, transition:'all 0.2s' }} onMouseEnter={e=>e.currentTarget.style.background='rgba(var(--rgb-white),0.1)'} onMouseLeave={e=>e.currentTarget.style.background='rgba(var(--rgb-white),0.05)'}>Change</button>
         </div>
 
         {/* Service Type Pills */}
@@ -334,11 +334,11 @@ export default function UserView() {
             {options.map(opt => (
               <button key={opt} onClick={() => setServiceType(opt)} style={{
                 padding: '12px 18px', borderRadius: '14px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.22,1,0.36,1)',
-                background: serviceType === opt ? `${meta?.accent}15` : 'rgba(255,255,255,0.03)',
-                color: serviceType === opt ? '#fff' : '#94a3b8',
-                border: serviceType === opt ? `1px solid ${meta?.accent}` : '1px solid rgba(255,255,255,0.06)',
+                background: serviceType === opt ? `${meta?.accent}15` : 'rgba(var(--rgb-white),0.03)',
+                color: serviceType === opt ? 'var(--text-main)' : 'var(--text-muted)',
+                border: serviceType === opt ? `1px solid ${meta?.accent}` : '1px solid rgba(var(--rgb-white),0.06)',
                 boxShadow: serviceType === opt ? `0 8px 24px ${meta?.accentDim}` : 'none'
-              }} onMouseEnter={e => { if(serviceType!==opt) { e.currentTarget.style.background='rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.12)' } }} onMouseLeave={e => { if(serviceType!==opt) { e.currentTarget.style.background='rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.06)' } }}>
+              }} onMouseEnter={e => { if(serviceType!==opt) { e.currentTarget.style.background='rgba(var(--rgb-white),0.06)'; e.currentTarget.style.borderColor='rgba(var(--rgb-white),0.12)' } }} onMouseLeave={e => { if(serviceType!==opt) { e.currentTarget.style.background='rgba(var(--rgb-white),0.03)'; e.currentTarget.style.borderColor='rgba(var(--rgb-white),0.06)' } }}>
                 {opt}
               </button>
             ))}
@@ -355,11 +355,11 @@ export default function UserView() {
             {Object.entries(URGENCY).map(([key, u]) => (
               <button key={key} onClick={() => setUrgency(key)} style={{
                 padding: '14px', borderRadius: '14px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.22,1,0.36,1)', textAlign: 'center',
-                background: urgency === key ? u.bg : 'rgba(255,255,255,0.03)',
-                color: urgency === key ? u.color : '#94a3b8',
-                border: urgency === key ? `1px solid ${u.border}` : '1px solid rgba(255,255,255,0.06)',
+                background: urgency === key ? u.bg : 'rgba(var(--rgb-white),0.03)',
+                color: urgency === key ? u.color : 'var(--text-muted)',
+                border: urgency === key ? `1px solid ${u.border}` : '1px solid rgba(var(--rgb-white),0.06)',
                 boxShadow: urgency === key ? `0 8px 24px ${u.bg}` : 'none'
-              }} onMouseEnter={e => { if(urgency!==key) { e.currentTarget.style.background='rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.12)' } }} onMouseLeave={e => { if(urgency!==key) { e.currentTarget.style.background='rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.06)' } }}>
+              }} onMouseEnter={e => { if(urgency!==key) { e.currentTarget.style.background='rgba(var(--rgb-white),0.06)'; e.currentTarget.style.borderColor='rgba(var(--rgb-white),0.12)' } }} onMouseLeave={e => { if(urgency!==key) { e.currentTarget.style.background='rgba(var(--rgb-white),0.03)'; e.currentTarget.style.borderColor='rgba(var(--rgb-white),0.06)' } }}>
                 {u.label}
               </button>
             ))}
@@ -369,7 +369,7 @@ export default function UserView() {
         {/* Textarea (Optional) */}
         <div style={{ marginBottom: '24px' }}>
           <label style={{ display: 'block', fontSize: '11px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '12px' }}>Additional Notes (Optional)</label>
-          <section aria-label="Request input form" style={{ borderRadius:'14px', border:'1px solid rgba(255,255,255,0.1)', background:'rgba(255,255,255,0.03)', overflow:'hidden' }}>
+          <section aria-label="Request input form" style={{ borderRadius:'14px', border:'1px solid rgba(var(--rgb-white),0.1)', background:'rgba(var(--rgb-white),0.03)', overflow:'hidden' }}>
             <textarea
               rows={3}
               value={requestText}
@@ -398,15 +398,15 @@ export default function UserView() {
       <Page>
         <BackBtn onClick={() => setStep('request')} />
         <StepperBar steps={STEPS} currentStep={2} />
-        <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:'#fff', marginBottom:'6px' }}>Review & Confirm</h1>
+        <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:'var(--text-main)', marginBottom:'6px' }}>Review & Confirm</h1>
         <p style={{ fontSize:'14px', color:'#64748b', marginBottom:'24px' }}>Please check your details and confirm to get your token</p>
 
         {/* Booking Details card */}
         <div style={{ borderRadius:'18px', padding:'24px', background:`linear-gradient(135deg, rgba(17,18,24,0.9), rgba(20,21,30,0.95))`, border:`1px solid ${urg.border}`, marginBottom:'16px', position:'relative', overflow:'hidden', boxShadow:`0 16px 40px rgba(0,0,0,0.4)` }}>
           <div style={{ position:'absolute', top:0, right:0, width:'150px', height:'150px', background:urg.color, filter:'blur(100px)', opacity:0.1, pointerEvents:'none' }}/>
-          <div style={{ display:'flex', alignItems:'center', gap:'10px', paddingBottom:'16px', borderBottom:'1px solid rgba(255,255,255,0.06)', marginBottom:'20px' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:'10px', paddingBottom:'16px', borderBottom:'1px solid rgba(var(--rgb-white),0.06)', marginBottom:'20px' }}>
             <span style={{ fontSize:'20px' }}>📋</span>
-            <span style={{ fontWeight:800, color:'#fff', fontSize:'16px' }}>Booking Summary</span>
+            <span style={{ fontWeight:800, color:'var(--text-main)', fontSize:'16px' }}>Booking Summary</span>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px' }}>
             {[
@@ -415,13 +415,13 @@ export default function UserView() {
               { label:'Category', val: 'Walk-in' },
               { label:'Wait Time', val: `~${(selected?.stats?.waiting_count ?? 0) * (selected?.avg_service_time ?? 10)}m` },
             ].map(({ label, val, color, bg }) => (
-              <div key={label} style={{ padding:'14px', borderRadius:'14px', background: bg || 'rgba(255,255,255,0.02)', border: bg ? 'none' : '1px solid rgba(255,255,255,0.04)' }}>
+              <div key={label} style={{ padding:'14px', borderRadius:'14px', background: bg || 'rgba(var(--rgb-white),0.02)', border: bg ? 'none' : '1px solid rgba(var(--rgb-white),0.04)' }}>
                 <p style={{ fontSize:'10px', color:'#64748b', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:'6px' }}>{label}</p>
                 <p style={{ fontSize:'15px', fontWeight:800, color: color || '#f8fafc', margin:0 }}>{val}</p>
               </div>
             ))}
             {requestText && (
-              <div style={{ gridColumn:'1/-1', padding:'14px', borderRadius:'14px', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.04)' }}>
+              <div style={{ gridColumn:'1/-1', padding:'14px', borderRadius:'14px', background:'rgba(var(--rgb-white),0.02)', border:'1px solid rgba(var(--rgb-white),0.04)' }}>
                 <p style={{ fontSize:'10px', color:'#64748b', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:'6px' }}>Notes</p>
                 <p style={{ fontSize:'14px', color:'#cbd5e1', fontStyle:'italic', margin:0, lineHeight:1.5 }}>"{requestText}"</p>
               </div>
@@ -430,16 +430,16 @@ export default function UserView() {
         </div>
 
         {/* Your details */}
-        <div style={{ borderRadius:'18px', padding:'24px', background:'rgba(14,16,26,0.5)', border:'1px solid rgba(255,255,255,0.05)', marginBottom:'20px' }}>
+        <div style={{ borderRadius:'18px', padding:'24px', background:'rgba(14,16,26,0.5)', border:'1px solid rgba(var(--rgb-white),0.05)', marginBottom:'20px' }}>
           <p style={{ fontSize:'11px', color:'#64748b', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:'16px' }}>Your Details</p>
           <div style={{ display:'flex', flexDirection:'column', gap:'16px' }}>
             <div>
-              <label style={{ display:'block', fontSize:'12px', fontWeight:600, color:'#94a3b8', marginBottom:'8px' }}>Full Name <span style={{ color:'#e50914' }}>*</span></label>
-              <input className="input-field" style={{ padding:'14px 16px', borderRadius:'12px', background:'rgba(255,255,255,0.03)' }} placeholder="Enter your full name" value={userName} onChange={e => setUserName(e.target.value)} />
+              <label style={{ display:'block', fontSize:'12px', fontWeight:600, color:'var(--text-muted)', marginBottom:'8px' }}>Full Name <span style={{ color:'#e50914' }}>*</span></label>
+              <input className="input-field" style={{ padding:'14px 16px', borderRadius:'12px', background:'rgba(var(--rgb-white),0.03)' }} placeholder="Enter your full name" value={userName} onChange={e => setUserName(e.target.value)} />
             </div>
             <div>
-              <label style={{ display:'block', fontSize:'12px', fontWeight:600, color:'#94a3b8', marginBottom:'8px' }}>Phone (optional)</label>
-              <input className="input-field" style={{ padding:'14px 16px', borderRadius:'12px', background:'rgba(255,255,255,0.03)' }} placeholder="+91 98765 43210" value={phone} onChange={e => setPhone(e.target.value)} />
+              <label style={{ display:'block', fontSize:'12px', fontWeight:600, color:'var(--text-muted)', marginBottom:'8px' }}>Phone (optional)</label>
+              <input className="input-field" style={{ padding:'14px 16px', borderRadius:'12px', background:'rgba(var(--rgb-white),0.03)' }} placeholder="+91 98765 43210" value={phone} onChange={e => setPhone(e.target.value)} />
             </div>
           </div>
         </div>
@@ -447,7 +447,7 @@ export default function UserView() {
         <button onClick={handleBook} disabled={isLoading || !userName.trim()} className="btn-book"
           style={{ width:'100%', padding:'14px', fontSize:'15px' }}>
           {isLoading
-            ? <span style={{ display:'flex', alignItems:'center', gap:'8px', justifyContent:'center' }}><span style={{ width:'16px', height:'16px', borderRadius:'50%', border:'2px solid rgba(255,255,255,0.3)', borderTopColor:'#fff', animation:'spin 0.8s linear infinite', display:'block' }}/>Booking…</span>
+            ? <span style={{ display:'flex', alignItems:'center', gap:'8px', justifyContent:'center' }}><span style={{ width:'16px', height:'16px', borderRadius:'50%', border:'2px solid rgba(var(--rgb-white),0.3)', borderTopColor:'var(--text-main)', animation:'spin 0.8s linear infinite', display:'block' }}/>Booking…</span>
             : '🎟️ Confirm & Get Token'}
         </button>
       </Page>
@@ -466,14 +466,14 @@ export default function UserView() {
     return (
       <Page>
         <StepperBar steps={STEPS} currentStep={3} />
-        <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:'#fff', marginBottom:'24px' }}>Track Your Booking</h1>
+        <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:'var(--text-main)', marginBottom:'24px' }}>Track Your Booking</h1>
 
         {/* Your turn banner */}
         {(isTurn || isServing) && (
           <div style={{ borderRadius:'18px', padding:'24px', textAlign:'center', background:'linear-gradient(135deg,#0d1f0d,#0a2e0a)', border:'1px solid rgba(74,222,128,0.4)', boxShadow:'0 0 40px rgba(74,222,128,0.2)', marginBottom:'20px', position:'relative', overflow:'hidden' }}>
             <div style={{ position:'absolute', top:0, left:0, right:0, height:'4px', background:'#4ade80' }}/>
             <div style={{ fontSize:'3rem', marginBottom:'10px', animation:'pulse-dot 2s infinite' }}>🎉</div>
-            <h2 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', marginBottom:'5px', letterSpacing:'-0.01em' }}>It's Your Turn!</h2>
+            <h2 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'var(--text-main)', marginBottom:'5px', letterSpacing:'-0.01em' }}>It's Your Turn!</h2>
             <p style={{ fontSize:'15px', color:'#4ade80', fontWeight:700 }}>Please proceed to the counter now</p>
           </div>
         )}
@@ -485,7 +485,7 @@ export default function UserView() {
 
         {/* Queue list */}
         {!isDone && !isSkipped && waitingList.length > 0 && (
-          <div style={{ borderRadius:'18px', padding:'20px', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.06)', marginBottom:'20px' }}>
+          <div style={{ borderRadius:'18px', padding:'20px', background:'rgba(var(--rgb-white),0.02)', border:'1px solid rgba(var(--rgb-white),0.06)', marginBottom:'20px' }}>
             <p style={{ display:'flex', alignItems:'center', gap:'8px', fontSize:'11px', color:'#64748b', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:'16px' }}>
               <span style={{ fontSize:'14px' }}>👥</span> Queue Position
             </p>
@@ -493,10 +493,10 @@ export default function UserView() {
               {waitingList.slice(0, 5).map((t, i) => {
                 const isMe = t.id === liveToken.id
                 return (
-                  <div key={t.id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'12px 16px', borderRadius:'14px', background: isMe ? (m.accentDim || 'rgba(56,189,248,0.08)') : 'rgba(255,255,255,0.03)', border: isMe ? `1px solid ${m.border || 'rgba(56,189,248,0.2)'}` : '1px solid transparent', boxShadow: isMe ? `0 8px 24px ${m.accentDim}` : 'none', transform: isMe ? 'scale(1.02)' : 'none', transition:'all 0.2s', position: isMe ? 'relative' : 'static', zIndex: isMe ? 2 : 1 }}>
+                  <div key={t.id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'12px 16px', borderRadius:'14px', background: isMe ? (m.accentDim || 'rgba(56,189,248,0.08)') : 'rgba(var(--rgb-white),0.03)', border: isMe ? `1px solid ${m.border || 'rgba(56,189,248,0.2)'}` : '1px solid transparent', boxShadow: isMe ? `0 8px 24px ${m.accentDim}` : 'none', transform: isMe ? 'scale(1.02)' : 'none', transition:'all 0.2s', position: isMe ? 'relative' : 'static', zIndex: isMe ? 2 : 1 }}>
                     <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
                       <span style={{ width:'26px', height:'26px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'12px', fontWeight:800, background: isMe ? (m.accent || '#38bdf8') : '#1f2937', color: isMe ? '#000' : '#6b7280' }}>{i+1}</span>
-                      <span style={{ fontFamily:'monospace', fontSize:'15px', fontWeight:800, color: isMe ? (m.accent || '#38bdf8') : '#94a3b8' }}>{t.token_number}</span>
+                      <span style={{ fontFamily:'monospace', fontSize:'15px', fontWeight:800, color: isMe ? (m.accent || '#38bdf8') : 'var(--text-muted)' }}>{t.token_number}</span>
                       {isMe && <span style={{ fontSize:'11px', fontWeight:800, color:m.accent, background:`${m.accent}15`, padding:'2px 8px', borderRadius:'99px' }}>← You</span>}
                     </div>
                     <span style={{ fontSize:'10px', padding:'3px 10px', borderRadius:'8px', fontWeight:800, background: t.urgency==='high'?'rgba(239,68,68,0.12)':t.urgency==='medium'?'rgba(245,158,11,0.12)':'rgba(34,197,94,0.12)', color: t.urgency==='high'?'#f87171':t.urgency==='medium'?'#fbbf24':'#4ade80', border:`1px solid ${t.urgency==='high'?'rgba(239,68,68,0.2)':t.urgency==='medium'?'rgba(245,158,11,0.2)':'rgba(34,197,94,0.2)'}` }}>{t.urgency}</span>
@@ -508,10 +508,10 @@ export default function UserView() {
         )}
 
         {(isDone || isSkipped) && (
-          <div style={{ borderRadius:'18px', padding:'40px 24px', textAlign:'center', background:'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))', border:'1px solid rgba(255,255,255,0.08)', marginBottom:'20px', backdropFilter:'blur(10px)' }}>
+          <div style={{ borderRadius:'18px', padding:'40px 24px', textAlign:'center', background:'linear-gradient(135deg, rgba(var(--rgb-white),0.03), rgba(var(--rgb-white),0.01))', border:'1px solid rgba(var(--rgb-white),0.08)', marginBottom:'20px', backdropFilter:'blur(10px)' }}>
             <div style={{ fontSize:'3.5rem', marginBottom:'16px' }}>{isDone ? '✅' : '⏭️'}</div>
-            <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', marginBottom:'8px', letterSpacing:'-0.01em' }}>{isDone ? 'Booking Complete!' : 'Token Skipped'}</h3>
-            <p style={{ fontSize:'15px', color:'#94a3b8', marginBottom:'32px' }}>{isDone ? 'Thank you for using WAITLESS.' : 'Please approach the counter directly.'}</p>
+            <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'var(--text-main)', marginBottom:'8px', letterSpacing:'-0.01em' }}>{isDone ? 'Booking Complete!' : 'Token Skipped'}</h3>
+            <p style={{ fontSize:'15px', color:'var(--text-muted)', marginBottom:'32px' }}>{isDone ? 'Thank you for using WAITLESS.' : 'Please approach the counter directly.'}</p>
             <button onClick={reset} className="btn-book" style={{ padding:'14px 36px', fontSize:'15px', borderRadius:'99px' }}>Book Another Slot</button>
           </div>
         )}

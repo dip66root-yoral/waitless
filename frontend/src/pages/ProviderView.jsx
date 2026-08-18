@@ -31,30 +31,30 @@ function TokenRow({ token, onAction, loadingId, meta }) {
     <div style={{
       display:'flex', alignItems:'center', gap:'16px',
       padding:'16px 20px', borderRadius:'16px', transition:'all 0.25s cubic-bezier(0.22,1,0.36,1)',
-      background: isServing ? meta?.accentDim || 'rgba(229,9,20,0.08)' : 'rgba(255,255,255,0.03)',
-      border: isServing ? `1px solid ${meta?.border || 'rgba(229,9,20,0.2)'}` : '1px solid rgba(255,255,255,0.06)',
+      background: isServing ? meta?.accentDim || 'rgba(229,9,20,0.08)' : 'rgba(var(--rgb-white),0.03)',
+      border: isServing ? `1px solid ${meta?.border || 'rgba(229,9,20,0.2)'}` : '1px solid rgba(var(--rgb-white),0.06)',
       boxShadow: isServing ? `0 8px 32px ${meta?.accentDim}` : 'none',
       opacity: isDone || isSkipped ? 0.6 : 1,
       position: 'relative', overflow: 'hidden'
-    }} onMouseEnter={e => { if(isWaiting) { e.currentTarget.style.background='rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.1)' } }} onMouseLeave={e => { if(isWaiting) { e.currentTarget.style.background='rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.06)' } }}>
+    }} onMouseEnter={e => { if(isWaiting) { e.currentTarget.style.background='rgba(var(--rgb-white),0.06)'; e.currentTarget.style.borderColor='rgba(var(--rgb-white),0.1)' } }} onMouseLeave={e => { if(isWaiting) { e.currentTarget.style.background='rgba(var(--rgb-white),0.03)'; e.currentTarget.style.borderColor='rgba(var(--rgb-white),0.06)' } }}>
       {isServing && <div style={{ position:'absolute', top:0, left:0, width:'4px', height:'100%', background:meta?.accent || '#e50914' }}/>}
 
       {/* Token number badge */}
-      <div style={{ width:'60px', height:'48px', borderRadius:'12px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'16px', flexShrink:0, background: isServing ? (meta?.accent || '#e50914') : 'rgba(255,255,255,0.05)', color: isServing ? '#fff' : '#94a3b8', border: isServing ? 'none' : '1px solid rgba(255,255,255,0.08)', letterSpacing:'0.02em', boxShadow: isServing ? `0 4px 16px ${meta?.accent}40` : 'none' }}>
+      <div style={{ width:'60px', height:'48px', borderRadius:'12px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'16px', flexShrink:0, background: isServing ? (meta?.accent || '#e50914') : 'rgba(var(--rgb-white),0.05)', color: isServing ? 'var(--text-main)' : 'var(--text-muted)', border: isServing ? 'none' : '1px solid rgba(var(--rgb-white),0.08)', letterSpacing:'0.02em', boxShadow: isServing ? `0 4px 16px ${meta?.accent}40` : 'none' }}>
         {token.token_number}
       </div>
 
       {/* Info */}
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:'7px', marginBottom:'4px' }}>
-          <span style={{ fontWeight:800, color:'#fff', fontSize:'15px', letterSpacing:'-0.01em' }}>{token.user_name}</span>
+          <span style={{ fontWeight:800, color:'var(--text-main)', fontSize:'15px', letterSpacing:'-0.01em' }}>{token.user_name}</span>
           <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:urg.bg, color:urg.color, border:`1px solid ${urg.border}`, letterSpacing:'0.05em' }}>{urg.label}</span>
           {isServing  && <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(74,222,128,0.12)', color:'#4ade80', border:'1px solid rgba(74,222,128,0.25)', letterSpacing:'0.05em' }}>● SERVING</span>}
-          {isDone     && <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(148,163,184,0.1)', color:'#94a3b8', border:'1px solid rgba(148,163,184,0.2)', letterSpacing:'0.05em' }}>✓ DONE</span>}
+          {isDone     && <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(148,163,184,0.1)', color:'var(--text-muted)', border:'1px solid rgba(148,163,184,0.2)', letterSpacing:'0.05em' }}>✓ DONE</span>}
           {isSkipped  && <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(148,163,184,0.07)', color:'#64748b', border:'1px solid rgba(148,163,184,0.12)', letterSpacing:'0.05em' }}>↷ SKIPPED</span>}
           {isWaiting  && <span style={{ fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'20px', background:'rgba(245,158,11,0.12)', color:'#fbbf24', border:'1px solid rgba(245,158,11,0.25)', letterSpacing:'0.05em' }}>⏳ WAITING</span>}
         </div>
-        <p style={{ fontSize:'13px', color:'#94a3b8', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+        <p style={{ fontSize:'13px', color:'var(--text-muted)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
           {token.service_type || token.request_text || 'General booking'}
         </p>
         {token.notes && (
@@ -74,11 +74,11 @@ function TokenRow({ token, onAction, loadingId, meta }) {
         {isWaiting && (
           <>
             <button onClick={() => onAction(token.id,'serve')} disabled={busy}
-              style={{ padding:'8px 16px', borderRadius:'10px', fontSize:'12px', fontWeight:800, cursor:'pointer', background:meta?.accent||'#e50914', color:'#fff', border:'none', opacity:busy?0.5:1, transition:'all 0.15s' }}>
+              style={{ padding:'8px 16px', borderRadius:'10px', fontSize:'12px', fontWeight:800, cursor:'pointer', background:meta?.accent||'#e50914', color:'var(--text-main)', border:'none', opacity:busy?0.5:1, transition:'all 0.15s' }}>
               {loadingId===token.id ? '…' : '▶ Serve'}
             </button>
             <button onClick={() => onAction(token.id,'skip')} disabled={busy}
-              style={{ padding:'8px 12px', borderRadius:'10px', fontSize:'12px', fontWeight:800, cursor:'pointer', background:'rgba(255,255,255,0.05)', color:'#64748b', border:'1px solid rgba(255,255,255,0.08)', opacity:busy?0.5:1 }}>
+              style={{ padding:'8px 12px', borderRadius:'10px', fontSize:'12px', fontWeight:800, cursor:'pointer', background:'rgba(var(--rgb-white),0.05)', color:'#64748b', border:'1px solid rgba(var(--rgb-white),0.08)', opacity:busy?0.5:1 }}>
               ↷
             </button>
           </>
@@ -97,7 +97,7 @@ function TokenRow({ token, onAction, loadingId, meta }) {
 /* ─── Stat card ────────────────────────────────────────────────── */
 function StatCard({ icon, value, label, color }) {
   return (
-    <div style={{ borderRadius:'16px', padding:'20px 24px', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.06)', textAlign:'center', transition:'all 0.2s', cursor:'default' }} onMouseEnter={e => { e.currentTarget.style.background='rgba(255,255,255,0.04)'; e.currentTarget.style.transform='translateY(-2px)' }} onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.02)'; e.currentTarget.style.transform='none' }}>
+    <div style={{ borderRadius:'16px', padding:'20px 24px', background:'rgba(var(--rgb-white),0.02)', border:'1px solid rgba(var(--rgb-white),0.06)', textAlign:'center', transition:'all 0.2s', cursor:'default' }} onMouseEnter={e => { e.currentTarget.style.background='rgba(var(--rgb-white),0.04)'; e.currentTarget.style.transform='translateY(-2px)' }} onMouseLeave={e => { e.currentTarget.style.background='rgba(var(--rgb-white),0.02)'; e.currentTarget.style.transform='none' }}>
       <div style={{ fontSize:'24px', marginBottom:'12px' }}>{icon}</div>
       <div style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'36px', color, lineHeight:1, marginBottom:'6px' }}>{value}</div>
       <div style={{ fontSize:'13px', color:'#64748b', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>{label}</div>
@@ -199,7 +199,7 @@ export default function ProviderView() {
     finally { setLoadingTokenId(null) }
   }
 
-  const meta     = activeQueue ? (SERVICE_META[activeQueue.id] || { icon:'🏢', accent:'#94a3b8', accentDim:'rgba(148,163,184,0.08)', border:'rgba(148,163,184,0.2)', bg:'#111218' }) : {}
+  const meta     = activeQueue ? (SERVICE_META[activeQueue.id] || { icon:'🏢', accent:'var(--text-muted)', accentDim:'rgba(148,163,184,0.08)', border:'rgba(148,163,184,0.2)', bg:'#111218' }) : {}
   const serving  = tokens.filter(t => t.status==='in-progress')
   const waiting  = tokens.filter(t => t.status==='waiting')
   const done     = tokens.filter(t => t.status==='done')
@@ -211,26 +211,26 @@ export default function ProviderView() {
       {/* ═══════════════════════════════════════════════
           SIDEBAR
       ═══════════════════════════════════════════════ */}
-      <aside style={{ width:'220px', flexShrink:0, borderRight:'1px solid rgba(255,255,255,0.05)', padding:'24px 14px', display:'flex', flexDirection:'column', gap:'6px', minHeight:`calc(100vh - ${NAV_H})` }}>
+      <aside style={{ width:'220px', flexShrink:0, borderRight:'1px solid rgba(var(--rgb-white),0.05)', padding:'24px 14px', display:'flex', flexDirection:'column', gap:'6px', minHeight:`calc(100vh - ${NAV_H})` }}>
         <p style={{ fontSize:'10px', color:'#374151', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.12em', marginBottom:'12px', paddingLeft:'10px' }}>Service Counters</p>
 
         {queues.length === 0 ? (
           [1,2,3,4].map(i => <div key={i} className="shimmer" style={{ height:'62px', borderRadius:'12px' }} />)
         ) : queues.map(q => {
-          const m = SERVICE_META[q.id] || { icon:'🏢', accent:'#94a3b8', accentDim:'rgba(148,163,184,0.07)', border:'rgba(148,163,184,0.18)', bg:'#111218' }
+          const m = SERVICE_META[q.id] || { icon:'🏢', accent:'var(--text-muted)', accentDim:'rgba(148,163,184,0.07)', border:'rgba(148,163,184,0.18)', bg:'#111218' }
           const isActive = activeQueue?.id === q.id
           const waiting_count = q.stats?.waiting_count ?? 0
           return (
             <button key={q.id}
               onClick={() => { switchQueue(q); navigate(`/provider/${q.id}`) }}
               style={{ width:'100%', textAlign:'left', padding:'12px 14px', borderRadius:'14px', cursor:'pointer', transition:'all 0.2s', background: isActive ? m.accentDim : 'transparent', border: `1px solid ${isActive ? m.border : 'transparent'}`, display:'flex', alignItems:'center', gap:'12px' }}
-              onMouseEnter={e => { if(!isActive) e.currentTarget.style.background='rgba(255,255,255,0.03)' }}
+              onMouseEnter={e => { if(!isActive) e.currentTarget.style.background='rgba(var(--rgb-white),0.03)' }}
               onMouseLeave={e => { if(!isActive) e.currentTarget.style.background='transparent' }}>
-              <div style={{ width:'38px', height:'38px', borderRadius:'10px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'18px', flexShrink:0, background: isActive ? `${m.accent}20` : 'rgba(255,255,255,0.04)', border:`1px solid ${isActive ? m.border : 'rgba(255,255,255,0.06)'}`, boxShadow: isActive ? `0 4px 12px ${m.accentDim}` : 'none' }}>
+              <div style={{ width:'38px', height:'38px', borderRadius:'10px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'18px', flexShrink:0, background: isActive ? `${m.accent}20` : 'rgba(var(--rgb-white),0.04)', border:`1px solid ${isActive ? m.border : 'rgba(var(--rgb-white),0.06)'}`, boxShadow: isActive ? `0 4px 12px ${m.accentDim}` : 'none' }}>
                 {m.icon}
               </div>
               <div style={{ minWidth:0 }}>
-                <p style={{ fontWeight:700, fontSize:'14px', color: isActive ? '#fff' : '#94a3b8', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{q.service_name}</p>
+                <p style={{ fontWeight:700, fontSize:'14px', color: isActive ? 'var(--text-main)' : 'var(--text-muted)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{q.service_name}</p>
                 <p style={{ fontSize:'12px', color: isActive ? m.accent : '#4b5563', margin:'2px 0 0', fontWeight: isActive ? 700 : 500 }}>{waiting_count} waiting</p>
               </div>
             </button>
@@ -240,13 +240,13 @@ export default function ProviderView() {
         {/* Hardcoded Sports Counter link to remove the mess */}
         <button onClick={() => navigate('/stadiums')}
           style={{ width:'100%', textAlign:'left', padding:'12px 14px', borderRadius:'14px', cursor:'pointer', transition:'all 0.2s', background: 'transparent', border: '1px solid transparent', display:'flex', alignItems:'center', gap:'12px' }}
-          onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.03)'}
+          onMouseEnter={e => e.currentTarget.style.background='rgba(var(--rgb-white),0.03)'}
           onMouseLeave={e => e.currentTarget.style.background='transparent'}>
           <div style={{ width:'38px', height:'38px', borderRadius:'10px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'18px', flexShrink:0, background: 'rgba(245,158,11,0.04)', border:'1px solid rgba(245,158,11,0.06)' }}>
             🏟️
           </div>
           <div style={{ minWidth:0 }}>
-            <p style={{ fontWeight:700, fontSize:'14px', color: '#94a3b8', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>Sports Counters</p>
+            <p style={{ fontWeight:700, fontSize:'14px', color: 'var(--text-muted)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>Sports Counters</p>
             <p style={{ fontSize:'12px', color: '#4b5563', margin:'2px 0 0', fontWeight: 500 }}>View Matches</p>
           </div>
         </button>
@@ -265,7 +265,7 @@ export default function ProviderView() {
                   {meta?.icon}
                 </div>
                 <div>
-                  <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'22px', color:'#fff', margin:0, lineHeight:1.1 }}>{activeQueue.service_name}</h1>
+                  <h1 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'22px', color:'var(--text-main)', margin:0, lineHeight:1.1 }}>{activeQueue.service_name}</h1>
                   <p style={{ fontSize:'12px', color:'#4b5563', margin:'3px 0 0' }}>{activeQueue.description}</p>
                 </div>
               </div>
@@ -277,7 +277,7 @@ export default function ProviderView() {
                 <button onClick={callNext} disabled={isCallingNext || waiting.length===0} className="btn-book"
                   style={{ padding:'10px 22px', fontSize:'13px', opacity: waiting.length===0 ? 0.4 : 1 }}>
                   {isCallingNext
-                    ? <span style={{ display:'flex', alignItems:'center', gap:'7px' }}><span style={{ width:'13px', height:'13px', borderRadius:'50%', border:'2px solid rgba(255,255,255,0.3)', borderTopColor:'#fff', animation:'spin 0.8s linear infinite', display:'block' }}/>Calling…</span>
+                    ? <span style={{ display:'flex', alignItems:'center', gap:'7px' }}><span style={{ width:'13px', height:'13px', borderRadius:'50%', border:'2px solid rgba(var(--rgb-white),0.3)', borderTopColor:'var(--text-main)', animation:'spin 0.8s linear infinite', display:'block' }}/>Calling…</span>
                     : '⏭️ Call Next'}
                 </button>
               </div>
@@ -313,9 +313,9 @@ export default function ProviderView() {
 
             {/* Empty state */}
             {waiting.length===0 && serving.length===0 && (
-              <div style={{ padding:'60px 20px', textAlign:'center', borderRadius:'20px', background:'rgba(255,255,255,0.02)', border:'1px solid rgba(255,255,255,0.05)', marginBottom:'22px' }}>
+              <div style={{ padding:'60px 20px', textAlign:'center', borderRadius:'20px', background:'rgba(var(--rgb-white),0.02)', border:'1px solid rgba(var(--rgb-white),0.05)', marginBottom:'22px' }}>
                 <div style={{ fontSize:'3rem', marginBottom:'12px' }}>✅</div>
-                <p style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'20px', color:'#fff', marginBottom:'6px' }}>Counter Clear!</p>
+                <p style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'20px', color:'var(--text-main)', marginBottom:'6px' }}>Counter Clear!</p>
                 <p style={{ fontSize:'13px', color:'#374151' }}>All bookings have been served.</p>
               </div>
             )}

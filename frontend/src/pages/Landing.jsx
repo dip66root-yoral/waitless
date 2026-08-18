@@ -21,8 +21,8 @@ function MovieCard({ movie }) {
       onMouseMove={handlers.onMouseMove}>
       <div ref={ref} className="tilt-wrap card-3d" style={{
         position:'relative', borderRadius:'20px', overflow:'hidden', height:'100%', display:'flex', flexDirection:'column',
-        border:`1px solid ${hov ? movie.poster.accent+'80' : 'rgba(255,255,255,0.08)'}`,
-        boxShadow: hov ? `0 0 32px ${movie.poster.accent}30, 0 16px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1)` : '0 8px 24px rgba(0,0,0,0.6)',
+        border:`1px solid ${hov ? movie.poster.accent+'80' : 'rgba(var(--rgb-white),0.08)'}`,
+        boxShadow: hov ? `0 0 32px ${movie.poster.accent}30, 0 16px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(var(--rgb-white),0.1)` : '0 8px 24px rgba(0,0,0,0.6)',
         transition:'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
       }}>
         {/* Glare overlay */}
@@ -35,7 +35,7 @@ function MovieCard({ movie }) {
 
         {/* NEW badge */}
         {movie.isNew && (
-          <div style={{ position:'absolute', top:'12px', left:'12px', background:'#e50914', color:'#fff', fontSize:'10px', fontWeight:800, padding:'3px 10px', borderRadius:'6px', zIndex:3, letterSpacing:'0.05em', boxShadow:'0 4px 12px rgba(229,9,20,0.4)' }}>NEW</div>
+          <div style={{ position:'absolute', top:'12px', left:'12px', background:'#e50914', color:'var(--text-main)', fontSize:'10px', fontWeight:800, padding:'3px 10px', borderRadius:'6px', zIndex:3, letterSpacing:'0.05em', boxShadow:'0 4px 12px rgba(229,9,20,0.4)' }}>NEW</div>
         )}
         {/* Rating */}
         <div style={{ position:'absolute', top:'12px', right:'12px', background:'rgba(0,0,0,0.7)', backdropFilter:'blur(8px)', color:movie.poster.accent, fontSize:'11px', fontWeight:800, padding:'3px 10px', borderRadius:'6px', border:`1px solid ${movie.poster.accent}60`, zIndex:3 }}>
@@ -47,13 +47,13 @@ function MovieCard({ movie }) {
           <div style={{ display:'flex', alignItems:'center', gap:'6px', marginBottom:'4px' }}>
             <span style={{ color:'#fbbf24', fontSize:'11px', fontWeight:800 }}>⭐ {movie.imdb}</span>
             <span style={{ color:'#4b5563' }}>·</span>
-            <span style={{ color:'#94a3b8', fontSize:'11px', fontWeight:600 }}>{movie.duration}</span>
+            <span style={{ color:'var(--text-muted)', fontSize:'11px', fontWeight:600 }}>{movie.duration}</span>
           </div>
-          <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'#fff', fontSize:'16px', lineHeight:1.2, marginBottom:'4px', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden', letterSpacing:'-0.01em' }}>{movie.title}</h3>
+          <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'var(--text-main)', fontSize:'16px', lineHeight:1.2, marginBottom:'4px', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden', letterSpacing:'-0.01em' }}>{movie.title}</h3>
           <p style={{ color:movie.poster.accent, fontSize:'11px', fontWeight:700, marginBottom: hov?'12px':'0', transition:'margin 0.3s cubic-bezier(0.25, 1, 0.5, 1)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{movie.genre.join(' · ')}</p>
           
           <div style={{ overflow:'hidden', maxHeight: hov?'44px':'0', transition:'max-height 0.3s cubic-bezier(0.25, 1, 0.5, 1)', opacity: hov?1:0 }}>
-            <div className="btn-book" style={{ padding:'8px 12px', fontSize:'13px', width:'100%', borderRadius:'10px', textAlign:'center', display:'block', background: movie.poster.accent, color:'#fff' }}>
+            <div className="btn-book" style={{ padding:'8px 12px', fontSize:'13px', width:'100%', borderRadius:'10px', textAlign:'center', display:'block', background: movie.poster.accent, color:'var(--text-main)' }}>
               Book Tickets →
             </div>
           </div>
@@ -84,7 +84,7 @@ function HubCard({ hub, waiting, wait, onClick }) {
         borderRadius:'24px', overflow:'hidden', cursor:'pointer', position: 'relative',
         background: hub.bg, 
         border:`1px solid ${hov ? hub.accent+'60' : hub.border}`,
-        boxShadow: hov ? `0 0 40px ${hub.accentDim}, 0 24px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.15)` : '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+        boxShadow: hov ? `0 0 40px ${hub.accentDim}, 0 24px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(var(--rgb-white),0.15)` : '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(var(--rgb-white),0.05)',
         transition:'border 0.3s, box-shadow 0.3s',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
@@ -104,21 +104,21 @@ function HubCard({ hub, waiting, wait, onClick }) {
                 <span style={{ fontSize:'11px', fontWeight:800, color:hub.accent, letterSpacing:'0.08em' }}>LIVE</span>
               </div>
               <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'26px', color:hub.accent, lineHeight:1 }}>{waiting}</span>
-              <p style={{ fontSize:'11px', color:'#94a3b8', marginTop:'2px', fontWeight:600 }}>in queue · ~{wait}m</p>
+              <p style={{ fontSize:'11px', color:'var(--text-muted)', marginTop:'2px', fontWeight:600 }}>in queue · ~{wait}m</p>
             </div>
           ) : (
             <span style={{ fontSize:'11px', fontWeight:800, padding:'4px 12px', borderRadius:'20px', background:hub.accentDim, color:hub.accent, border:`1px solid ${hub.border}`, letterSpacing:'0.05em' }}>OPEN</span>
           )}
         </div>
-        <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', marginBottom:'8px', letterSpacing:'-0.01em' }}>{hub.title}</h3>
-        <p style={{ fontSize:'15px', color:'#94a3b8', marginBottom:'24px', lineHeight:1.6 }}>{hub.desc}</p>
+        <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'var(--text-main)', marginBottom:'8px', letterSpacing:'-0.01em' }}>{hub.title}</h3>
+        <p style={{ fontSize:'15px', color:'var(--text-muted)', marginBottom:'24px', lineHeight:1.6 }}>{hub.desc}</p>
         <div style={{ display:'flex', flexWrap:'wrap', gap:'8px' }}>
           {hub.tags.map(t => (
-            <span key={t} style={{ fontSize:'12px', padding:'5px 12px', borderRadius:'10px', fontWeight:700, background:'rgba(255,255,255,0.03)', color:'#cbd5e1', border:'1px solid rgba(255,255,255,0.06)' }}>{t}</span>
+            <span key={t} style={{ fontSize:'12px', padding:'5px 12px', borderRadius:'10px', fontWeight:700, background:'rgba(var(--rgb-white),0.03)', color:'#cbd5e1', border:'1px solid rgba(var(--rgb-white),0.06)' }}>{t}</span>
           ))}
         </div>
       </div>
-      <div style={{ padding:'18px 28px', borderTop:`1px solid ${hub.border}`, display:'flex', alignItems:'center', justifyContent:'space-between', background: hov ? hub.accentDim : 'rgba(255,255,255,0.01)', transition:'background 0.3s' }}>
+      <div style={{ padding:'18px 28px', borderTop:`1px solid ${hub.border}`, display:'flex', alignItems:'center', justifyContent:'space-between', background: hov ? hub.accentDim : 'rgba(var(--rgb-white),0.01)', transition:'background 0.3s' }}>
         <span style={{ fontSize:'14px', fontWeight:800, color:hub.accent, letterSpacing:'0.02em' }}>{hub.cta}</span>
         <span style={{ fontSize:'18px', color:hub.accent, transform: hov ? 'translateX(6px)' : 'none', transition:'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)' }}>→</span>
       </div>
@@ -139,7 +139,7 @@ const HUBS = [
 function Divider() {
   return (
     <div style={{ padding:'0 28px' }}>
-      <div style={{ maxWidth:MAX_W, margin:'0 auto', height:'1px', background:'linear-gradient(to right,transparent,rgba(255,255,255,0.07),transparent)' }}/>
+      <div style={{ maxWidth:MAX_W, margin:'0 auto', height:'1px', background:'linear-gradient(to right,transparent,rgba(var(--rgb-white),0.07),transparent)' }}/>
     </div>
   )
 }
@@ -152,12 +152,12 @@ function StadiumCard({ stadium }) {
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       <div style={{
         position:'relative', borderRadius:'14px', overflow:'hidden', height:'100%', display:'flex', flexDirection:'column',
-        border:`1px solid ${hov ? stadium.poster.accent+'60' : 'rgba(255,255,255,0.08)'}`,
+        border:`1px solid ${hov ? stadium.poster.accent+'60' : 'rgba(var(--rgb-white),0.08)'}`,
         boxShadow: hov ? `0 0 28px ${stadium.poster.accent}25, 0 12px 40px rgba(0,0,0,0.7)` : '0 4px 20px rgba(0,0,0,0.5)',
         transform: hov ? 'translateY(-7px) scale(1.01)' : 'none',
         transition:'all 0.28s cubic-bezier(.22,.68,0,1.2)',
       }}>
-        <div style={{ position:'relative', aspectRatio:'4/3', width:'100%', background: 'rgba(255,255,255,0.02)' }}>
+        <div style={{ position:'relative', aspectRatio:'4/3', width:'100%', background: 'rgba(var(--rgb-white),0.02)' }}>
           <img src={stadium.posterUrl} alt={stadium.title} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
           <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'70%', background:'linear-gradient(to top, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.7) 40%, transparent 100%)' }}/>
         </div>
@@ -168,10 +168,10 @@ function StadiumCard({ stadium }) {
             <span style={{ color:'#374151' }}>·</span>
             <span style={{ color:'#6b7280', fontSize:'10px' }}>{stadium.capacity} Seats</span>
           </div>
-          <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'#fff', fontSize:'14px', lineHeight:1.35, marginBottom:'3px' }}>{stadium.title}</h3>
-          <p style={{ color:'#94a3b8', fontSize:'10px', marginBottom: hov?'10px':'0', transition:'margin 0.2s' }}>{stadium.location}</p>
+          <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'var(--text-main)', fontSize:'14px', lineHeight:1.35, marginBottom:'3px' }}>{stadium.title}</h3>
+          <p style={{ color:'var(--text-muted)', fontSize:'10px', marginBottom: hov?'10px':'0', transition:'margin 0.2s' }}>{stadium.location}</p>
           <div style={{ overflow:'hidden', maxHeight: hov?'40px':'0', transition:'max-height 0.25s ease', opacity: hov?1:0 }}>
-            <div className="btn-book" style={{ padding:'6px 10px', fontSize:'11px', width:'100%', borderRadius:'9px', textAlign:'center', display:'block', background: stadium.poster.accent, color:'#fff' }}>
+            <div className="btn-book" style={{ padding:'6px 10px', fontSize:'11px', width:'100%', borderRadius:'9px', textAlign:'center', display:'block', background: stadium.poster.accent, color:'var(--text-main)' }}>
               Book Tickets
             </div>
           </div>
@@ -211,8 +211,8 @@ export default function Landing() {
 
           {/* Heading */}
           <header className="responsive-text-center" style={{ textAlign:'center', marginBottom:'64px' }}>
-            <h1 className="hero-3d-text" style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'clamp(40px, 6vw, 64px)', color:'#fff', margin:'0 0 20px', lineHeight:1.1, letterSpacing:'-0.03em',
-              textShadow: '0 2px 0 rgba(255,255,255,0.1), 0 8px 30px rgba(0,0,0,0.5), 0 -2px 0 rgba(255,255,255,0.05)'
+            <h1 className="hero-3d-text" style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'clamp(40px, 6vw, 64px)', color:'var(--text-main)', margin:'0 0 20px', lineHeight:1.1, letterSpacing:'-0.03em',
+              textShadow: '0 2px 0 rgba(var(--rgb-white),0.1), 0 8px 30px rgba(0,0,0,0.5), 0 -2px 0 rgba(var(--rgb-white),0.05)'
             }}>
               What do you want to{' '}
               <span style={{ background:'linear-gradient(135deg, #38bdf8, #a855f7, #ec4899)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
@@ -220,7 +220,7 @@ export default function Landing() {
               }}>book today?</span>
             </h1>
             <p style={{
-              color: '#94a3b8', fontSize: '20px', maxWidth: '640px', margin: '0 auto', lineHeight: 1.6, fontWeight: 500
+              color: 'var(--text-muted)', fontSize: '20px', maxWidth: '640px', margin: '0 auto', lineHeight: 1.6, fontWeight: 500
             }}>
               Skip the line. Pre-book your spot across hospitals, salons, theatres, stadiums, and government offices. 
               Real-time tracking, zero waiting.
@@ -254,7 +254,7 @@ export default function Landing() {
           <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', marginBottom:'20px' }}>
             <div>
               <p style={{ fontSize:'10px', fontWeight:800, letterSpacing:'0.12em', textTransform:'uppercase', color:'#e50914', marginBottom:'6px' }}>Now Showing</p>
-              <h2 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', marginBottom:'3px' }}>🎬 Movies in Cinemas</h2>
+              <h2 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'var(--text-main)', marginBottom:'3px' }}>🎬 Movies in Cinemas</h2>
               <p style={{ fontSize:'13px', color:'#4b5563' }}>PVR · INOX · Cinépolis · Miraj</p>
             </div>
             <Link to="/movies" style={{ textDecoration:'none', fontSize:'13px', fontWeight:600, color:'#e50914' }}>See all →</Link>
@@ -268,14 +268,14 @@ export default function Landing() {
                 <button key={l} onClick={() => {
                   if (isSel) setLangFilter(langFilter.filter(x => x !== l))
                   else setLangFilter([...langFilter, l])
-                }} style={{ flexShrink:0, padding:'5px 14px', borderRadius:'20px', fontSize:'12px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap', background: isSel?'rgba(229,9,20,0.12)':'rgba(255,255,255,0.04)', color: isSel?'#f87171':'#475569', border: isSel?'1px solid rgba(229,9,20,0.5)':'1px solid rgba(255,255,255,0.06)', boxShadow: isSel?'0 0 12px rgba(229,9,20,0.2)':'none', transition:'all 0.2s' }}>{l}</button>
+                }} style={{ flexShrink:0, padding:'5px 14px', borderRadius:'20px', fontSize:'12px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap', background: isSel?'rgba(229,9,20,0.12)':'rgba(var(--rgb-white),0.04)', color: isSel?'#f87171':'#475569', border: isSel?'1px solid rgba(229,9,20,0.5)':'1px solid rgba(var(--rgb-white),0.06)', boxShadow: isSel?'0 0 12px rgba(229,9,20,0.2)':'none', transition:'all 0.2s' }}>{l}</button>
               )
             })}
-            <div style={{ width:'1px', height:'14px', background:'rgba(255,255,255,0.09)', flexShrink:0, margin:'0 3px' }}/>
+            <div style={{ width:'1px', height:'14px', background:'rgba(var(--rgb-white),0.09)', flexShrink:0, margin:'0 3px' }}/>
             {['All Formats','2D','3D','IMAX','4DX'].map((f) => {
               const isSel = formatFilter === f
               return (
-                <button key={f} onClick={() => setFormatFilter(f)} style={{ flexShrink:0, padding:'5px 14px', borderRadius:'20px', fontSize:'12px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap', background: isSel?'rgba(255,255,255,0.07)':'rgba(255,255,255,0.03)', color: isSel?'#e2e8f0':'#374151', border: isSel?'1px solid rgba(255,255,255,0.3)':'1px solid rgba(255,255,255,0.06)', boxShadow: isSel?'0 0 12px rgba(255,255,255,0.1)':'none', transition:'all 0.2s' }}>{f}</button>
+                <button key={f} onClick={() => setFormatFilter(f)} style={{ flexShrink:0, padding:'5px 14px', borderRadius:'20px', fontSize:'12px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap', background: isSel?'rgba(var(--rgb-white),0.07)':'rgba(var(--rgb-white),0.03)', color: isSel?'#e2e8f0':'#374151', border: isSel?'1px solid rgba(var(--rgb-white),0.3)':'1px solid rgba(var(--rgb-white),0.06)', boxShadow: isSel?'0 0 12px rgba(var(--rgb-white),0.1)':'none', transition:'all 0.2s' }}>{f}</button>
               )
             })}
           </div>
@@ -288,7 +288,7 @@ export default function Landing() {
               return true
             }).map(m => <MovieCard key={m.id} movie={m} />)}
             {/* Coming soon */}
-            <div style={{ borderRadius:'14px', aspectRatio:'2/3', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:'8px', background:'rgba(255,255,255,0.015)', border:'1px dashed rgba(255,255,255,0.07)' }}>
+            <div style={{ borderRadius:'14px', aspectRatio:'2/3', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:'8px', background:'rgba(var(--rgb-white),0.015)', border:'1px dashed rgba(var(--rgb-white),0.07)' }}>
               <span style={{ fontSize:'26px', opacity:0.2 }}>🎬</span>
               <p style={{ fontSize:'11px', color:'#2d3748', textAlign:'center', lineHeight:1.5 }}>More releasing<br/>this week</p>
             </div>
@@ -307,7 +307,7 @@ export default function Landing() {
           <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', marginBottom:'28px' }}>
             <div>
               <p style={{ fontSize:'10px', fontWeight:800, letterSpacing:'0.12em', textTransform:'uppercase', color:'#64748b', marginBottom:'6px' }}>Skip the Physical Line</p>
-              <h2 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'#fff', marginBottom:'3px' }}>🎟️ Live Service Counters</h2>
+              <h2 style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, fontSize:'24px', color:'var(--text-main)', marginBottom:'3px' }}>🎟️ Live Service Counters</h2>
               <p style={{ fontSize:'13px', color:'#4b5563' }}>Get a virtual token — track your spot from your phone</p>
             </div>
             <Link to="/user" className="btn-book" style={{ padding:'9px 20px', fontSize:'13px', textDecoration:'none' }}>Get Token →</Link>
@@ -335,7 +335,7 @@ export default function Landing() {
                           LIVE
                         </div>
                       </div>
-                      <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'17px', color:'#fff', marginBottom:'3px' }}>{s.name}</h3>
+                      <h3 style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, fontSize:'17px', color:'var(--text-main)', marginBottom:'3px' }}>{s.name}</h3>
                       <p style={{ fontSize:'13px', color:'#64748b', marginBottom:'16px' }}>{s.desc}</p>
                       <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', marginBottom:'10px' }}>
                         <div>
@@ -347,7 +347,7 @@ export default function Landing() {
                           <p style={{ fontSize:'10px', color:'#374151' }}>wait time</p>
                         </div>
                       </div>
-                      <div style={{ height:'3px', borderRadius:'3px', background:'rgba(255,255,255,0.05)' }}>
+                      <div style={{ height:'3px', borderRadius:'3px', background:'rgba(var(--rgb-white),0.05)' }}>
                         <div style={{ height:'100%', borderRadius:'3px', width:`${Math.min((waiting/8)*100,100)}%`, background:`linear-gradient(90deg,${s.accent}70,${s.accent})`, transition:'width 0.7s ease' }}/>
                       </div>
                     </div>
@@ -364,13 +364,13 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <div style={{ borderTop:'1px solid rgba(255,255,255,0.05)', padding:'22px 28px' }}>
+      <div style={{ borderTop:'1px solid rgba(var(--rgb-white),0.05)', padding:'22px 28px' }}>
         <div style={{ maxWidth:MAX_W, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:'12px' }}>
           <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
             <div style={{ width:'28px', height:'28px', borderRadius:'8px', background:'linear-gradient(135deg, #e50914, #ff4040)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'#fff', fontSize:'14px' }}>W</span>
+              <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:900, color:'var(--text-main)', fontSize:'14px' }}>W</span>
             </div>
-            <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, color:'#fff', fontSize:'15px', letterSpacing:'0.05em' }}>WAITLESS</span>
+            <span style={{ fontFamily:'Outfit,sans-serif', fontWeight:800, color:'var(--text-main)', fontSize:'15px', letterSpacing:'0.05em' }}>WAITLESS</span>
             <span style={{ color:'#374151', fontSize:'13px' }}>· Built for India 🇮🇳</span>
           </div>
           <div style={{ display:'flex', gap:'24px', fontSize:'12px', color:'#374151' }}>

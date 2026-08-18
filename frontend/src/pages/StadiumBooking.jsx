@@ -16,14 +16,14 @@ export default function StadiumBooking() {
   const filteredMatches = MATCHES.filter(m => filter === 'All' || m.type === filter)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#060810', paddingTop: '72px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg-main)', paddingTop: '72px' }}>
 
       {/* ── Hero header ─────────────────────── */}
       <div style={{
         position: 'relative', overflow: 'hidden',
         padding: '60px 28px 80px',
         background: 'linear-gradient(180deg, rgba(229,9,20,0.06) 0%, transparent 100%)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        borderBottom: '1px solid rgba(var(--rgb-white),0.05)',
       }}>
         {/* Decorative glow */}
         <div style={{
@@ -39,7 +39,7 @@ export default function StadiumBooking() {
             <span style={{ fontSize: '11px', fontWeight: 800, color: '#f87171', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Live Events</span>
           </div>
 
-          <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, color: '#fff', marginBottom: '16px', lineHeight: 1.05, letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, color: 'var(--text-main)', marginBottom: '16px', lineHeight: 1.05, letterSpacing: '-0.02em' }}>
             Stadium Tickets &amp;<br />
             <span style={{ background: 'linear-gradient(135deg, #e50914, #f97316)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               Live Matches
@@ -60,9 +60,9 @@ export default function StadiumBooking() {
                   cursor: 'pointer', transition: 'all 0.22s ease',
                   background: filter === f
                     ? 'linear-gradient(135deg, #e50914, #c8070f)'
-                    : 'rgba(255,255,255,0.05)',
-                  color: filter === f ? '#fff' : '#64748b',
-                  border: filter === f ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                    : 'rgba(var(--rgb-white),0.05)',
+                  color: filter === f ? 'var(--text-main)' : '#64748b',
+                  border: filter === f ? 'none' : '1px solid rgba(var(--rgb-white),0.08)',
                   boxShadow: filter === f ? '0 4px 20px rgba(229,9,20,0.4)' : 'none',
                 }}
               >
@@ -103,8 +103,8 @@ export default function StadiumBooking() {
                   position: 'absolute', top: '14px', right: '14px',
                   padding: '5px 12px', borderRadius: '99px',
                   background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  fontSize: '11px', fontWeight: 800, color: '#fff',
+                  border: '1px solid rgba(var(--rgb-white),0.1)',
+                  fontSize: '11px', fontWeight: 800, color: 'var(--text-main)',
                   letterSpacing: '0.06em', textTransform: 'uppercase',
                 }}>
                   {m.type === 'Football' ? '⚽' : '🏏'} {m.type}
@@ -137,7 +137,7 @@ export default function StadiumBooking() {
                   {m.subtitle}
                 </div>
 
-                <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 900, color: '#fff', margin: '0 0 8px', lineHeight: 1.2, letterSpacing: '-0.01em' }}>
+                <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 900, color: 'var(--text-main)', margin: '0 0 8px', lineHeight: 1.2, letterSpacing: '-0.01em' }}>
                   {m.title}
                 </h3>
 
@@ -152,7 +152,7 @@ export default function StadiumBooking() {
                 </div>
 
                 {/* Divider */}
-                <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)', marginBottom: '20px' }} />
+                <div style={{ height: '1px', background: 'rgba(var(--rgb-white),0.05)', marginBottom: '20px' }} />
 
                 {/* CTA */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -166,9 +166,9 @@ export default function StadiumBooking() {
                     padding: '9px 20px',
                     background: hovered === m.id
                       ? `linear-gradient(135deg, ${m.accent}, ${m.accent}cc)`
-                      : 'rgba(255,255,255,0.06)',
-                    color: hovered === m.id ? '#fff' : '#94a3b8',
-                    border: `1px solid ${hovered === m.id ? m.accent : 'rgba(255,255,255,0.08)'}`,
+                      : 'rgba(var(--rgb-white),0.06)',
+                    color: hovered === m.id ? 'var(--text-main)' : 'var(--text-muted)',
+                    border: `1px solid ${hovered === m.id ? m.accent : 'rgba(var(--rgb-white),0.08)'}`,
                     borderRadius: '10px',
                     fontSize: '12px',
                     fontWeight: 800,
@@ -187,7 +187,7 @@ export default function StadiumBooking() {
         {filteredMatches.length === 0 && (
           <div style={{ textAlign: 'center', padding: '80px 20px' }}>
             <p style={{ fontSize: '48px', marginBottom: '16px' }}>🏟️</p>
-            <p style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '24px', color: '#fff', marginBottom: '8px' }}>No events found</p>
+            <p style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '24px', color: 'var(--text-main)', marginBottom: '8px' }}>No events found</p>
             <p style={{ color: '#64748b', fontSize: '14px' }}>Try selecting a different sport filter</p>
           </div>
         )}

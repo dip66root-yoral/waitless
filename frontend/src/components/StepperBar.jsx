@@ -12,7 +12,7 @@ export function StepperBar({ steps, currentStep }) {
               <div style={{
                 width: '32px', height: '32px', borderRadius: '50%',
                 background: isActive ? '#e50914' : '#1e293b',
-                color: isActive ? '#fff' : '#64748b',
+                color: isActive ? 'var(--text-main)' : '#64748b',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontWeight: 700, fontSize: '14px', zIndex: 2,
                 boxShadow: isActive ? '0 0 12px rgba(229,9,20,0.5)' : 'none',

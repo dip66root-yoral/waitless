@@ -13,7 +13,7 @@ export function LiveTicket({ token, movie, meta, queueData, children }) {
   const waitingList = queueData?.tokens?.filter(t => t.status === 'waiting') || []
 
   return (
-    <div style={{ borderRadius: '20px', background: 'linear-gradient(135deg,#111218,#14151e)', border: '1px solid rgba(255,255,255,0.08)', overflow: 'hidden', marginBottom: '14px', boxShadow: '0 8px 40px rgba(0,0,0,0.5)' }}>
+    <div style={{ borderRadius: '20px', background: 'linear-gradient(135deg,#111218,#14151e)', border: '1px solid rgba(var(--rgb-white),0.08)', overflow: 'hidden', marginBottom: '14px', boxShadow: '0 8px 40px rgba(0,0,0,0.5)' }}>
       {/* Colored top strip */}
       <div style={{ height: '4px', background: `linear-gradient(90deg,${m.accent || '#e50914'}80,${m.accent || '#e50914'})` }} />
 
@@ -31,19 +31,19 @@ export function LiveTicket({ token, movie, meta, queueData, children }) {
           </div>
           
           <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}>
-            <div style={{ display: 'inline-block', padding: '5px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 800, background: isServing ? 'rgba(74,222,128,0.15)' : isDone ? 'rgba(148,163,184,0.1)' : 'rgba(245,158,11,0.1)', color: isServing ? '#4ade80' : isDone ? '#94a3b8' : '#fbbf24', border: isServing ? '1px solid rgba(74,222,128,0.3)' : isDone ? '1px solid rgba(148,163,184,0.2)' : '1px solid rgba(245,158,11,0.3)' }}>
+            <div style={{ display: 'inline-block', padding: '5px 12px', borderRadius: '20px', fontSize: '11px', fontWeight: 800, background: isServing ? 'rgba(74,222,128,0.15)' : isDone ? 'rgba(148,163,184,0.1)' : 'rgba(245,158,11,0.1)', color: isServing ? '#4ade80' : isDone ? 'var(--text-muted)' : '#fbbf24', border: isServing ? '1px solid rgba(74,222,128,0.3)' : isDone ? '1px solid rgba(148,163,184,0.2)' : '1px solid rgba(245,158,11,0.3)' }}>
               {isServing ? '● NOW SERVING' : isDone ? '✓ DONE' : isSkipped ? '↷ SKIPPED' : '⏳ WAITING'}
             </div>
             
             {/* QR Code */}
-            <div style={{ width: '100px', height: '100px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '8px', border: `1px solid ${m.accent || '#e50914'}30`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '100px', height: '100px', background: 'rgba(var(--rgb-white),0.05)', borderRadius: '12px', padding: '8px', border: `1px solid ${m.accent || '#e50914'}30`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <QRCodeSVG value={`waitless:token:${token.id}`} size={82} fgColor={m.accent || '#e50914'} bgColor="transparent" />
             </div>
           </div>
         </div>
 
         {/* Divider */}
-        <div style={{ borderTop: '1px dashed rgba(255,255,255,0.08)', margin: '0 0 20px' }} />
+        <div style={{ borderTop: '1px dashed rgba(var(--rgb-white),0.08)', margin: '0 0 20px' }} />
 
         {/* Custom Content */}
         {children && (

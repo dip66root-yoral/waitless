@@ -19,7 +19,7 @@ export function CinemaPoster({ movie, style = {} }) {
         return (
           <>
             {[...Array(80)].map((_,i) => (
-              <div key={i} style={{ position:'absolute', borderRadius:'50%', background:'#fff', width: i%5===0?'2.5px':i%3===0?'1.5px':'1px', height: i%5===0?'2.5px':i%3===0?'1.5px':'1px', left:`${(i*41+7)%100}%`, top:`${(i*67+13)%100}%`, opacity: 0.08+(i%7)*0.07 }}/>
+              <div key={i} style={{ position:'absolute', borderRadius:'50%', background:'var(--text-main)', width: i%5===0?'2.5px':i%3===0?'1.5px':'1px', height: i%5===0?'2.5px':i%3===0?'1.5px':'1px', left:`${(i*41+7)%100}%`, top:`${(i*67+13)%100}%`, opacity: 0.08+(i%7)*0.07 }}/>
             ))}
             <div style={{ position:'absolute', top:'15%', right:'12%', width:'100px', height:'100px', borderRadius:'50%', background:`radial-gradient(circle at 35% 35%, ${poster.accent}50 0%, ${poster.accent}15 50%, transparent 70%)`, boxShadow:`0 0 40px ${poster.accent}35`}}/>
             <div style={{ position:'absolute', top:'20%', left:'25%', width:'220px', height:'140px', borderRadius:'50%', background:`radial-gradient(ellipse, ${poster.accent2}15 0%, transparent 70%)` }}/>

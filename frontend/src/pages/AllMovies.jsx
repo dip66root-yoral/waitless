@@ -9,10 +9,10 @@ export default function AllMovies() {
         
         <div style={{ marginBottom: '40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <h1 style={{ fontFamily: 'Outfit,sans-serif', fontWeight: 900, color: '#fff', fontSize: '32px', marginBottom: '8px' }}>
+            <h1 style={{ fontFamily: 'Outfit,sans-serif', fontWeight: 900, color: 'var(--text-main)', fontSize: '32px', marginBottom: '8px' }}>
               All Movies
             </h1>
-            <p style={{ color: '#94a3b8', fontSize: '15px' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>
               Browse all movies currently playing in cinemas near you.
             </p>
           </div>
@@ -37,7 +37,7 @@ export default function AllMovies() {
                 borderRadius: '12px',
                 overflow: 'hidden',
                 aspectRatio: '1/1.45',
-                border: `1px solid rgba(255,255,255,0.08)`,
+                border: `1px solid rgba(var(--rgb-white),0.08)`,
                 boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
                 transition: 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s'
               }}
@@ -72,12 +72,12 @@ export default function AllMovies() {
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
                     <span style={{ fontSize: '11px', fontWeight: 700, color: '#fbbf24' }}>⭐ {movie.imdb}</span>
-                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>· {movie.duration}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>· {movie.duration}</span>
                   </div>
-                  <h3 style={{ fontFamily: 'Outfit,sans-serif', fontWeight: 800, fontSize: '18px', color: '#fff', lineHeight: 1.1, margin: 0 }}>
+                  <h3 style={{ fontFamily: 'Outfit,sans-serif', fontWeight: 800, fontSize: '18px', color: 'var(--text-main)', lineHeight: 1.1, margin: 0 }}>
                     {movie.title}
                   </h3>
-                  <p style={{ fontSize: '11px', color: '#94a3b8', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {movie.genre.join(' · ')}
                   </p>
                 </div>

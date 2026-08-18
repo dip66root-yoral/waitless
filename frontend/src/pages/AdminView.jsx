@@ -50,38 +50,38 @@ export default function AdminView() {
         
         <div style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
-            <h1 style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontSize: '36px', color: '#fff', marginBottom: '8px' }}>
+            <h1 style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontSize: '36px', color: 'var(--text-main)', marginBottom: '8px' }}>
               Admin Dashboard
             </h1>
-            <p style={{ color: '#94a3b8', fontSize: '15px' }}>Manage all registered users and support tickets.</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>Manage all registered users and support tickets.</p>
           </div>
-          <div style={{ display: 'flex', gap: '8px', background: 'rgba(255,255,255,0.05)', padding: '6px', borderRadius: '12px' }}>
+          <div style={{ display: 'flex', gap: '8px', background: 'rgba(var(--rgb-white),0.05)', padding: '6px', borderRadius: '12px' }}>
             <button 
               onClick={() => setActiveTab('users')}
-              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: activeTab === 'users' ? '#3b82f6' : 'transparent', color: activeTab === 'users' ? '#fff' : '#94a3b8', fontWeight: 600, cursor: 'pointer', transition: '0.2s' }}>
+              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: activeTab === 'users' ? '#3b82f6' : 'transparent', color: activeTab === 'users' ? 'var(--text-main)' : 'var(--text-muted)', fontWeight: 600, cursor: 'pointer', transition: '0.2s' }}>
               Users
             </button>
             <button 
               onClick={() => setActiveTab('support')}
-              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: activeTab === 'support' ? '#a855f7' : 'transparent', color: activeTab === 'support' ? '#fff' : '#94a3b8', fontWeight: 600, cursor: 'pointer', transition: '0.2s', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: activeTab === 'support' ? '#a855f7' : 'transparent', color: activeTab === 'support' ? 'var(--text-main)' : 'var(--text-muted)', fontWeight: 600, cursor: 'pointer', transition: '0.2s', display: 'flex', alignItems: 'center', gap: '6px' }}>
               Support Inbox
               {tickets.filter(t => t.status === 'open').length > 0 && (
-                <span style={{ background: '#ef4444', color: '#fff', padding: '2px 6px', borderRadius: '10px', fontSize: '10px' }}>{tickets.filter(t => t.status === 'open').length}</span>
+                <span style={{ background: '#ef4444', color: 'var(--text-main)', padding: '2px 6px', borderRadius: '10px', fontSize: '10px' }}>{tickets.filter(t => t.status === 'open').length}</span>
               )}
             </button>
           </div>
         </div>
 
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 12px 40px rgba(0,0,0,0.5)' }}>
+        <div style={{ background: 'rgba(var(--rgb-white),0.02)', border: '1px solid rgba(var(--rgb-white),0.06)', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 12px 40px rgba(0,0,0,0.5)' }}>
           {activeTab === 'users' ? (
             loading ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>Loading users...</div>
+              <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>Loading users...</div>
             ) : users.length === 0 ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>No users found.</div>
+              <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>No users found.</div>
             ) : (
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                <tr style={{ background: 'rgba(var(--rgb-white),0.04)', borderBottom: '1px solid rgba(var(--rgb-white),0.08)' }}>
                   <th style={{ textAlign: 'left', padding: '16px 20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>User</th>
                   <th style={{ textAlign: 'left', padding: '16px 20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>Contact</th>
                   <th style={{ textAlign: 'left', padding: '16px 20px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b' }}>Role</th>
@@ -93,10 +93,10 @@ export default function AdminView() {
               </thead>
               <tbody>
                 {users.map(u => (
-                  <tr key={u.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                  <tr key={u.id} style={{ borderBottom: '1px solid rgba(var(--rgb-white),0.04)' }}>
                     <td style={{ padding: '16px 20px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #e50914, #ff4040)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '14px', color: '#fff' }}>
+                        <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #e50914, #ff4040)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '14px', color: 'var(--text-main)' }}>
                           {u.name?.[0]?.toUpperCase()}
                         </div>
                         <div>
@@ -111,9 +111,9 @@ export default function AdminView() {
                     <td style={{ padding: '16px 20px' }}>
                       <span style={{ 
                         fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '12px', 
-                        background: u.role === 'admin' ? 'rgba(239,68,68,0.15)' : u.role === 'provider' ? 'rgba(56,189,248,0.15)' : 'rgba(255,255,255,0.06)',
-                        color: u.role === 'admin' ? '#f87171' : u.role === 'provider' ? '#38bdf8' : '#94a3b8',
-                        border: `1px solid ${u.role === 'admin' ? 'rgba(239,68,68,0.3)' : u.role === 'provider' ? 'rgba(56,189,248,0.3)' : 'rgba(255,255,255,0.1)'}`
+                        background: u.role === 'admin' ? 'rgba(239,68,68,0.15)' : u.role === 'provider' ? 'rgba(56,189,248,0.15)' : 'rgba(var(--rgb-white),0.06)',
+                        color: u.role === 'admin' ? '#f87171' : u.role === 'provider' ? '#38bdf8' : 'var(--text-muted)',
+                        border: `1px solid ${u.role === 'admin' ? 'rgba(239,68,68,0.3)' : u.role === 'provider' ? 'rgba(56,189,248,0.3)' : 'rgba(var(--rgb-white),0.1)'}`
                       }}>
                         {u.role.toUpperCase()}
                       </span>
@@ -124,10 +124,10 @@ export default function AdminView() {
                         <span style={{ color: u.is_online ? '#22c55e' : '#64748b', fontSize: '12px', fontWeight: 600 }}>{u.is_online ? 'Online' : 'Offline'}</span>
                       </div>
                     </td>
-                    <td style={{ padding: '16px 20px', color: '#94a3b8', fontSize: '13px' }}>
+                    <td style={{ padding: '16px 20px', color: 'var(--text-muted)', fontSize: '13px' }}>
                       {new Date(u.created_at).toLocaleDateString()}
                     </td>
-                    <td style={{ padding: '16px 20px', color: '#94a3b8', fontSize: '13px' }}>
+                    <td style={{ padding: '16px 20px', color: 'var(--text-muted)', fontSize: '13px' }}>
                       {u.last_login_at ? new Date(u.last_login_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Never'}
                     </td>
                     <td style={{ padding: '16px 20px', textAlign: 'center' }}>
@@ -160,33 +160,33 @@ export default function AdminView() {
           ) : (
             // Support Inbox Tab
             loadingTickets ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>Loading tickets...</div>
+              <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>Loading tickets...</div>
             ) : tickets.length === 0 ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>No support tickets.</div>
+              <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>No support tickets.</div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {tickets.map(t => (
-                  <div key={t.id} style={{ padding: '24px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '24px' }}>
+                  <div key={t.id} style={{ padding: '24px', borderBottom: '1px solid rgba(var(--rgb-white),0.05)', display: 'flex', gap: '24px' }}>
                     <div style={{ flexShrink: 0, width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(168,85,247,0.2)', color: '#a855f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>
                       {t.status === 'open' ? '?' : '✓'}
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                         <div>
-                          <span style={{ color: '#fff', fontWeight: 600 }}>{t.user_name}</span>
+                          <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{t.user_name}</span>
                           <span style={{ color: '#64748b', fontSize: '12px', marginLeft: '8px' }}>{new Date(t.created_at).toLocaleString()}</span>
                         </div>
                         <span style={{ padding: '4px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', background: t.status === 'open' ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)', color: t.status === 'open' ? '#ef4444' : '#22c55e' }}>
                           {t.status}
                         </span>
                       </div>
-                      <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '12px', marginBottom: '12px' }}>
+                      <div style={{ background: 'rgba(var(--rgb-white),0.03)', padding: '16px', borderRadius: '12px', marginBottom: '12px' }}>
                         <p style={{ margin: '0 0 8px', color: '#cbd5e1', fontSize: '14px', fontStyle: 'italic' }}>"{t.question}"</p>
-                        <p style={{ margin: 0, color: '#94a3b8', fontSize: '13px' }}><strong>AI Replied:</strong> {t.ai_response}</p>
+                        <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '13px' }}><strong>AI Replied:</strong> {t.ai_response}</p>
                       </div>
                       {t.status === 'open' && (
                         <div style={{ display: 'flex', gap: '8px' }}>
-                          <button onClick={() => handleResolveTicket(t.id)} style={{ padding: '8px 16px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Mark as Resolved</button>
+                          <button onClick={() => handleResolveTicket(t.id)} style={{ padding: '8px 16px', background: '#3b82f6', color: 'var(--text-main)', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>Mark as Resolved</button>
                         </div>
                       )}
                     </div>

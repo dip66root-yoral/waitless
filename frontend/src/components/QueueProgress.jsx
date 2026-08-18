@@ -29,14 +29,14 @@ const QueueProgress = React.memo(function QueueProgress({ status, position, acce
             {/* Connector */}
             {!isLast && (
               <div className="absolute top-[18px] h-[2px] z-0"
-                style={{ left: '55%', right: '-50%', background: done || isActive ? `${accentColor}60` : 'rgba(255,255,255,0.06)' }} />
+                style={{ left: '55%', right: '-50%', background: done || isActive ? `${accentColor}60` : 'rgba(var(--rgb-white),0.06)' }} />
             )}
 
             {/* Icon circle */}
             <div className="relative z-10 w-9 h-9 rounded-full flex items-center justify-center text-base transition-all duration-500"
               style={{
-                background: isActive ? accentColor : done ? `${accentColor}30` : 'rgba(255,255,255,0.05)',
-                border: isActive ? `2px solid ${accentColor}` : done ? `2px solid ${accentColor}60` : '2px solid rgba(255,255,255,0.08)',
+                background: isActive ? accentColor : done ? `${accentColor}30` : 'rgba(var(--rgb-white),0.05)',
+                border: isActive ? `2px solid ${accentColor}` : done ? `2px solid ${accentColor}60` : '2px solid rgba(var(--rgb-white),0.08)',
                 boxShadow: isActive ? `0 0 16px ${accentColor}60` : 'none',
               }}>
               {step.icon}
