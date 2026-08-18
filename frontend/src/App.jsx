@@ -181,7 +181,7 @@ export default function App() {
                   {/* Protected User Routes */}
                   <Route path="/user" element={<ProtectedRoute><UserView /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-                  <Route path="/movies/:movieId/book" element={<ProtectedRoute><MovieBooking /></ProtectedRoute>} />
+                  <Route path="/movie/:movieId" element={<MovieBooking />} />
                   <Route path="/movies/all" element={<ProtectedRoute><AllMovies /></ProtectedRoute>} />
                   <Route path="/stadiums/:matchId/book" element={<ProtectedRoute><StadiumBooking /></ProtectedRoute>} />
                   
